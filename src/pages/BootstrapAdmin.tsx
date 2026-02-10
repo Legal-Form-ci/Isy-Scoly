@@ -82,7 +82,7 @@ const BootstrapAdmin = () => {
               </p>
               <div className="bg-muted p-4 rounded-lg text-left space-y-2 mb-6">
                 <p><strong>Email :</strong> admin@scoly.ci</p>
-                <p><strong>Mot de passe :</strong> ScolyAdmin2024!</p>
+                <p><strong>Mot de passe :</strong> @AdminScoly2024</p>
               </div>
               <Button 
                 onClick={() => window.location.href = '/auth'}
@@ -171,7 +171,7 @@ const BootstrapAdmin = () => {
             <div className="pt-4 border-t">
               <p className="text-xs text-center text-muted-foreground">
                 Cette action créera un compte avec les identifiants :<br />
-                <strong>admin@scoly.ci</strong> / <strong>ScolyAdmin2024!</strong>
+                <strong>admin@scoly.ci</strong> / <strong>@AdminScoly2024</strong>
               </p>
             </div>
           </CardContent>
