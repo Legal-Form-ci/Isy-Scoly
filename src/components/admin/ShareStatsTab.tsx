@@ -48,11 +48,7 @@ const ShareStatsTab = () => {
         setShareStats(shares as ShareStat[]);
       }
 
-      // Fetch analytics summary
-      const { data: analytics, error: analyticsError } = await supabase.rpc("get_analytics_summary");
-      if (!analyticsError && analytics) {
-        setAnalyticsSummary(analytics as AnalyticsSummary[]);
-      }
+      // Analytics summary not available - skip
     } catch (error) {
       console.error("Error fetching stats:", error);
     } finally {

@@ -23,7 +23,7 @@ export type Database = {
           is_active: boolean | null
           link_text: string | null
           link_url: string | null
-          media_type: string
+          media_type: string | null
           media_url: string | null
           priority: number | null
           starts_at: string | null
@@ -38,7 +38,7 @@ export type Database = {
           is_active?: boolean | null
           link_text?: string | null
           link_url?: string | null
-          media_type?: string
+          media_type?: string | null
           media_url?: string | null
           priority?: number | null
           starts_at?: string | null
@@ -53,7 +53,7 @@ export type Database = {
           is_active?: boolean | null
           link_text?: string | null
           link_url?: string | null
-          media_type?: string
+          media_type?: string | null
           media_url?: string | null
           priority?: number | null
           starts_at?: string | null
@@ -134,7 +134,7 @@ export type Database = {
           id: string
           payment_id: string | null
           purchased_at: string | null
-          status: string
+          status: string | null
           user_id: string
         }
         Insert: {
@@ -144,7 +144,7 @@ export type Database = {
           id?: string
           payment_id?: string | null
           purchased_at?: string | null
-          status?: string
+          status?: string | null
           user_id: string
         }
         Update: {
@@ -154,7 +154,7 @@ export type Database = {
           id?: string
           payment_id?: string | null
           purchased_at?: string | null
-          status?: string
+          status?: string | null
           user_id?: string
         }
         Relationships: [
@@ -177,21 +177,21 @@ export type Database = {
       article_reactions: {
         Row: {
           article_id: string
-          created_at: string
+          created_at: string | null
           id: string
           reaction_type: string
           user_id: string
         }
         Insert: {
           article_id: string
-          created_at?: string
+          created_at?: string | null
           id?: string
           reaction_type: string
           user_id: string
         }
         Update: {
           article_id?: string
-          created_at?: string
+          created_at?: string | null
           id?: string
           reaction_type?: string
           user_id?: string
@@ -209,40 +209,40 @@ export type Database = {
       article_share_counts: {
         Row: {
           article_id: string
-          facebook: number
-          linkedin: number
-          telegram: number
-          total: number
-          twitter: number
-          updated_at: string
-          whatsapp: number
+          facebook: number | null
+          linkedin: number | null
+          telegram: number | null
+          total: number | null
+          twitter: number | null
+          updated_at: string | null
+          whatsapp: number | null
         }
         Insert: {
           article_id: string
-          facebook?: number
-          linkedin?: number
-          telegram?: number
-          total?: number
-          twitter?: number
-          updated_at?: string
-          whatsapp?: number
+          facebook?: number | null
+          linkedin?: number | null
+          telegram?: number | null
+          total?: number | null
+          twitter?: number | null
+          updated_at?: string | null
+          whatsapp?: number | null
         }
         Update: {
           article_id?: string
-          facebook?: number
-          linkedin?: number
-          telegram?: number
-          total?: number
-          twitter?: number
-          updated_at?: string
-          whatsapp?: number
+          facebook?: number | null
+          linkedin?: number | null
+          telegram?: number | null
+          total?: number | null
+          twitter?: number | null
+          updated_at?: string | null
+          whatsapp?: number | null
         }
         Relationships: []
       }
       articles: {
         Row: {
           author_id: string
-          category: string
+          category: string | null
           content_de: string | null
           content_en: string | null
           content_es: string | null
@@ -260,7 +260,7 @@ export type Database = {
           price: number | null
           published_at: string | null
           rejection_reason: string | null
-          status: string
+          status: string | null
           title_de: string
           title_en: string
           title_es: string
@@ -270,7 +270,7 @@ export type Database = {
         }
         Insert: {
           author_id: string
-          category?: string
+          category?: string | null
           content_de?: string | null
           content_en?: string | null
           content_es?: string | null
@@ -288,7 +288,7 @@ export type Database = {
           price?: number | null
           published_at?: string | null
           rejection_reason?: string | null
-          status?: string
+          status?: string | null
           title_de: string
           title_en: string
           title_es: string
@@ -298,7 +298,7 @@ export type Database = {
         }
         Update: {
           author_id?: string
-          category?: string
+          category?: string | null
           content_de?: string | null
           content_en?: string | null
           content_es?: string | null
@@ -316,7 +316,7 @@ export type Database = {
           price?: number | null
           published_at?: string | null
           rejection_reason?: string | null
-          status?: string
+          status?: string | null
           title_de?: string
           title_en?: string
           title_es?: string
@@ -329,7 +329,7 @@ export type Database = {
       audit_logs: {
         Row: {
           action: string
-          created_at: string
+          created_at: string | null
           entity_id: string | null
           entity_type: string
           id: string
@@ -341,7 +341,7 @@ export type Database = {
         }
         Insert: {
           action: string
-          created_at?: string
+          created_at?: string | null
           entity_id?: string | null
           entity_type: string
           id?: string
@@ -353,7 +353,7 @@ export type Database = {
         }
         Update: {
           action?: string
-          created_at?: string
+          created_at?: string | null
           entity_id?: string | null
           entity_type?: string
           id?: string
@@ -377,7 +377,7 @@ export type Database = {
           name: string
           start_date: string | null
           target_audience: string | null
-          type: string
+          type: string | null
         }
         Insert: {
           clicks?: number | null
@@ -390,7 +390,7 @@ export type Database = {
           name: string
           start_date?: string | null
           target_audience?: string | null
-          type?: string
+          type?: string | null
         }
         Update: {
           clicks?: number | null
@@ -403,7 +403,7 @@ export type Database = {
           name?: string
           start_date?: string | null
           target_audience?: string | null
-          type?: string
+          type?: string | null
         }
         Relationships: []
       }
@@ -486,38 +486,38 @@ export type Database = {
       commissions: {
         Row: {
           commission_amount: number
-          commission_rate: number
+          commission_rate: number | null
           created_at: string | null
           id: string
           order_id: string | null
           order_item_id: string | null
           paid_at: string | null
           sale_amount: number
-          status: string
+          status: string | null
           vendor_id: string
         }
         Insert: {
           commission_amount: number
-          commission_rate?: number
+          commission_rate?: number | null
           created_at?: string | null
           id?: string
           order_id?: string | null
           order_item_id?: string | null
           paid_at?: string | null
           sale_amount: number
-          status?: string
+          status?: string | null
           vendor_id: string
         }
         Update: {
           commission_amount?: number
-          commission_rate?: number
+          commission_rate?: number | null
           created_at?: string | null
           id?: string
           order_id?: string | null
           order_item_id?: string | null
           paid_at?: string | null
           sale_amount?: number
-          status?: string
+          status?: string | null
           vendor_id?: string
         }
         Relationships: [
@@ -540,24 +540,24 @@ export type Database = {
       coupon_redemptions: {
         Row: {
           coupon_id: string
-          created_at: string
-          discount_amount: number
+          created_at: string | null
+          discount_amount: number | null
           id: string
           order_id: string | null
           user_id: string
         }
         Insert: {
           coupon_id: string
-          created_at?: string
-          discount_amount?: number
+          created_at?: string | null
+          discount_amount?: number | null
           id?: string
           order_id?: string | null
           user_id: string
         }
         Update: {
           coupon_id?: string
-          created_at?: string
-          discount_amount?: number
+          created_at?: string | null
+          discount_amount?: number | null
           id?: string
           order_id?: string | null
           user_id?: string
@@ -636,7 +636,7 @@ export type Database = {
           recipient_name: string | null
           recipient_photo_url: string | null
           signature_url: string | null
-          timestamp: string
+          timestamp: string | null
         }
         Insert: {
           created_at?: string | null
@@ -652,7 +652,7 @@ export type Database = {
           recipient_name?: string | null
           recipient_photo_url?: string | null
           signature_url?: string | null
-          timestamp?: string
+          timestamp?: string | null
         }
         Update: {
           created_at?: string | null
@@ -668,7 +668,7 @@ export type Database = {
           recipient_name?: string | null
           recipient_photo_url?: string | null
           signature_url?: string | null
-          timestamp?: string
+          timestamp?: string | null
         }
         Relationships: [
           {
@@ -837,10 +837,10 @@ export type Database = {
       loyalty_rewards: {
         Row: {
           coupon_code: string | null
-          created_at: string
+          created_at: string | null
           expires_at: string | null
           id: string
-          is_used: boolean
+          is_used: boolean | null
           points_spent: number
           reward_type: string
           used_at: string | null
@@ -848,10 +848,10 @@ export type Database = {
         }
         Insert: {
           coupon_code?: string | null
-          created_at?: string
+          created_at?: string | null
           expires_at?: string | null
           id?: string
-          is_used?: boolean
+          is_used?: boolean | null
           points_spent: number
           reward_type: string
           used_at?: string | null
@@ -859,10 +859,10 @@ export type Database = {
         }
         Update: {
           coupon_code?: string | null
-          created_at?: string
+          created_at?: string | null
           expires_at?: string | null
           id?: string
-          is_used?: boolean
+          is_used?: boolean | null
           points_spent?: number
           reward_type?: string
           used_at?: string | null
@@ -911,7 +911,7 @@ export type Database = {
           is_read: boolean | null
           message: string
           title: string
-          type: string
+          type: string | null
           user_id: string
         }
         Insert: {
@@ -921,7 +921,7 @@ export type Database = {
           is_read?: boolean | null
           message: string
           title: string
-          type?: string
+          type?: string | null
           user_id: string
         }
         Update: {
@@ -931,7 +931,7 @@ export type Database = {
           is_read?: boolean | null
           message?: string
           title?: string
-          type?: string
+          type?: string | null
           user_id?: string
         }
         Relationships: []
@@ -990,7 +990,7 @@ export type Database = {
           delivery_notes: string | null
           delivery_received_at: string | null
           delivery_user_id: string | null
-          discount_amount: number
+          discount_amount: number | null
           id: string
           notes: string | null
           payment_method: string | null
@@ -1010,7 +1010,7 @@ export type Database = {
           delivery_notes?: string | null
           delivery_received_at?: string | null
           delivery_user_id?: string | null
-          discount_amount?: number
+          discount_amount?: number | null
           id?: string
           notes?: string | null
           payment_method?: string | null
@@ -1030,7 +1030,7 @@ export type Database = {
           delivery_notes?: string | null
           delivery_received_at?: string | null
           delivery_user_id?: string | null
-          discount_amount?: number
+          discount_amount?: number | null
           id?: string
           notes?: string | null
           payment_method?: string | null
@@ -1055,7 +1055,7 @@ export type Database = {
           payment_method: string
           payment_reference: string | null
           phone_number: string | null
-          status: string
+          status: string | null
           transaction_id: string | null
           user_id: string
         }
@@ -1069,7 +1069,7 @@ export type Database = {
           payment_method: string
           payment_reference?: string | null
           phone_number?: string | null
-          status?: string
+          status?: string | null
           transaction_id?: string | null
           user_id: string
         }
@@ -1083,7 +1083,7 @@ export type Database = {
           payment_method?: string
           payment_reference?: string | null
           phone_number?: string | null
-          status?: string
+          status?: string | null
           transaction_id?: string | null
           user_id?: string
         }
@@ -1288,7 +1288,7 @@ export type Database = {
           created_at: string | null
           current_uses: number | null
           description: string | null
-          discount_type: string
+          discount_type: string | null
           discount_value: number
           end_date: string | null
           id: string
@@ -1303,7 +1303,7 @@ export type Database = {
           created_at?: string | null
           current_uses?: number | null
           description?: string | null
-          discount_type?: string
+          discount_type?: string | null
           discount_value: number
           end_date?: string | null
           id?: string
@@ -1318,7 +1318,7 @@ export type Database = {
           created_at?: string | null
           current_uses?: number | null
           description?: string | null
-          discount_type?: string
+          discount_type?: string | null
           discount_value?: number
           end_date?: string | null
           id?: string
@@ -1363,30 +1363,30 @@ export type Database = {
       rate_limits: {
         Row: {
           action_type: string
-          attempts: number
+          attempts: number | null
           blocked_until: string | null
-          first_attempt_at: string
+          first_attempt_at: string | null
           id: string
           identifier: string
-          last_attempt_at: string
+          last_attempt_at: string | null
         }
         Insert: {
           action_type: string
-          attempts?: number
+          attempts?: number | null
           blocked_until?: string | null
-          first_attempt_at?: string
+          first_attempt_at?: string | null
           id?: string
           identifier: string
-          last_attempt_at?: string
+          last_attempt_at?: string | null
         }
         Update: {
           action_type?: string
-          attempts?: number
+          attempts?: number | null
           blocked_until?: string | null
-          first_attempt_at?: string
+          first_attempt_at?: string | null
           id?: string
           identifier?: string
-          last_attempt_at?: string
+          last_attempt_at?: string | null
         }
         Relationships: []
       }
@@ -1661,14 +1661,6 @@ export type Database = {
           total_users: number
         }[]
       }
-      get_analytics_summary: {
-        Args: { _end_date?: string; _start_date?: string }
-        Returns: {
-          event_count: number
-          event_type: string
-          unique_users: number
-        }[]
-      }
       get_delivery_orders: {
         Args: { _delivery_user_id: string }
         Returns: {
@@ -1679,7 +1671,7 @@ export type Database = {
           delivery_notes: string | null
           delivery_received_at: string | null
           delivery_user_id: string | null
-          discount_amount: number
+          discount_amount: number | null
           id: string
           notes: string | null
           payment_method: string | null
@@ -1739,13 +1731,13 @@ export type Database = {
         Args: { _article_id: string; _platform: string }
         Returns: {
           article_id: string
-          facebook: number
-          linkedin: number
-          telegram: number
-          total: number
-          twitter: number
-          updated_at: string
-          whatsapp: number
+          facebook: number | null
+          linkedin: number | null
+          telegram: number | null
+          total: number | null
+          twitter: number | null
+          updated_at: string | null
+          whatsapp: number | null
         }
         SetofOptions: {
           from: "*"
