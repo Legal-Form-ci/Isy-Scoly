@@ -1,1 +1,43 @@
-project_id = "zvzrnqckqcqwysplhpfe"
+project_id = "duxbzpsezdhvhprwjwmk"
+
+[functions.bootstrap-admin]
+verify_jwt = false
+
+[functions.seed-products]
+verify_jwt = false
+
+[functions.check-payment-status]
+verify_jwt = false
+
+[functions.cloud-backup]
+verify_jwt = false
+
+[functions.confirm-payment]
+verify_jwt = false
+
+[functions.create-user]
+verify_jwt = false
+
+[functions.generate-ad-cta]
+verify_jwt = false
+
+[functions.kkiapay-webhook]
+verify_jwt = false
+
+[functions.process-payment]
+verify_jwt = false
+
+[functions.restore-database]
+verify_jwt = false
+
+[functions.send-article-notification]
+verify_jwt = false
+
+[functions.send-order-email]
+verify_jwt = false
+
+[functions.send-push-notification]
+verify_jwt = false
+
+[functions.translate-product]
+verify_jwt = false
