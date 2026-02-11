@@ -8,11 +8,12 @@ const Footer = () => {
 
   const links = {
     categories: [
-      { label: "Izy-Scoly Primaire", href: "/shop?category=scoly-primaire" },
-      { label: "Izy-Scoly Secondaire", href: "/shop?category=scoly-secondaire" },
-      { label: "Izy-Scoly Université", href: "/shop?category=scoly-universite" },
-      { label: "Izy-Scoly Bureautique", href: "/shop?category=scoly-bureautique" },
-      { label: "Izy-Scoly Librairie", href: "/shop?category=scoly-librairie" },
+      { label: "Préscolaire", href: "/shop?category=prescolaire" },
+      { label: "Primaire", href: "/shop?category=scoly-primaire" },
+      { label: "Secondaire", href: "/shop?category=scoly-secondaire" },
+      { label: "Université", href: "/shop?category=scoly-universite" },
+      { label: "Bureautique", href: "/shop?category=scoly-bureautique" },
+      { label: "Librairie", href: "/shop?category=scoly-librairie" },
     ],
     resources: [
       { label: "Actualités", href: "/actualites" },
@@ -28,10 +29,10 @@ const Footer = () => {
   };
 
   const socials = [
-    { icon: <Facebook size={20} />, href: "https://facebook.com/izyscoly", label: "Facebook" },
-    { icon: <Twitter size={20} />, href: "https://twitter.com/izyscoly", label: "Twitter" },
-    { icon: <Instagram size={20} />, href: "https://instagram.com/izyscoly", label: "Instagram" },
-    { icon: <Linkedin size={20} />, href: "https://linkedin.com/company/izyscoly", label: "LinkedIn" },
+    { icon: <Facebook size={20} />, href: "https://facebook.com/scoofficeplus", label: "Facebook" },
+    { icon: <Twitter size={20} />, href: "https://twitter.com/scoofficeplus", label: "Twitter" },
+    { icon: <Instagram size={20} />, href: "https://instagram.com/scoofficeplus", label: "Instagram" },
+    { icon: <Linkedin size={20} />, href: "https://linkedin.com/company/scoofficeplus", label: "LinkedIn" },
   ];
 
   return (
@@ -62,7 +63,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 mb-12">
           {/* Brand Column */}
           <div className="lg:col-span-2">
-            <Logo variant="white" size="lg" />
+            <Logo variant="white" size="lg" showSlogan />
             <p className="mt-4 text-primary-foreground/80 max-w-sm leading-relaxed">
               La plateforme de référence en Côte d'Ivoire pour les fournitures scolaires et bureautiques de qualité.
             </p>
@@ -70,11 +71,11 @@ const Footer = () => {
             {/* Contact Info */}
             <div className="mt-6 space-y-3">
               <a
-                href="mailto:contact@izy-scoly.ci"
+                href="mailto:contact@scoofficeplus.ci"
                 className="flex items-center gap-3 text-primary-foreground/80 hover:text-accent transition-colors"
               >
                 <Mail size={18} />
-                contact@izy-scoly.ci
+                contact@scoofficeplus.ci
               </a>
               <a
                 href="tel:+2250759566087"
@@ -135,7 +136,7 @@ const Footer = () => {
         <div className="pt-8 border-t border-primary-foreground/20">
           <div className="text-center space-y-2">
             <p className="text-primary-foreground/80 text-sm">
-              © {new Date().getFullYear()} Izy-Scoly. Tous droits réservés.
+              © {new Date().getFullYear()} ScoOffice+. Tous droits réservés.
             </p>
             <a
               href="https://ikoffi.agricapital.ci"

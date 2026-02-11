@@ -301,7 +301,7 @@ const Auth = () => {
             {isLogin ? t.auth.loginTitle : t.auth.signupTitle}
           </h1>
           <p className="text-center text-muted-foreground mb-8">
-            {isLogin ? "Connectez-vous à votre compte Izy-scoly" : "Créez votre compte Izy-scoly"}
+            {isLogin ? "Connectez-vous à votre compte ScoOffice+" : "Créez votre compte ScoOffice+"}
           </p>
 
           {/* Form */}

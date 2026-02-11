@@ -15,10 +15,10 @@ const Index = () => {
   return (
     <main className="min-h-screen bg-background">
       <SEOHead 
-        title="Izy-scoly - Fournitures scolaires et bureautiques en Côte d'Ivoire"
-        description="Votre référence pour les fournitures scolaires et bureautiques de qualité. Livraison gratuite partout en Côte d'Ivoire. Primaire, Secondaire, Université, Bureautique."
-        url="https://izy-scoly.ci"
-        keywords={["fournitures scolaires", "bureautique", "Côte d'Ivoire", "Abidjan", "livraison gratuite", "école", "université", "livres scolaires"]}
+        title="ScoOffice+ — Fournitures scolaires et bureautiques en Côte d'Ivoire"
+        description="Votre référence pour les fournitures scolaires et bureautiques de qualité. Livraison gratuite partout en Côte d'Ivoire. Préscolaire, Primaire, Secondaire, Université, Bureautique."
+        url="https://scoofficeplus.ci"
+        keywords={["fournitures scolaires", "bureautique", "Côte d'Ivoire", "Abidjan", "livraison gratuite", "école", "université", "livres scolaires", "ScoOffice+"]}
       />
       <Navbar />
       <HeroSection />

@@ -44,9 +44,10 @@ const HeroSection = () => {
   };
 
   const scolyCategories = [
-    { name: "Izy-Scoly Primaire", slug: "scoly-primaire" },
-    { name: "Izy-Scoly Secondaire", slug: "scoly-secondaire" },
-    { name: "Izy-Scoly Université", slug: "scoly-universite" },
+    { name: "Préscolaire", slug: "prescolaire" },
+    { name: "Primaire", slug: "scoly-primaire" },
+    { name: "Secondaire", slug: "scoly-secondaire" },
+    { name: "Université", slug: "scoly-universite" },
   ];
 
   return (
@@ -124,13 +125,13 @@ const HeroSection = () => {
                 to="/shop?category=scoly-bureautique"
                 className="px-4 py-2 rounded-full bg-primary-foreground/10 hover:bg-primary-foreground/20 backdrop-blur-sm border border-primary-foreground/20 text-primary-foreground text-sm font-medium transition-all hover:scale-[1.03]"
               >
-                Izy-Scoly Bureautique
+                Bureautique
               </Link>
               <Link
                 to="/shop?category=scoly-librairie"
                 className="px-4 py-2 rounded-full bg-primary-foreground/10 hover:bg-primary-foreground/20 backdrop-blur-sm border border-primary-foreground/20 text-primary-foreground text-sm font-medium transition-all hover:scale-[1.03]"
               >
-                Izy-Scoly Librairie
+                Librairie
               </Link>
             </div>
           </div>
