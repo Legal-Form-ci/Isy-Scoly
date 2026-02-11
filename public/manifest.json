@@ -1,11 +1,11 @@
 {
-  "name": "Izy-scoly",
-  "short_name": "Izy-scoly",
+  "name": "ScoOffice+",
+  "short_name": "ScoOffice+",
   "description": "Fournitures scolaires et bureautiques en Côte d'Ivoire",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#1e40af",
+  "theme_color": "#1a365d",
   "orientation": "portrait-primary",
   "icons": [
     {

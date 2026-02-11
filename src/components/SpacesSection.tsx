@@ -57,7 +57,7 @@ const SpacesSection = () => {
             Tout pour l'école et le bureau
           </h2>
           <p className="text-lg text-muted-foreground leading-relaxed">
-            Izy-scoly vous offre des fournitures scolaires et bureautiques de qualité pour accompagner votre réussite
+            ScoOffice+ vous offre des fournitures scolaires et bureautiques de qualité pour accompagner votre réussite
           </p>
         </div>
 
@@ -67,7 +67,7 @@ const SpacesSection = () => {
           <SpaceCard
             id="boutique"
             icon={<ShoppingBag size={32} />}
-            title="Boutique Izy-scoly"
+            title="Boutique ScoOffice+"
             subtitle="Scolaire & Bureautique"
             description="Retrouvez toutes vos fournitures scolaires et bureautiques : cahiers, stylos, classeurs, accessoires de bureau et bien plus encore."
             features={[
@@ -103,7 +103,7 @@ const SpacesSection = () => {
           <SpaceCard
             id="actualites"
             icon={<Newspaper size={32} />}
-            title="Actualités Izy-scoly"
+            title="Actualités ScoOffice+"
             subtitle="Articles & Publications"
             description="Restez informé avec nos articles sur l'éducation, les résultats d'examens, les taux de réussite scolaire et les conseils pratiques."
             features={[

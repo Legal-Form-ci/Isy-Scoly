@@ -6,20 +6,20 @@
 
 @layer base {
   :root {
-    /* Ocean Blue - Primary (Trust, Education) */
-    --primary: 192 82% 28%;
+    /* Navy Blue - Primary (Trust, Education) */
+    --primary: 213 55% 23%;
     --primary-foreground: 0 0% 100%;
-    --primary-light: 192 70% 45%;
-    --primary-dark: 192 85% 20%;
+    --primary-light: 213 45% 40%;
+    --primary-dark: 213 60% 16%;
     
-    /* Coral Orange - Secondary (Energy, Warmth) */
-    --secondary: 24 95% 58%;
+    /* Vibrant Orange - Secondary (Energy, Dynamism) */
+    --secondary: 28 80% 52%;
     --secondary-foreground: 0 0% 100%;
-    --secondary-light: 24 100% 70%;
+    --secondary-light: 28 90% 65%;
     
-    /* Gold Amber - Accent (Excellence) */
-    --accent: 43 96% 56%;
-    --accent-foreground: 43 100% 15%;
+    /* Teal - Accent (Innovation, Growth) */
+    --accent: 180 47% 33%;
+    --accent-foreground: 0 0% 100%;
     
     /* Backgrounds */
     --background: 40 33% 98%;
@@ -43,22 +43,22 @@
     /* Borders & Inputs */
     --border: 220 15% 88%;
     --input: 220 15% 88%;
-    --ring: 192 82% 28%;
+    --ring: 213 55% 23%;
     
     --radius: 0.75rem;
     
     /* Gradients - Solid backgrounds preferred for contrast */
-    --gradient-primary: linear-gradient(135deg, hsl(192, 82%, 25%) 0%, hsl(192, 70%, 35%) 100%);
-    --gradient-secondary: linear-gradient(135deg, hsl(24, 95%, 55%) 0%, hsl(24, 100%, 60%) 100%);
-    --gradient-hero: linear-gradient(135deg, hsl(192, 82%, 22%) 0%, hsl(192, 75%, 30%) 100%);
+    --gradient-primary: linear-gradient(135deg, hsl(213, 55%, 20%) 0%, hsl(213, 45%, 32%) 100%);
+    --gradient-secondary: linear-gradient(135deg, hsl(28, 80%, 50%) 0%, hsl(28, 90%, 58%) 100%);
+    --gradient-hero: linear-gradient(135deg, hsl(213, 55%, 18%) 0%, hsl(213, 50%, 28%) 100%);
     --gradient-card: linear-gradient(180deg, hsl(0, 0%, 100%) 0%, hsl(40, 33%, 98%) 100%);
     
     /* Shadows */
     --shadow-sm: 0 2px 8px -2px hsl(220 30% 15% / 0.08);
     --shadow-md: 0 8px 24px -4px hsl(220 30% 15% / 0.12);
     --shadow-lg: 0 16px 48px -8px hsl(220 30% 15% / 0.16);
-    --shadow-glow: 0 0 40px hsl(192 82% 28% / 0.25);
-    --shadow-gold: 0 4px 20px hsl(43 96% 56% / 0.35);
+    --shadow-glow: 0 0 40px hsl(213 55% 23% / 0.25);
+    --shadow-gold: 0 4px 20px hsl(180 47% 33% / 0.35);
 
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
@@ -71,16 +71,16 @@
   }
 
   .dark {
-    --primary: 192 70% 50%;
+    --primary: 213 50% 45%;
     --primary-foreground: 0 0% 100%;
-    --primary-light: 192 60% 60%;
-    --primary-dark: 192 80% 35%;
+    --primary-light: 213 45% 55%;
+    --primary-dark: 213 55% 30%;
     
-    --secondary: 24 95% 60%;
+    --secondary: 28 85% 58%;
     --secondary-foreground: 0 0% 100%;
     
-    --accent: 43 96% 60%;
-    --accent-foreground: 43 100% 10%;
+    --accent: 180 50% 45%;
+    --accent-foreground: 0 0% 100%;
     
     --background: 220 30% 8%;
     --foreground: 40 20% 95%;
@@ -99,7 +99,7 @@
     
     --border: 220 25% 22%;
     --input: 220 25% 22%;
-    --ring: 192 70% 50%;
+    --ring: 213 50% 45%;
 
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
@@ -183,8 +183,8 @@
 }
 
 @keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 20px hsl(192 82% 28% / 0.3); }
-  50% { box-shadow: 0 0 40px hsl(192 82% 28% / 0.5); }
+  0%, 100% { box-shadow: 0 0 20px hsl(213 55% 23% / 0.3); }
+  50% { box-shadow: 0 0 40px hsl(213 55% 23% / 0.5); }
 }
 
 @keyframes slide-up {

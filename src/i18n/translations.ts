@@ -313,7 +313,7 @@ export interface Translations {
 export const translations: Record<Language, Translations> = {
   fr: {
     nav: {
-      easyClass: "Izy-scoly",
+      easyClass: "ScoOffice+",
       secondary: "Actualités",
       secondaryDesc: "Actualités scolaires et bureautiques",
       university: "Actualités",
@@ -334,21 +334,21 @@ export const translations: Record<Language, Translations> = {
       badge: "Votre partenaire pour la réussite scolaire",
       title1: "Fournitures scolaires",
       title2: "et bureautiques en un seul clic",
-      subtitle: "Izy-scoly vous accompagne dans votre parcours éducatif avec des fournitures de qualité, livrées gratuitement partout en Côte d'Ivoire.",
+      subtitle: "ScoOffice+ vous accompagne dans votre parcours éducatif avec des fournitures de qualité, livrées gratuitement partout en Côte d'Ivoire.",
       cta: "Découvrir nos produits",
       demo: "Voir les actualités",
-      secondaryTitle: "Actualités Izy-scoly",
+      secondaryTitle: "Actualités ScoOffice+",
       secondaryDesc: "Actualités scolaires et bureautiques",
-      universityTitle: "Actualités Izy-scoly",
+      universityTitle: "Actualités ScoOffice+",
       universityDesc: "Actualités scolaires et bureautiques",
-      shopTitle: "Boutique Izy-scoly",
+      shopTitle: "Boutique ScoOffice+",
       shopDesc: "Livres et fournitures scolaires",
     },
     spaces: {
       title: "Tout pour votre réussite scolaire et professionnelle",
-      subtitle: "Izy-scoly vous offre des produits de qualité scolaires et bureautiques pour accompagner votre parcours éducatif et professionnel.",
+      subtitle: "ScoOffice+ vous offre des produits de qualité scolaires et bureautiques pour accompagner votre parcours éducatif et professionnel.",
       secondary: {
-        title: "Boutique Izy-scoly",
+        title: "Boutique ScoOffice+",
         description: "Retrouvez toutes vos fournitures scolaires et bureautiques organisées par niveau : Primaire, Secondaire, Université et Bureau.",
         features: [
           "Catalogue complet scolaire et bureautique",
@@ -359,7 +359,7 @@ export const translations: Record<Language, Translations> = {
         cta: "Découvrir notre boutique",
       },
       university: {
-        title: "Actualités Izy-scoly",
+        title: "Actualités ScoOffice+",
         description: "Un espace dédié aux actualités scolaires et bureautiques. Découvrez les taux de réussite, résultats d'examens et informations utiles.",
         features: [
           "Taux de réussite scolaire",
@@ -370,7 +370,7 @@ export const translations: Record<Language, Translations> = {
         cta: "Découvrir les actualités",
       },
       shop: {
-        title: "Boutique Izy-scoly",
+        title: "Boutique ScoOffice+",
         description: "Tous vos livres et fournitures scolaires et bureautiques en un seul endroit. Livraison gratuite partout en Côte d'Ivoire.",
         features: [
           "Livres scolaires officiels",
@@ -382,8 +382,8 @@ export const translations: Record<Language, Translations> = {
       },
     },
     features: {
-      title: "Pourquoi choisir Izy-scoly ?",
-      subtitle: "Une plateforme complète conçue pour répondre à tous vos besoins éducatifs.",
+      title: "Pourquoi choisir ScoOffice+ ?",
+      subtitle: "Une plateforme complète conçue pour répondre à tous vos besoins éducatifs et professionnels.",
       items: {
         resources: {
           title: "Ressources de qualité",
@@ -422,7 +422,7 @@ export const translations: Record<Language, Translations> = {
         "Aucuns frais cachés",
         "Support client 24/7",
       ],
-      cta: "Découvrir Easy Scolaire",
+      cta: "Découvrir ScoOffice+",
       amountLabel: "Montant à payer",
       secure: "Paiement 100% sécurisé",
     },
@@ -434,7 +434,7 @@ export const translations: Record<Language, Translations> = {
     },
     cta: {
       title: "Prêt à transformer votre apprentissage ?",
-      subtitle: "Rejoignez des milliers d'étudiants qui ont déjà choisi Izy-scoly pour réussir.",
+      subtitle: "Rejoignez des milliers d'étudiants qui ont déjà choisi ScoOffice+ pour réussir.",
       button: "Créer mon compte gratuit",
       trustedBy: "Ils nous font confiance",
     },
@@ -456,7 +456,7 @@ export const translations: Record<Language, Translations> = {
       cookies: "Cookies",
       address: "Abidjan, Côte d'Ivoire",
       phone: "+225 07 00 00 00 00",
-      email: "contact@scoly.ci",
+      email: "contact@scoofficeplus.ci",
       copyright: "Tous droits réservés.",
       madeWith: "Fait avec ❤️ en Côte d'Ivoire",
     },
@@ -482,7 +482,7 @@ export const translations: Record<Language, Translations> = {
       privacy: "politique de confidentialité",
     },
     shop: {
-      title: "Boutique Izy-scoly",
+      title: "Boutique ScoOffice+",
       subtitle: "Tous vos livres et fournitures scolaires et bureautiques en un clic",
       searchPlaceholder: "Rechercher un produit...",
       categories: "Catégories",
@@ -601,7 +601,7 @@ export const translations: Record<Language, Translations> = {
       info: "Nos coordonnées",
     },
     about: {
-      title: "À propos d'Izy-scoly",
+      title: "À propos de ScoOffice+",
       subtitle: "Notre mission est de faciliter l'accès aux fournitures scolaires et bureautiques",
       mission: "Notre mission",
       missionText: "Offrir aux familles ivoiriennes un accès facile à des fournitures scolaires et bureautiques de qualité, avec une livraison gratuite et un service client exemplaire.",
