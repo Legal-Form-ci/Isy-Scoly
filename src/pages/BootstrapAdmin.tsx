@@ -115,8 +115,8 @@ const BootstrapAdmin = () => {
                 <CheckCircle className="h-4 w-4" />
                 <div className="text-sm">
                   <p className="font-semibold">Compte Super Admin créé !</p>
-                  <p><strong>Email :</strong> admin@scoly.ci</p>
-                  <p><strong>Mot de passe :</strong> @AdminScoly2024</p>
+                  <p><strong>Email :</strong> admin@scooffice.ci</p>
+                  <p><strong>Mot de passe :</strong> @AdminScoOffice2026</p>
                 </div>
               </motion.div>
             )}
