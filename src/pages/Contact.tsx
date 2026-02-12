@@ -110,9 +110,9 @@ const Contact = () => {
     <main className="min-h-screen bg-background">
       <SEOHead 
         title="Contact - Nous contacter"
-        description="Contactez l'équipe Izy-scoly pour toute question sur vos commandes, livraisons ou partenariats. Service client disponible 7j/7."
-        url="https://izy-scoly.ci/contact"
-        keywords={["contact", "service client", "support", "Izy-scoly"]}
+        description="Contactez l'équipe ScoOffice+ pour toute question sur vos commandes, livraisons ou partenariats. Service client disponible 7j/7."
+        url="https://scoofficeplus.ci/contact"
+        keywords={["contact", "service client", "support", "ScoOffice+"]}
       />
       <Navbar />
       

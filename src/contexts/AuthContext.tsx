@@ -205,7 +205,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
       toast({
         title: "Connexion réussie !",
-        description: "Bienvenue sur Izy-scoly.",
+        description: "Bienvenue sur ScoOffice+.",
       });
 
       return { error: null };
