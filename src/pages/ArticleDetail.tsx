@@ -437,8 +437,8 @@ const ArticleDetail = () => {
     <main className="min-h-screen bg-background">
       <SEOHead 
         title={getTitle()}
-        description={getExcerpt() || `Découvrez cet article sur Izy-scoly`}
-        url={`https://izy-scoly.ci/actualites/${article.id}`}
+        description={getExcerpt() || `Découvrez cet article sur ScoOffice+`}
+        url={`https://scoofficeplus.ci/actualites/${article.id}`}
         image={article.cover_image || undefined}
         type="article"
         author={author ? `${author.first_name} ${author.last_name}` : undefined}
@@ -619,7 +619,7 @@ const ArticleDetail = () => {
             <SocialShare 
               title={getTitle()} 
               text={getExcerpt() || undefined}
-              url={`https://izy-scoly.ci/actualites/${article.id}`}
+              url={`https://scoofficeplus.ci/actualites/${article.id}`}
             />
           </div>
 
@@ -778,7 +778,7 @@ const ArticleDetail = () => {
         <SocialShare 
           title={getTitle()} 
           text={getExcerpt() || undefined}
-          url={`https://izy-scoly.ci/actualites/${article.id}`}
+          url={`https://scoofficeplus.ci/actualites/${article.id}`}
           variant="icon-only"
           articleId={article.id}
           showCounts={true}
@@ -789,7 +789,7 @@ const ArticleDetail = () => {
       <SocialShare 
         title={getTitle()} 
         text={getExcerpt() || undefined}
-        url={`https://izy-scoly.ci/actualites/${article.id}`}
+        url={`https://scoofficeplus.ci/actualites/${article.id}`}
         variant="mobile-bar"
         articleId={article.id}
         showCounts={true}

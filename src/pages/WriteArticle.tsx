@@ -259,7 +259,7 @@ const WriteArticle = () => {
           <h1 className="text-3xl font-display font-bold text-foreground mb-2">
             {id ? "Modifier l'article" : "Publier un article"}
           </h1>
-          <p className="text-muted-foreground mb-8">Partagez vos idées et conseils avec la communauté Izy-scoly</p>
+          <p className="text-muted-foreground mb-8">Partagez vos idées et conseils avec la communauté ScoOffice+</p>
 
           <div className="grid gap-8">
             {/* Media Upload */}
