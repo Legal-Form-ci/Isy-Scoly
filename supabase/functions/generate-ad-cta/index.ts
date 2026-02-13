@@ -12,7 +12,7 @@ serve(async (req) => {
 
   try {
     const { title, description } = await req.json();
-    
+
     if (!title) {
       return new Response(
         JSON.stringify({ error: "Title is required" }),
@@ -20,13 +20,12 @@ serve(async (req) => {
       );
     }
 
-    // Support both legacy and new secret names for backward compatibility
-    const IZY_SCOLY_AI_KEY = Deno.env.get("IZY_SCOLY_AI_KEY") || Deno.env.get("LOVABLE_API_KEY");
-    if (!IZY_SCOLY_AI_KEY) {
-      throw new Error("IZY_SCOLY_AI_KEY is not configured");
+    const API_KEY = Deno.env.get("LOVABLE_API_KEY");
+    if (!API_KEY) {
+      throw new Error("LOVABLE_API_KEY is not configured");
     }
 
-    const prompt = `Tu es un expert marketing pour une plateforme e-commerce de fournitures scolaires et bureautiques en Côte d'Ivoire appelée "Izy-Scoly".
+    const prompt = `Tu es un expert marketing pour une plateforme e-commerce de fournitures scolaires et bureautiques en Côte d'Ivoire appelée "ScoOffice+".
 
 Génère un CTA (Call-to-Action) pour cette publicité:
 - Titre: ${title}
@@ -40,7 +39,7 @@ Réponds uniquement en JSON avec ce format exact:
 
 Le link_url doit être une route interne commençant par "/" comme:
 - "/shop" pour les produits
-- "/shop?category=scoly-primaire" pour les catégories spécifiques
+- "/shop?category=prescolaire" pour les catégories spécifiques
 - "/actualites" pour les actualités
 - "/contact" pour les partenariats
 - "/about" pour en savoir plus
@@ -50,7 +49,7 @@ Le link_text doit être court, engageant et en français.`;
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${IZY_SCOLY_AI_KEY}`,
+        Authorization: `Bearer ${API_KEY}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
@@ -77,11 +76,9 @@ Le link_text doit être court, engageant et en français.`;
 
     const data = await response.json();
     const content = data.choices?.[0]?.message?.content || "";
-    
-    // Parse JSON from response
+
     let result = { link_url: "/shop", link_text: "Découvrir" };
     try {
-      // Extract JSON from potential markdown code blocks
       const jsonMatch = content.match(/\{[\s\S]*\}/);
       if (jsonMatch) {
         result = JSON.parse(jsonMatch[0]);
@@ -98,7 +95,7 @@ Le link_text doit être court, engageant et en français.`;
   } catch (error) {
     console.error("Error in generate-ad-cta:", error);
     return new Response(
-      JSON.stringify({ 
+      JSON.stringify({
         error: error instanceof Error ? error.message : "Unknown error",
         link_url: "/shop",
         link_text: "En savoir plus"

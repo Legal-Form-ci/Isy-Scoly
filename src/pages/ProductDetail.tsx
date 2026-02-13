@@ -126,9 +126,7 @@ const ProductDetail = () => {
 
   const handleAddToCart = () => {
     if (product) {
-      for (let i = 0; i < quantity; i++) {
-        addToCart(product.id);
-      }
+      addToCart(product.id, quantity);
       toast.success(t.shop.addedToCart);
     }
   };
