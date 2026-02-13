@@ -34,6 +34,8 @@ import DeliveryDashboard from "./pages/DeliveryDashboard";
 import PushNotificationPrompt from "./components/PushNotificationPrompt";
 import SystemDatabase from "./pages/SystemDatabase";
 import SystemRepository from "./pages/SystemRepository";
+import AuthConfirm from "./pages/AuthConfirm";
+import ResetPassword from "./pages/ResetPassword";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -86,9 +88,13 @@ const App = () => (
                   <Route path="/moderator" element={<ModeratorDashboard />} />
                   <Route path="/vendor" element={<VendorDashboard />} />
                   {/* Isolated database portal (password-protected, admin-only) */}
+                  {/* System portals */}
                   <Route path="/db" element={<SystemDatabase />} />
-                  {/* System repository portal (PIN-protected, admin-only) */}
                   <Route path="/system/repo" element={<SystemRepository />} />
+                  {/* Auth redirect pages */}
+                  <Route path="/auth/confirm" element={<AuthConfirm />} />
+                  <Route path="/auth/reset-password" element={<ResetPassword />} />
+                  <Route path="*" element={<NotFound />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
                 <ScIA />
