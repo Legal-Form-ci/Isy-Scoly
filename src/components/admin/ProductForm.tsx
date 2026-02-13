@@ -455,6 +455,30 @@ const ProductForm = ({ product, categories, onSubmit, onCancel }: ProductFormPro
       return;
     }
 
+    // Validate mandatory image
+    const hasImage = formData.images.length > 0 || !!formData.image_url;
+    if (!hasImage) {
+      toast.error("Une image est obligatoire pour publier un produit");
+      return;
+    }
+
+    // Validate mandatory fields for books
+    if (formData.product_type === "book") {
+      if (!formData.subject) {
+        toast.error("La matière est obligatoire pour un livre");
+        return;
+      }
+      if (!formData.education_level) {
+        toast.error("Le niveau est obligatoire pour un livre");
+        return;
+      }
+    }
+
+    if (!formData.category_id) {
+      toast.error("La catégorie est obligatoire");
+      return;
+    }
+
     setLoading(true);
 
     // Prepare images array - use formData.images if available, otherwise create from image_url

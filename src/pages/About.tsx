@@ -17,9 +17,9 @@ const About = () => {
   ];
 
   const team = [
-    { name: "M. KABLAN Jacques", role: "Directeur Général", image: founderImage },
+    { name: "Inocent KOFFI", role: "Développeur & Directeur Technique", image: founderImage },
     { name: "Mme. TRA Lou Marie", role: "Directrice Commerciale", image: null },
-    { name: "M. KONAN Yao Séverin", role: "Directeur Technique", image: null },
+    { name: "M. KONAN Yao Séverin", role: "Responsable Logistique", image: null },
     { name: "M. DIALLO Ibrahim", role: "Responsable Relations Clients", image: null },
   ];
 
@@ -137,20 +137,6 @@ const About = () => {
         </div>
       </section>
 
-      {/* Download Logo */}
-      <section className="py-12 bg-muted">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-2xl font-display font-bold text-foreground mb-4">Notre logo</h2>
-          <p className="text-muted-foreground mb-6">Téléchargez le logo ScoOffice+ en haute définition</p>
-          <a
-            href="/logo-scooffice-plus-hd.png"
-            download="ScoOffice-Plus-Logo-HD.png"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-primary text-primary-foreground font-medium hover:bg-primary/90 transition-colors"
-          >
-            Télécharger le logo HD
-          </a>
-        </div>
-      </section>
 
       {/* Stats */}
       <section className="py-20 bg-primary">
