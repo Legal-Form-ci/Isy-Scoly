@@ -11,7 +11,7 @@ import { useRealtimeNotifications } from '@/hooks/useRealtimeNotifications';
 import { formatDistanceToNow } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import { useNavigate } from 'react-router-dom';
-import LoginSecurityAlert from './LoginSecurityAlert';
+
 
 const NotificationBell = () => {
   const [open, setOpen] = useState(false);
@@ -63,22 +63,6 @@ const NotificationBell = () => {
 
   return (
     <>
-      {/* Security Alert Dialog - shown outside of popover */}
-      {activeSecurityAlert && (
-        <LoginSecurityAlert 
-          notification={{
-            id: activeSecurityAlert.id,
-            data: activeSecurityAlert.data as {
-              session_id: string;
-              ip_address: string | null;
-              device_info: string | null;
-              requires_confirmation: boolean;
-              origin_device_fingerprint?: string;
-            } | null
-          }} 
-          onClose={handleSecurityAlertClose} 
-        />
-      )}
       
       <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
