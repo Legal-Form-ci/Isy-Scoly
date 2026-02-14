@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Save, Send, ArrowLeft, Loader2, Sparkles } from "lucide-react";
+import { Save, Send, ArrowLeft, Loader2, Sparkles, Wand2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -8,6 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import MediaUpload from "@/components/MediaUpload";
@@ -31,6 +32,9 @@ const WriteArticle = () => {
   
   const [loading, setLoading] = useState(false);
   const [fetchingArticle, setFetchingArticle] = useState(!!id);
+  const [aiGenerating, setAiGenerating] = useState(false);
+  const [showAiDialog, setShowAiDialog] = useState(false);
+  const [aiInput, setAiInput] = useState("");
   const [form, setForm] = useState({
     title_fr: "",
     title_en: "",
@@ -120,32 +124,68 @@ const WriteArticle = () => {
       }
     } catch (error) {
       console.error('Error fetching article:', error);
-      toast({
-        title: "Erreur",
-        description: "Impossible de charger l'article.",
-        variant: "destructive",
-      });
+      toast({ title: "Erreur", description: "Impossible de charger l'article.", variant: "destructive" });
     } finally {
       setFetchingArticle(false);
     }
   };
 
-  const handleSubmit = async (publish: boolean) => {
-    if (!user) {
+  const handleAiGenerate = async (withImage: boolean) => {
+    if (!aiInput.trim()) {
+      toast({ title: "Erreur", description: "Veuillez entrer un sujet ou du texte.", variant: "destructive" });
+      return;
+    }
+
+    setAiGenerating(true);
+    setShowAiDialog(false);
+
+    try {
+      const { data, error } = await supabase.functions.invoke('generate-article', {
+        body: { content: aiInput, generateImage: withImage },
+      });
+
+      if (error) throw error;
+      if (data?.error) throw new Error(data.error);
+
+      setForm(prev => ({
+        ...prev,
+        title_fr: data.title_fr || prev.title_fr,
+        title_en: data.title_en || prev.title_en,
+        title_de: data.title_de || prev.title_de,
+        title_es: data.title_es || prev.title_es,
+        content_fr: data.content_fr || prev.content_fr,
+        content_en: data.content_en || prev.content_en,
+        content_de: data.content_de || prev.content_de,
+        content_es: data.content_es || prev.content_es,
+        excerpt_fr: data.excerpt_fr || prev.excerpt_fr,
+        excerpt_en: data.excerpt_en || prev.excerpt_en,
+        category: data.category || prev.category,
+        media: data.generated_image
+          ? [{ url: data.generated_image, type: "image" as const }, ...prev.media]
+          : prev.media,
+      }));
+
+      toast({ title: "Article généré !", description: "L'IA a rempli tous les champs. Vous pouvez les modifier avant publication." });
+    } catch (error: any) {
+      console.error('AI generation error:', error);
       toast({
-        title: "Erreur",
-        description: "Vous devez être connecté pour publier.",
+        title: "Erreur de génération",
+        description: error?.message || "Impossible de générer l'article.",
         variant: "destructive",
       });
+    } finally {
+      setAiGenerating(false);
+    }
+  };
+
+  const handleSubmit = async (publish: boolean) => {
+    if (!user) {
+      toast({ title: "Erreur", description: "Vous devez être connecté pour publier.", variant: "destructive" });
       return;
     }
 
     if (!form.title_fr || !form.content_fr) {
-      toast({
-        title: "Erreur",
-        description: "Veuillez remplir le titre et le contenu.",
-        variant: "destructive",
-      });
+      toast({ title: "Erreur", description: "Veuillez remplir le titre et le contenu.", variant: "destructive" });
       return;
     }
 
@@ -178,42 +218,19 @@ const WriteArticle = () => {
       };
 
       if (id) {
-        const { error } = await supabase
-          .from('articles')
-          .update(articleData)
-          .eq('id', id);
-
+        const { error } = await supabase.from('articles').update(articleData).eq('id', id);
         if (error) throw error;
-
-        toast({
-          title: "Article mis à jour",
-          description: publish 
-            ? "Votre article a été soumis pour approbation."
-            : "Votre brouillon a été enregistré.",
-        });
+        toast({ title: "Article mis à jour", description: publish ? "Soumis pour approbation." : "Brouillon enregistré." });
       } else {
-        const { error } = await supabase
-          .from('articles')
-          .insert(articleData);
-
+        const { error } = await supabase.from('articles').insert(articleData);
         if (error) throw error;
-
-        toast({
-          title: publish ? "Article soumis" : "Brouillon enregistré",
-          description: publish 
-            ? "Votre article a été soumis pour approbation."
-            : "Votre brouillon a été enregistré.",
-        });
+        toast({ title: publish ? "Article soumis" : "Brouillon enregistré", description: publish ? "Soumis pour approbation." : "Brouillon enregistré." });
       }
       
       navigate('/actualites');
     } catch (error) {
       console.error('Error saving article:', error);
-      toast({
-        title: "Erreur",
-        description: "Impossible de sauvegarder l'article.",
-        variant: "destructive",
-      });
+      toast({ title: "Erreur", description: "Impossible de sauvegarder l'article.", variant: "destructive" });
     } finally {
       setLoading(false);
     }
@@ -256,10 +273,69 @@ const WriteArticle = () => {
         </Button>
 
         <div className="max-w-4xl mx-auto">
-          <h1 className="text-3xl font-display font-bold text-foreground mb-2">
-            {id ? "Modifier l'article" : "Publier un article"}
-          </h1>
-          <p className="text-muted-foreground mb-8">Partagez vos idées et conseils avec la communauté ScoOffice+</p>
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
+            <div>
+              <h1 className="text-3xl font-display font-bold text-foreground">
+                {id ? "Modifier l'article" : "Publier un article"}
+              </h1>
+              <p className="text-muted-foreground">Partagez vos idées avec la communauté ScoOffice+</p>
+            </div>
+            <Button
+              variant="hero"
+              onClick={() => setShowAiDialog(true)}
+              disabled={aiGenerating}
+              className="gap-2 shrink-0"
+            >
+              {aiGenerating ? <Loader2 size={18} className="animate-spin" /> : <Wand2 size={18} />}
+              {aiGenerating ? "Génération..." : "Générer avec l'IA"}
+            </Button>
+          </div>
+
+          {/* AI Generation Dialog */}
+          <Dialog open={showAiDialog} onOpenChange={setShowAiDialog}>
+            <DialogContent className="sm:max-w-lg">
+              <DialogHeader>
+                <DialogTitle className="flex items-center gap-2">
+                  <Sparkles size={20} className="text-primary" />
+                  Générer un article avec l'IA
+                </DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4 py-4">
+                <div>
+                  <Label>Sujet ou texte de base</Label>
+                  <Textarea
+                    value={aiInput}
+                    onChange={(e) => setAiInput(e.target.value)}
+                    placeholder="Ex: Rentrée scolaire 2026, nouveau programme de mathématiques, conseils pour bien préparer sa rentrée..."
+                    rows={4}
+                    className="mt-2"
+                  />
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Entrez un simple mot, une phrase ou un paragraphe. L'IA générera un article complet structuré.
+                  </p>
+                </div>
+              </div>
+              <DialogFooter className="flex flex-col sm:flex-row gap-2">
+                <Button
+                  variant="outline"
+                  onClick={() => handleAiGenerate(false)}
+                  disabled={!aiInput.trim()}
+                  className="flex-1"
+                >
+                  <Sparkles size={16} className="mr-2" />
+                  Sans image
+                </Button>
+                <Button
+                  onClick={() => handleAiGenerate(true)}
+                  disabled={!aiInput.trim()}
+                  className="flex-1"
+                >
+                  <Wand2 size={16} className="mr-2" />
+                  Avec image IA
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
 
           <div className="grid gap-8">
             {/* Media Upload */}
@@ -278,7 +354,7 @@ const WriteArticle = () => {
               </CardContent>
             </Card>
 
-            {/* Titles with auto-translation */}
+            {/* Titles */}
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
@@ -303,36 +379,21 @@ const WriteArticle = () => {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div>
                     <Label htmlFor="title_en">Titre (Anglais)</Label>
-                    <Input
-                      id="title_en"
-                      placeholder="English title..."
-                      value={form.title_en}
-                      onChange={(e) => setForm({ ...form, title_en: e.target.value })}
-                    />
+                    <Input id="title_en" placeholder="English title..." value={form.title_en} onChange={(e) => setForm({ ...form, title_en: e.target.value })} />
                   </div>
                   <div>
                     <Label htmlFor="title_de">Titre (Allemand)</Label>
-                    <Input
-                      id="title_de"
-                      placeholder="Deutscher Titel..."
-                      value={form.title_de}
-                      onChange={(e) => setForm({ ...form, title_de: e.target.value })}
-                    />
+                    <Input id="title_de" placeholder="Deutscher Titel..." value={form.title_de} onChange={(e) => setForm({ ...form, title_de: e.target.value })} />
                   </div>
                   <div>
                     <Label htmlFor="title_es">Titre (Espagnol)</Label>
-                    <Input
-                      id="title_es"
-                      placeholder="Título en español..."
-                      value={form.title_es}
-                      onChange={(e) => setForm({ ...form, title_es: e.target.value })}
-                    />
+                    <Input id="title_es" placeholder="Título en español..." value={form.title_es} onChange={(e) => setForm({ ...form, title_es: e.target.value })} />
                   </div>
                 </div>
               </CardContent>
             </Card>
 
-            {/* Main Content with Rich Text Editor */}
+            {/* Content */}
             <Card>
               <CardHeader>
                 <CardTitle>Contenu de l'article</CardTitle>

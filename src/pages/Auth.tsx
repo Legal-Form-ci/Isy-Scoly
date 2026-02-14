@@ -11,7 +11,7 @@ import Logo from "@/components/Logo";
 import { z } from "zod";
 import { toast } from "sonner";
 import { useRateLimit } from "@/hooks/useRateLimit";
-import { useLoginSecurity } from "@/hooks/useLoginSecurity";
+import MathCaptcha from "@/components/MathCaptcha";
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -26,6 +26,7 @@ const Auth = () => {
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [passwordStrength, setPasswordStrength] = useState<{ score: number; checks: boolean[] }>({ score: 0, checks: [] });
+  const [captchaValid, setCaptchaValid] = useState(false);
 
   const { signIn, signUp, user } = useAuth();
   const { t, language } = useLanguage();
@@ -34,7 +35,6 @@ const Auth = () => {
   // Rate limiting for login/signup
   const loginRateLimit = useRateLimit('auth_login', { maxAttempts: 5, windowSeconds: 300, blockSeconds: 900 });
   const signupRateLimit = useRateLimit('auth_signup', { maxAttempts: 3, windowSeconds: 600, blockSeconds: 1800 });
-  const { recordLoginSession } = useLoginSecurity();
 
   const redirectToDashboard = async () => {
     const { data: { user: u } } = await supabase.auth.getUser();
@@ -177,6 +177,13 @@ const Auth = () => {
     setLoading(true);
 
     try {
+      // Check CAPTCHA
+      if (!captchaValid) {
+        toast.error("Veuillez résoudre le calcul de sécurité.");
+        setLoading(false);
+        return;
+      }
+
       // Check rate limit first
       const rateLimit = isLogin ? loginRateLimit : signupRateLimit;
       const rateLimitResult = await rateLimit.checkRateLimit();
@@ -238,9 +245,6 @@ const Auth = () => {
                .from('profiles')
                .update({ email: loggedUser.email })
                .eq('id', loggedUser.id);
-             
-             // Record login session for security tracking
-             await recordLoginSession(loggedUser.id);
            }
            await redirectToDashboard();
          }
@@ -497,6 +501,9 @@ const Auth = () => {
               </div>
             )}
 
+            {/* Math CAPTCHA */}
+            <MathCaptcha onValidChange={setCaptchaValid} />
+
             {isLogin && (
               <div className="flex items-center justify-end">
                 <button type="button" className="text-sm text-primary hover:underline">
@@ -505,7 +512,7 @@ const Auth = () => {
               </div>
             )}
 
-            <Button type="submit" variant="hero" className="w-full" disabled={loading}>
+            <Button type="submit" variant="hero" className="w-full" disabled={loading || !captchaValid}>
               {loading ? t.common.loading : isLogin ? t.auth.loginButton : t.auth.signupButton}
             </Button>
 
