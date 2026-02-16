@@ -142,7 +142,7 @@ const HeroAdvertisements = () => {
             <div className="rounded-xl border border-primary-foreground/15 bg-background/10 p-4">
               <p className="text-primary-foreground font-semibold">Partenaires</p>
               <p className="text-primary-foreground/80 text-sm mt-1">
-                Mettez votre marque en avant sur Izy-Scoly.
+                Mettez votre marque en avant sur ScoOffice+.
               </p>
             </div>
           </div>

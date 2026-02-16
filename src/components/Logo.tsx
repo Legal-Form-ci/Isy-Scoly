@@ -21,19 +21,11 @@ const Logo = ({ variant = "default", size = "md", showSlogan = false }: LogoProp
 
   return (
     <div className="flex flex-col">
-      <div className="flex items-center gap-2">
-        <img
-          src={logoImage}
-          alt="ScoOffice+"
-          className={`${sizeClasses[size]} w-auto object-contain`}
-        />
-        <span className={`font-display font-bold ${
-          size === "lg" ? "text-2xl" : size === "sm" ? "text-lg" : "text-xl"
-        } ${variant === "white" ? "text-primary-foreground" : "text-primary"}`}>
-          ScoOffice<span className="text-accent">+</span>
-        </span>
-      </div>
-
+      <img
+        src={logoImage}
+        alt="ScoOffice+"
+        className={`${sizeClasses[size]} w-auto object-contain`}
+      />
       {showSlogan && (
         <span
           className={`${sloganSizes[size]} ${

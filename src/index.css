@@ -6,19 +6,19 @@
 
 @layer base {
   :root {
-    /* Navy Blue - Primary (Trust, Education) */
-    --primary: 213 55% 23%;
+    /* Deep Navy - Primary (Trust, Education) */
+    --primary: 220 65% 18%;
     --primary-foreground: 0 0% 100%;
-    --primary-light: 213 45% 40%;
-    --primary-dark: 213 60% 16%;
+    --primary-light: 220 50% 35%;
+    --primary-dark: 220 70% 12%;
     
-    /* Vibrant Orange - Secondary (Energy, Dynamism) */
-    --secondary: 28 80% 52%;
+    /* Warm Orange - Secondary (Energy, Local Identity) */
+    --secondary: 24 90% 50%;
     --secondary-foreground: 0 0% 100%;
-    --secondary-light: 28 90% 65%;
+    --secondary-light: 24 95% 62%;
     
-    /* Teal - Accent (Innovation, Growth) */
-    --accent: 180 47% 33%;
+    /* Emerald Teal - Accent (Growth, Freshness) */
+    --accent: 162 55% 35%;
     --accent-foreground: 0 0% 100%;
     
     /* Backgrounds */
@@ -48,17 +48,17 @@
     --radius: 0.75rem;
     
     /* Gradients - Solid backgrounds preferred for contrast */
-    --gradient-primary: linear-gradient(135deg, hsl(213, 55%, 20%) 0%, hsl(213, 45%, 32%) 100%);
-    --gradient-secondary: linear-gradient(135deg, hsl(28, 80%, 50%) 0%, hsl(28, 90%, 58%) 100%);
-    --gradient-hero: linear-gradient(135deg, hsl(213, 55%, 18%) 0%, hsl(213, 50%, 28%) 100%);
+    --gradient-primary: linear-gradient(135deg, hsl(220, 65%, 15%) 0%, hsl(220, 50%, 28%) 100%);
+    --gradient-secondary: linear-gradient(135deg, hsl(24, 90%, 48%) 0%, hsl(24, 95%, 56%) 100%);
+    --gradient-hero: linear-gradient(135deg, hsl(220, 65%, 14%) 0%, hsl(220, 55%, 24%) 100%);
     --gradient-card: linear-gradient(180deg, hsl(0, 0%, 100%) 0%, hsl(40, 33%, 98%) 100%);
     
     /* Shadows */
     --shadow-sm: 0 2px 8px -2px hsl(220 30% 15% / 0.08);
     --shadow-md: 0 8px 24px -4px hsl(220 30% 15% / 0.12);
     --shadow-lg: 0 16px 48px -8px hsl(220 30% 15% / 0.16);
-    --shadow-glow: 0 0 40px hsl(213 55% 23% / 0.25);
-    --shadow-gold: 0 4px 20px hsl(180 47% 33% / 0.35);
+    --shadow-glow: 0 0 40px hsl(220 65% 18% / 0.25);
+    --shadow-gold: 0 4px 20px hsl(162 55% 35% / 0.35);
 
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
@@ -71,15 +71,15 @@
   }
 
   .dark {
-    --primary: 213 50% 45%;
+    --primary: 220 55% 40%;
     --primary-foreground: 0 0% 100%;
-    --primary-light: 213 45% 55%;
-    --primary-dark: 213 55% 30%;
+    --primary-light: 220 50% 50%;
+    --primary-dark: 220 60% 28%;
     
-    --secondary: 28 85% 58%;
+    --secondary: 24 90% 55%;
     --secondary-foreground: 0 0% 100%;
     
-    --accent: 180 50% 45%;
+    --accent: 162 50% 42%;
     --accent-foreground: 0 0% 100%;
     
     --background: 220 30% 8%;
