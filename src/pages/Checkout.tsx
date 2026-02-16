@@ -433,7 +433,7 @@ const Checkout = () => {
     openPaymentWidget(
       {
         amount: finalTotal,
-        reason: `Commande Izy-scoly #${orderNumber}`,
+        reason: `Commande ScoOffice+ #${orderNumber}`,
         name: `${formData.firstName} ${formData.lastName}`,
         email: formData.email,
         phone: formData.phone

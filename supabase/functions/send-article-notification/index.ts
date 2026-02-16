@@ -1,5 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
 const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
@@ -11,9 +11,13 @@ const corsHeaders = {
 };
 
 interface NotificationRequest {
-  articleId: string;
-  status: "approved" | "rejected";
+  articleId?: string;
+  status?: "approved" | "rejected";
   reason?: string;
+  // Generic notification fields
+  type?: string;
+  userId?: string;
+  data?: Record<string, any>;
 }
 
 const handler = async (req: Request): Promise<Response> => {
@@ -22,12 +26,83 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
-    const { articleId, status, reason }: NotificationRequest = await req.json();
-    console.log(`Sending notification for article ${articleId}, status: ${status}`);
-
+    const body: NotificationRequest = await req.json();
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-    // Get article details
+    // ========== GENERIC NOTIFICATION MODE ==========
+    if (body.type && body.userId) {
+      const { type, userId, data } = body;
+      console.log('Generic notification:', { type, userId });
+
+      let userName = '';
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('first_name, last_name')
+        .eq('id', userId)
+        .single();
+      userName = profile ? `${profile.first_name || ''} ${profile.last_name || ''}`.trim() : '';
+
+      const prefix = 'Message généré automatiquement, ne pas répondre. ';
+      const greeting = userName ? `Bonjour ${userName}, ` : 'Bonjour, ';
+
+      let title = '';
+      let message = '';
+
+      switch (type) {
+        case 'welcome':
+          title = 'Bienvenue sur ScoOffice+ !';
+          message = `${prefix}${greeting}bienvenue sur ScoOffice+ ! Découvrez notre catalogue de fournitures scolaires et bureautiques avec livraison gratuite partout en Côte d'Ivoire.`;
+          break;
+        case 'security_alert':
+          title = 'Alerte de sécurité';
+          message = `${prefix}${greeting}une connexion a été détectée sur votre compte depuis ${data?.device || 'un appareil inconnu'}. Si ce n'était pas vous, sécurisez votre compte immédiatement.`;
+          break;
+        case 'promotion':
+          title = data?.title || 'Offre spéciale ScoOffice+';
+          message = `${prefix}${greeting}${data?.message || 'une nouvelle promotion est disponible !'}`;
+          break;
+        case 'admin_announcement':
+          title = data?.title || 'Annonce ScoOffice+';
+          message = `${prefix}${data?.message || ''}`;
+          break;
+        default:
+          title = 'Notification ScoOffice+';
+          message = `${prefix}${greeting}vous avez une nouvelle notification.`;
+      }
+
+      await supabase.from('notifications').insert({
+        user_id: userId,
+        type: type || 'system',
+        title,
+        message,
+        data: data || {},
+      });
+
+      // Broadcast to all users
+      if (type === 'broadcast') {
+        const { data: users } = await supabase.from('profiles').select('id').limit(1000);
+        if (users && users.length > 0) {
+          const notifications = users.map(u => ({
+            user_id: u.id,
+            type: 'promotion',
+            title: data?.title || 'Annonce ScoOffice+',
+            message: `${prefix}${data?.message || 'Nouvelle annonce disponible.'}`,
+            data: data || {},
+          }));
+          await supabase.from('notifications').insert(notifications);
+        }
+      }
+
+      return new Response(
+        JSON.stringify({ success: true, title, message }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // ========== ARTICLE NOTIFICATION MODE ==========
+    const { articleId, status, reason } = body;
+    console.log(`Sending notification for article ${articleId}, status: ${status}`);
+
     const { data: article, error: articleError } = await supabase
       .from("articles")
       .select("title_fr, author_id")
@@ -35,11 +110,9 @@ const handler = async (req: Request): Promise<Response> => {
       .single();
 
     if (articleError || !article) {
-      console.error("Article not found:", articleError);
       throw new Error("Article not found");
     }
 
-    // Get author profile and email from auth.users
     const { data: profile } = await supabase
       .from("profiles")
       .select("first_name, last_name")
@@ -50,13 +123,25 @@ const handler = async (req: Request): Promise<Response> => {
     const authorEmail = userData?.user?.email;
 
     if (!authorEmail) {
-      console.error("Author email not found");
       throw new Error("Author email not found");
     }
 
     const authorName = profile?.first_name 
       ? `${profile.first_name} ${profile.last_name || ""}`.trim() 
       : "Auteur";
+
+    // Create in-app notification
+    await supabase.from('notifications').insert({
+      user_id: article.author_id,
+      type: 'article',
+      title: status === 'approved' ? 'Article publié !' : 'Article à réviser',
+      message: `Message généré automatiquement, ne pas répondre. ${
+        status === 'approved' 
+          ? `Votre article "${article.title_fr}" a été approuvé et publié sur ScoOffice+.`
+          : `Votre article "${article.title_fr}" nécessite des modifications.${reason ? ' Raison : ' + reason : ''}`
+      }`,
+      data: { article_id: articleId, status, reason },
+    });
 
     let subject: string;
     let htmlContent: string;
@@ -69,34 +154,34 @@ const handler = async (req: Request): Promise<Response> => {
         <head>
           <meta charset="utf-8">
           <style>
-            body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; }
+            body { font-family: 'Segoe UI', sans-serif; line-height: 1.6; color: #1a2744; margin: 0; padding: 0; background: #f0f2f5; }
             .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-            .header { background: linear-gradient(135deg, #059669 0%, #10b981 100%); padding: 30px; border-radius: 12px 12px 0 0; text-align: center; }
-            .header h1 { color: white; margin: 0; font-size: 24px; }
-            .content { background: #f9fafb; padding: 30px; border-radius: 0 0 12px 12px; }
-            .success-icon { font-size: 48px; text-align: center; margin-bottom: 20px; }
-            .button { display: inline-block; background: #059669; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; margin-top: 20px; }
-            .footer { text-align: center; margin-top: 30px; color: #666; font-size: 14px; }
+            .header { background: linear-gradient(135deg, #0f2b4a 0%, #1a4270 100%); padding: 30px; border-radius: 12px 12px 0 0; text-align: center; }
+            .header h1 { color: white; margin: 0; font-size: 22px; }
+            .header p { color: rgba(255,255,255,0.8); margin: 8px 0 0; font-size: 13px; }
+            .content { background: white; padding: 30px; border-radius: 0 0 12px 12px; }
+            .button { display: inline-block; background: #2d8a6e; color: white; padding: 12px 28px; text-decoration: none; border-radius: 8px; margin-top: 20px; font-weight: 600; }
+            .footer { text-align: center; margin-top: 20px; color: #888; font-size: 12px; }
+            .auto-msg { font-size: 11px; color: #999; text-align: center; margin-bottom: 15px; }
           </style>
         </head>
         <body>
           <div class="container">
             <div class="header">
               <h1>🎉 Article Approuvé !</h1>
+              <p>ScoOffice+ — Plateforme Scolaire & Bureautique</p>
             </div>
             <div class="content">
-              <div class="success-icon">✅</div>
+              <p class="auto-msg">Message généré automatiquement, ne pas répondre.</p>
               <p>Bonjour <strong>${authorName}</strong>,</p>
-              <p>Excellente nouvelle ! Votre article <strong>"${article.title_fr}"</strong> a été examiné et approuvé par notre équipe de modération.</p>
-              <p>Votre article est maintenant publié et accessible à tous les lecteurs d'Izy-scoly.</p>
-              <p>Merci pour votre contribution à la communauté Izy-scoly !</p>
+              <p>Votre article <strong>"${article.title_fr}"</strong> a été approuvé et publié sur ScoOffice+.</p>
+              <p>Merci pour votre contribution !</p>
               <center>
-                <a href="https://izy-scoly.ci/actualites" class="button">Voir mon article</a>
+                <a href="https://scoofficeplus.ci/actualites" class="button">Voir mon article</a>
               </center>
             </div>
             <div class="footer">
-              <p>L'équipe Izy-scoly</p>
-              <p>© ${new Date().getFullYear()} Izy-scoly - Tous droits réservés</p>
+              <p>© ${new Date().getFullYear()} ScoOffice+ — Tous droits réservés</p>
             </div>
           </div>
         </body>
@@ -110,38 +195,36 @@ const handler = async (req: Request): Promise<Response> => {
         <head>
           <meta charset="utf-8">
           <style>
-            body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; }
+            body { font-family: 'Segoe UI', sans-serif; line-height: 1.6; color: #1a2744; margin: 0; padding: 0; background: #f0f2f5; }
             .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-            .header { background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%); padding: 30px; border-radius: 12px 12px 0 0; text-align: center; }
-            .header h1 { color: white; margin: 0; font-size: 24px; }
-            .content { background: #f9fafb; padding: 30px; border-radius: 0 0 12px 12px; }
+            .header { background: linear-gradient(135deg, #d97706 0%, #f59e0b 100%); padding: 30px; border-radius: 12px 12px 0 0; text-align: center; }
+            .header h1 { color: white; margin: 0; font-size: 22px; }
+            .header p { color: rgba(255,255,255,0.8); margin: 8px 0 0; font-size: 13px; }
+            .content { background: white; padding: 30px; border-radius: 0 0 12px 12px; }
             .reason-box { background: #fef3c7; border-left: 4px solid #f59e0b; padding: 15px; margin: 20px 0; border-radius: 0 8px 8px 0; }
-            .button { display: inline-block; background: #f59e0b; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; margin-top: 20px; }
-            .footer { text-align: center; margin-top: 30px; color: #666; font-size: 14px; }
+            .button { display: inline-block; background: #d97706; color: white; padding: 12px 28px; text-decoration: none; border-radius: 8px; margin-top: 20px; font-weight: 600; }
+            .footer { text-align: center; margin-top: 20px; color: #888; font-size: 12px; }
+            .auto-msg { font-size: 11px; color: #999; text-align: center; margin-bottom: 15px; }
           </style>
         </head>
         <body>
           <div class="container">
             <div class="header">
               <h1>📝 Article à réviser</h1>
+              <p>ScoOffice+ — Plateforme Scolaire & Bureautique</p>
             </div>
             <div class="content">
+              <p class="auto-msg">Message généré automatiquement, ne pas répondre.</p>
               <p>Bonjour <strong>${authorName}</strong>,</p>
-              <p>Votre article <strong>"${article.title_fr}"</strong> a été examiné par notre équipe de modération et nécessite quelques modifications avant publication.</p>
-              ${reason ? `
-              <div class="reason-box">
-                <strong>Commentaire de l'équipe :</strong>
-                <p>${reason}</p>
-              </div>
-              ` : ""}
-              <p>Vous pouvez modifier votre article depuis votre espace auteur et le soumettre à nouveau pour révision.</p>
+              <p>Votre article <strong>"${article.title_fr}"</strong> nécessite des modifications.</p>
+              ${reason ? `<div class="reason-box"><strong>Commentaire :</strong><p>${reason}</p></div>` : ""}
+              <p>Modifiez votre article depuis votre espace auteur et soumettez-le à nouveau.</p>
               <center>
-                <a href="https://izy-scoly.ci/author" class="button">Modifier mon article</a>
+                <a href="https://scoofficeplus.ci/author" class="button">Modifier mon article</a>
               </center>
             </div>
             <div class="footer">
-              <p>L'équipe Izy-scoly</p>
-              <p>© ${new Date().getFullYear()} Izy-scoly - Tous droits réservés</p>
+              <p>© ${new Date().getFullYear()} ScoOffice+ — Tous droits réservés</p>
             </div>
           </div>
         </body>
@@ -149,36 +232,37 @@ const handler = async (req: Request): Promise<Response> => {
       `;
     }
 
-    const emailResponse = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${RESEND_API_KEY}`,
-      },
-      body: JSON.stringify({
-        from: "Izy-scoly <onboarding@resend.dev>",
-        to: [authorEmail],
-        subject,
-        html: htmlContent,
-      }),
-    });
+    // Send email if Resend is configured
+    if (RESEND_API_KEY) {
+      const emailResponse = await fetch("https://api.resend.com/emails", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${RESEND_API_KEY}`,
+        },
+        body: JSON.stringify({
+          from: "ScoOffice+ <onboarding@resend.dev>",
+          to: [authorEmail],
+          subject,
+          html: htmlContent,
+        }),
+      });
 
-    const emailData = await emailResponse.json();
+      const emailData = await emailResponse.json();
+      console.log("Email sent:", emailData);
+    } else {
+      console.log("RESEND_API_KEY not configured, skipping email. In-app notification created.");
+    }
 
-    console.log("Email sent successfully:", emailData);
-
-    return new Response(JSON.stringify({ success: true, emailData }), {
+    return new Response(JSON.stringify({ success: true }), {
       status: 200,
       headers: { "Content-Type": "application/json", ...corsHeaders },
     });
   } catch (error: any) {
-    console.error("Error in send-article-notification:", error);
+    console.error("Error:", error);
     return new Response(
       JSON.stringify({ error: error.message }),
-      {
-        status: 500,
-        headers: { "Content-Type": "application/json", ...corsHeaders },
-      }
+      { status: 500, headers: { "Content-Type": "application/json", ...corsHeaders } }
     );
   }
 };
