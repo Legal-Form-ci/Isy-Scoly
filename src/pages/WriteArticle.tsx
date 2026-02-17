@@ -278,7 +278,7 @@ const WriteArticle = () => {
               <h1 className="text-3xl font-display font-bold text-foreground">
                 {id ? "Modifier l'article" : "Publier un article"}
               </h1>
-              <p className="text-muted-foreground">Partagez vos idées avec la communauté ScoOffice+</p>
+              <p className="text-muted-foreground">Partagez vos idées avec la communauté Fournitoo</p>
             </div>
             <Button
               variant="hero"

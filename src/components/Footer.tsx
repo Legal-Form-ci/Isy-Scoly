@@ -29,10 +29,10 @@ const Footer = () => {
   };
 
   const socials = [
-    { icon: <Facebook size={20} />, href: "https://facebook.com/scoofficeplus", label: "Facebook" },
-    { icon: <Twitter size={20} />, href: "https://twitter.com/scoofficeplus", label: "Twitter" },
-    { icon: <Instagram size={20} />, href: "https://instagram.com/scoofficeplus", label: "Instagram" },
-    { icon: <Linkedin size={20} />, href: "https://linkedin.com/company/scoofficeplus", label: "LinkedIn" },
+    { icon: <Facebook size={20} />, href: "https://facebook.com/fournitoo", label: "Facebook" },
+    { icon: <Twitter size={20} />, href: "https://twitter.com/fournitoo", label: "Twitter" },
+    { icon: <Instagram size={20} />, href: "https://instagram.com/fournitoo", label: "Instagram" },
+    { icon: <Linkedin size={20} />, href: "https://linkedin.com/company/fournitoo", label: "LinkedIn" },
   ];
 
   return (
@@ -71,11 +71,11 @@ const Footer = () => {
             {/* Contact Info */}
             <div className="mt-6 space-y-3">
               <a
-                href="mailto:contact@scoofficeplus.ci"
+                href="mailto:contact@fournitoo.ci"
                 className="flex items-center gap-3 text-primary-foreground/80 hover:text-accent transition-colors"
               >
                 <Mail size={18} />
-                contact@scoofficeplus.ci
+                contact@fournitoo.ci
               </a>
               <a
                 href="tel:+2250759566087"
@@ -136,7 +136,7 @@ const Footer = () => {
         <div className="pt-8 border-t border-primary-foreground/20">
           <div className="text-center space-y-2">
             <p className="text-primary-foreground/80 text-sm">
-              © {new Date().getFullYear()} ScoOffice+. Tous droits réservés.
+              © {new Date().getFullYear()} Fournitoo. Tous droits réservés.
             </p>
             <a
               href="https://ikoffi.agricapital.ci"

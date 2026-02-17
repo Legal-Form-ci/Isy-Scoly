@@ -1,4 +1,4 @@
-import logoImage from "@/assets/logo-scooffice-plus.png";
+import logoImage from "@/assets/logo-fournitoo.png";
 
 interface LogoProps {
   variant?: "default" | "white";
@@ -23,8 +23,10 @@ const Logo = ({ variant = "default", size = "md", showSlogan = false }: LogoProp
     <div className="flex flex-col">
       <img
         src={logoImage}
-        alt="ScoOffice+"
-        className={`${sizeClasses[size]} w-auto object-contain`}
+        alt="Fournitoo"
+        className={`${sizeClasses[size]} w-auto object-contain ${
+          variant === "white" ? "brightness-0 invert" : ""
+        }`}
       />
       {showSlogan && (
         <span

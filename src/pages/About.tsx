@@ -27,7 +27,7 @@ const About = () => {
     <main className="min-h-screen bg-background">
       <SEOHead 
         title="À propos - Notre équipe et notre mission"
-        description="Découvrez ScoOffice+, votre partenaire pour l'éducation en Côte d'Ivoire. Notre mission : rendre les fournitures scolaires accessibles à tous."
+        description="Découvrez Fournitoo, votre partenaire pour l'éducation en Côte d'Ivoire. Notre mission : rendre les fournitures scolaires accessibles à tous."
         url="https://scoofficeplus.ci/about"
         keywords={["à propos", "équipe", "mission", "ScoOffice+", "Côte d'Ivoire", "éducation"]}
       />
