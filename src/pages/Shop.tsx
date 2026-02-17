@@ -142,7 +142,7 @@ const Shop = () => {
       <SEOHead 
         title="Boutique - Fournitures scolaires et bureautiques"
         description="Découvrez notre catalogue complet de fournitures scolaires et bureautiques. Livres, cahiers, stylos, matériel de bureau. Livraison gratuite en Côte d'Ivoire."
-        url="https://scoofficeplus.ci/shop"
+        url="https://fournitoo.ci/shop"
         keywords={["boutique", "fournitures scolaires", "bureautique", "acheter", "Côte d'Ivoire"]}
       />
       <Navbar />
@@ -152,7 +152,7 @@ const Shop = () => {
         <div className="container mx-auto px-4">
           <div className="text-center text-primary-foreground">
             <h1 className="text-4xl lg:text-5xl font-display font-bold mb-4">
-              Boutique ScoOffice+
+              Boutique Fournitoo
             </h1>
             <p className="text-lg opacity-90 max-w-2xl mx-auto mb-4">
               Toutes vos fournitures scolaires et bureautiques en un seul endroit

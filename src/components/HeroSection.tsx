@@ -88,7 +88,7 @@ const HeroSection = () => {
             
             <p className="text-lg sm:text-xl text-primary-foreground/90 max-w-3xl mx-auto mb-8 leading-relaxed">
               Votre référence en Côte d'Ivoire pour les fournitures scolaires et bureautiques de qualité,
-              livrées gratuitement partout.
+              livrées gratuitement partout sur Fournitoo.
             </p>
 
             {/* CTA Buttons */}
