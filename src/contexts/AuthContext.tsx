@@ -178,7 +178,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
       toast({
         title: "Inscription réussie !",
-        description: "Bienvenue sur Fournitoo ! Vous êtes maintenant connecté.",
+        description: "Bienvenue sur Scoly ! Vous êtes maintenant connecté.",
       });
 
       return { error: null };
@@ -205,7 +205,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
       toast({
         title: "Connexion réussie !",
-        description: "Bienvenue sur Fournitoo.",
+        description: "Bienvenue sur Scoly.",
       });
 
       return { error: null };

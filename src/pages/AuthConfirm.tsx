@@ -109,7 +109,7 @@ const AuthConfirm = () => {
           )}
 
           <p className="text-xs text-muted-foreground mt-8">
-            © {new Date().getFullYear()} Fournitoo — Tous droits réservés
+            © {new Date().getFullYear()} Scoly — Tous droits réservés
           </p>
         </div>
       </div>
