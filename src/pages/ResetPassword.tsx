@@ -101,7 +101,7 @@ const ResetPassword = () => {
                 Nouveau mot de passe
               </h1>
               <p className="text-center text-muted-foreground mb-6">
-                Choisissez un nouveau mot de passe sécurisé pour votre compte Fournitoo.
+                Choisissez un nouveau mot de passe sécurisé pour votre compte Scoly.
               </p>
 
               <form onSubmit={handleSubmit} className="space-y-4">
@@ -179,7 +179,7 @@ const ResetPassword = () => {
           )}
 
           <p className="text-xs text-muted-foreground mt-8 text-center">
-            © {new Date().getFullYear()} Fournitoo — Tous droits réservés
+            © {new Date().getFullYear()} Scoly — Tous droits réservés
           </p>
         </div>
       </div>

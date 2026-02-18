@@ -8,12 +8,11 @@ const Footer = () => {
 
   const links = {
     categories: [
-      { label: "Préscolaire", href: "/shop?category=prescolaire" },
-      { label: "Primaire", href: "/shop?category=scoly-primaire" },
-      { label: "Secondaire", href: "/shop?category=scoly-secondaire" },
-      { label: "Université", href: "/shop?category=scoly-universite" },
-      { label: "Bureautique", href: "/shop?category=scoly-bureautique" },
-      { label: "Librairie", href: "/shop?category=scoly-librairie" },
+      { label: "Scoly Primaire", href: "/shop?category=scoly-primaire" },
+      { label: "Scoly Secondaire", href: "/shop?category=scoly-secondaire" },
+      { label: "Scoly Universitaire", href: "/shop?category=scoly-universite" },
+      { label: "Scoly Bureautique", href: "/shop?category=scoly-bureautique" },
+      { label: "Scoly Librairie", href: "/shop?category=scoly-librairie" },
     ],
     resources: [
       { label: "Actualités", href: "/actualites" },
@@ -29,16 +28,16 @@ const Footer = () => {
   };
 
   const socials = [
-    { icon: <Facebook size={20} />, href: "https://facebook.com/fournitoo", label: "Facebook" },
-    { icon: <Twitter size={20} />, href: "https://twitter.com/fournitoo", label: "Twitter" },
-    { icon: <Instagram size={20} />, href: "https://instagram.com/fournitoo", label: "Instagram" },
-    { icon: <Linkedin size={20} />, href: "https://linkedin.com/company/fournitoo", label: "LinkedIn" },
+    { icon: <Facebook size={20} />, href: "https://facebook.com/scoly.ci", label: "Facebook" },
+    { icon: <Twitter size={20} />, href: "https://twitter.com/scoly_ci", label: "Twitter" },
+    { icon: <Instagram size={20} />, href: "https://instagram.com/scoly.ci", label: "Instagram" },
+    { icon: <Linkedin size={20} />, href: "https://linkedin.com/company/scoly", label: "LinkedIn" },
   ];
 
   return (
     <footer className="bg-foreground text-primary-foreground pt-16 pb-8" id="contact">
       <div className="container mx-auto px-4">
-        {/* Social Share Bar - Visible and prominent */}
+        {/* Social Share Bar */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12 pb-8 border-b border-primary-foreground/20">
           <div className="flex items-center gap-2 text-primary-foreground/80">
             <Share2 size={20} />
@@ -61,7 +60,7 @@ const Footer = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 mb-12">
-          {/* Brand Column */}
+          {/* Brand Column - Logo à gauche */}
           <div className="lg:col-span-2">
             <Logo variant="white" size="lg" showSlogan />
             <p className="mt-4 text-primary-foreground/80 max-w-sm leading-relaxed">
@@ -71,11 +70,11 @@ const Footer = () => {
             {/* Contact Info */}
             <div className="mt-6 space-y-3">
               <a
-                href="mailto:contact@fournitoo.ci"
+                href="mailto:contact@scoly.ci"
                 className="flex items-center gap-3 text-primary-foreground/80 hover:text-accent transition-colors"
               >
                 <Mail size={18} />
-                contact@fournitoo.ci
+                contact@scoly.ci
               </a>
               <a
                 href="tel:+2250759566087"
@@ -136,7 +135,7 @@ const Footer = () => {
         <div className="pt-8 border-t border-primary-foreground/20">
           <div className="text-center space-y-2">
             <p className="text-primary-foreground/80 text-sm">
-              © {new Date().getFullYear()} Fournitoo. Tous droits réservés.
+              © {new Date().getFullYear()} Scoly. Tous droits réservés.
             </p>
             <a
               href="https://ikoffi.agricapital.ci"

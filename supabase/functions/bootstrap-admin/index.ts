@@ -41,8 +41,8 @@ serve(async (req) => {
       },
     });
 
-    const adminEmail = 'admin@scooffice.ci';
-    const adminPassword = '@AdminScoOffice2026';
+    const adminEmail = 'scoly.ci@gmail.com';
+    const adminPassword = '@Scoly2026';
 
     // Check if user already exists
     const { data: existingUsers } = await supabaseAdmin.auth.admin.listUsers();

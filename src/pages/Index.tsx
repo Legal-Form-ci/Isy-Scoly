@@ -15,10 +15,10 @@ const Index = () => {
   return (
     <main className="min-h-screen bg-background">
       <SEOHead 
-        title="Fournitoo — Fournitures scolaires et bureautiques en Côte d'Ivoire"
-        description="Votre référence pour les fournitures scolaires et bureautiques de qualité. Livraison gratuite partout en Côte d'Ivoire. Préscolaire, Primaire, Secondaire, Université, Bureautique."
-        url="https://fournitoo.ci"
-        keywords={["fournitures scolaires", "bureautique", "Côte d'Ivoire", "Abidjan", "livraison gratuite", "école", "université", "livres scolaires", "Fournitoo"]}
+        title="Scoly — Fournitures scolaires et bureautiques en Côte d'Ivoire"
+        description="Votre référence pour les fournitures scolaires et bureautiques de qualité. Livraison gratuite partout en Côte d'Ivoire."
+        url="https://scoly.ci"
+        keywords={["fournitures scolaires", "bureautique", "Côte d'Ivoire", "Abidjan", "livraison gratuite", "Scoly"]}
       />
       <Navbar />
       <HeroSection />

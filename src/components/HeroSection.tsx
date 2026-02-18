@@ -44,15 +44,16 @@ const HeroSection = () => {
   };
 
   const scolyCategories = [
-    { name: "Préscolaire", slug: "prescolaire" },
-    { name: "Primaire", slug: "scoly-primaire" },
-    { name: "Secondaire", slug: "scoly-secondaire" },
-    { name: "Université", slug: "scoly-universite" },
+    { name: "Scoly Primaire", slug: "scoly-primaire" },
+    { name: "Scoly Secondaire", slug: "scoly-secondaire" },
+    { name: "Scoly Universitaire", slug: "scoly-universite" },
+    { name: "Scoly Bureautique", slug: "scoly-bureautique" },
+    { name: "Scoly Librairie", slug: "scoly-librairie" },
   ];
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
-      {/* Background - Solid color */}
+      {/* Background */}
       <div className="absolute inset-0 bg-primary" />
 
       {/* Decorative Elements */}
@@ -72,7 +73,7 @@ const HeroSection = () => {
 
       <div className="container mx-auto px-4 relative z-10">
         <div className="max-w-6xl mx-auto">
-          {/* CENTERED MAIN HEADING - spans both columns */}
+          {/* CENTERED MAIN HEADING */}
           <div className="text-center mb-8 animate-slide-up">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary-foreground/10 backdrop-blur-sm border border-primary-foreground/20 mb-6">
               <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
@@ -88,7 +89,7 @@ const HeroSection = () => {
             
             <p className="text-lg sm:text-xl text-primary-foreground/90 max-w-3xl mx-auto mb-8 leading-relaxed">
               Votre référence en Côte d'Ivoire pour les fournitures scolaires et bureautiques de qualité,
-              livrées gratuitement partout sur Fournitoo.
+              livrées gratuitement partout sur Scoly.
             </p>
 
             {/* CTA Buttons */}
@@ -108,7 +109,7 @@ const HeroSection = () => {
             </div>
           </div>
 
-          {/* Categories - centered above the two columns */}
+          {/* Categories */}
           <div className="animate-slide-up animation-delay-200 mb-6">
             <p className="text-primary-foreground/70 text-sm mb-3 text-center">Parcourir par catégorie :</p>
             <div className="flex flex-wrap gap-2 justify-center">
@@ -121,24 +122,11 @@ const HeroSection = () => {
                   {category.name}
                 </Link>
               ))}
-              <Link
-                to="/shop?category=scoly-bureautique"
-                className="px-4 py-2 rounded-full bg-primary-foreground/10 hover:bg-primary-foreground/20 backdrop-blur-sm border border-primary-foreground/20 text-primary-foreground text-sm font-medium transition-all hover:scale-[1.03]"
-              >
-                Bureautique
-              </Link>
-              <Link
-                to="/shop?category=scoly-librairie"
-                className="px-4 py-2 rounded-full bg-primary-foreground/10 hover:bg-primary-foreground/20 backdrop-blur-sm border border-primary-foreground/20 text-primary-foreground text-sm font-medium transition-all hover:scale-[1.03]"
-              >
-                Librairie
-              </Link>
             </div>
           </div>
 
-          {/* TWO COLUMN LAYOUT: Feature cards on left, "À la une" on right */}
+          {/* TWO COLUMN LAYOUT */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
-            {/* LEFT COLUMN: 3 Feature Cards stacked vertically */}
             <div className="lg:col-span-5 animate-slide-up animation-delay-300">
               <div className="flex flex-col gap-3 h-full">
                 <FeatureCard
@@ -165,7 +153,6 @@ const HeroSection = () => {
               </div>
             </div>
 
-            {/* RIGHT COLUMN: "À la une" carousel (ads + articles) */}
             <div className="lg:col-span-7 animate-slide-up animation-delay-100">
               <HeroAdvertisements />
             </div>

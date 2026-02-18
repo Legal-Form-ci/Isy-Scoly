@@ -57,17 +57,16 @@ const SpacesSection = () => {
             Tout pour l'école et le bureau
           </h2>
           <p className="text-lg text-muted-foreground leading-relaxed">
-            ScoOffice+ vous offre des fournitures scolaires et bureautiques de qualité pour accompagner votre réussite
+            Scoly vous offre des fournitures scolaires et bureautiques de qualité pour accompagner votre réussite
           </p>
         </div>
 
         {/* Spaces Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Boutique */}
           <SpaceCard
             id="boutique"
             icon={<ShoppingBag size={32} />}
-            title="Boutique ScoOffice+"
+            title="Boutique Scoly"
             subtitle="Scolaire & Bureautique"
             description="Retrouvez toutes vos fournitures scolaires et bureautiques : cahiers, stylos, classeurs, accessoires de bureau et bien plus encore."
             features={[
@@ -81,7 +80,6 @@ const SpacesSection = () => {
             href="/shop"
           />
 
-          {/* Livraison Gratuite */}
           <SpaceCard
             id="livraison"
             icon={<Truck size={32} />}
@@ -99,11 +97,10 @@ const SpacesSection = () => {
             href="/shop"
           />
 
-          {/* Actualités */}
           <SpaceCard
             id="actualites"
             icon={<Newspaper size={32} />}
-            title="Actualités ScoOffice+"
+            title="Actualités Scoly"
             subtitle="Articles & Publications"
             description="Restez informé avec nos articles sur l'éducation, les résultats d'examens, les taux de réussite scolaire et les conseils pratiques."
             features={[
@@ -143,10 +140,8 @@ const SpaceCard = ({ id, icon, title, subtitle, description, features, stats, gr
       id={id}
       className="group relative bg-card rounded-3xl border border-border overflow-hidden hover:shadow-lg transition-all duration-500 hover:-translate-y-2"
     >
-      {/* Solid Color Header */}
       <div className="h-40 bg-primary relative overflow-hidden">
         <div className="absolute inset-0 bg-black/5" />
-        
         <div className="relative h-full flex flex-col items-center justify-center">
           <div className="p-4 rounded-2xl bg-primary-foreground/20 backdrop-blur-sm text-primary-foreground mb-2">
             {icon}
@@ -155,12 +150,10 @@ const SpaceCard = ({ id, icon, title, subtitle, description, features, stats, gr
         </div>
       </div>
 
-      {/* Content */}
       <div className="p-6">
         <h3 className="text-xl font-display font-bold text-foreground mb-2">{title}</h3>
         <p className="text-muted-foreground mb-6 leading-relaxed">{description}</p>
 
-        {/* Features */}
         <ul className="space-y-3 mb-6">
           {features.map((feature, index) => (
             <li key={index} className="flex items-center gap-3 text-sm text-foreground">
@@ -170,7 +163,6 @@ const SpaceCard = ({ id, icon, title, subtitle, description, features, stats, gr
           ))}
         </ul>
 
-        {/* Stats */}
         <div className="flex items-center justify-between pt-4 border-t border-border">
           <div>
             <div className="text-2xl font-display font-bold text-foreground">{stats.value}</div>
@@ -185,7 +177,6 @@ const SpaceCard = ({ id, icon, title, subtitle, description, features, stats, gr
         </div>
       </div>
 
-      {/* Hover Effect */}
       <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
     </div>
   );
