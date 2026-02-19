@@ -29,7 +29,7 @@ const WriteArticle = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const { translateDebounced, translating } = useAutoTranslate();
-  
+  const [userRole, setUserRole] = useState<string>("user");
   const [loading, setLoading] = useState(false);
   const [fetchingArticle, setFetchingArticle] = useState(!!id);
   const [aiGenerating, setAiGenerating] = useState(false);
@@ -67,6 +67,25 @@ const WriteArticle = () => {
       fetchArticle();
     }
   }, [id, user]);
+
+  // Fetch user role
+  useEffect(() => {
+    if (user) {
+      const fetchRole = async () => {
+        const { data } = await supabase
+          .from("user_roles")
+          .select("role")
+          .eq("user_id", user.id);
+        if (data && data.length > 0) {
+          const roles = data.map((r: any) => r.role);
+          if (roles.includes("admin")) setUserRole("admin");
+          else if (roles.includes("moderator")) setUserRole("moderator");
+          else setUserRole("user");
+        }
+      };
+      fetchRole();
+    }
+  }, [user]);
 
   // Auto-translate title when French title changes
   const handleTitleChange = (value: string) => {
@@ -178,6 +197,8 @@ const WriteArticle = () => {
     }
   };
 
+  const canPublishDirectly = userRole === "admin" || userRole === "moderator";
+
   const handleSubmit = async (publish: boolean) => {
     if (!user) {
       toast({ title: "Erreur", description: "Vous devez être connecté pour publier.", variant: "destructive" });
@@ -213,8 +234,8 @@ const WriteArticle = () => {
         price: form.is_premium ? parseFloat(form.price) : 0,
         cover_image: coverImage,
         media: mediaJson as any,
-        status: publish ? 'pending' : 'draft',
-        published_at: publish ? new Date().toISOString() : null,
+        status: publish ? (canPublishDirectly ? 'published' : 'pending') : 'draft',
+        published_at: publish && canPublishDirectly ? new Date().toISOString() : null,
       };
 
       if (id) {
@@ -477,7 +498,7 @@ const WriteArticle = () => {
               </Button>
               <Button variant="hero" onClick={() => handleSubmit(true)} disabled={loading}>
                 <Send size={18} />
-                Soumettre pour publication
+                {canPublishDirectly ? "Publier maintenant" : "Soumettre pour publication"}
               </Button>
             </div>
           </div>

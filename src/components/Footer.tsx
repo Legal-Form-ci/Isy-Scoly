@@ -21,6 +21,7 @@ const Footer = () => {
       { label: t.nav.contact, href: "/contact" },
     ],
     legal: [
+      { label: "Mentions légales", href: "/mentions-legales" },
       { label: t.footer.terms, href: "/terms" },
       { label: t.footer.privacy, href: "/privacy" },
       { label: t.footer.cookies, href: "/cookies" },

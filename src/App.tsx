@@ -32,6 +32,10 @@ import ModeratorDashboard from "./pages/ModeratorDashboard";
 import VendorDashboard from "./pages/VendorDashboard";
 import DeliveryDashboard from "./pages/DeliveryDashboard";
 import Wishlist from "./pages/Wishlist";
+import MentionsLegales from "./pages/MentionsLegales";
+import TermsOfUse from "./pages/TermsOfUse";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import CookiesPolicy from "./pages/CookiesPolicy";
 
 import SystemDatabase from "./pages/SystemDatabase";
 import SystemRepository from "./pages/SystemRepository";
@@ -91,6 +95,10 @@ const App = () => (
                   <Route path="/moderator" element={<ModeratorDashboard />} />
                   <Route path="/vendor" element={<VendorDashboard />} />
                   <Route path="/wishlist" element={<Wishlist />} />
+                  <Route path="/mentions-legales" element={<MentionsLegales />} />
+                  <Route path="/terms" element={<TermsOfUse />} />
+                  <Route path="/privacy" element={<PrivacyPolicy />} />
+                  <Route path="/cookies" element={<CookiesPolicy />} />
                   {/* Isolated database portal (password-protected, admin-only) */}
                   {/* System portals */}
                   <Route path="/db" element={<SystemDatabase />} />
