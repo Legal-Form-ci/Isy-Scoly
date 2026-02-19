@@ -59,6 +59,7 @@ import ShareStatsTab from "@/components/admin/ShareStatsTab";
 import AIManager from "@/components/admin/AIManager";
 import PromotionsManagement from "@/components/admin/PromotionsManagement";
 import SocialMediaManager from "@/components/admin/SocialMediaManager";
+import DocumentationManager from "@/components/admin/DocumentationManager";
 
 import { Share2 } from "lucide-react";
 
@@ -86,7 +87,8 @@ type TabType =
   | "loyalty"
   | "payments"
   | "ai_manager"
-  | "social_media";
+  | "social_media"
+  | "documentation";
 
 const Admin = () => {
   const { t, language } = useLanguage();
@@ -150,6 +152,7 @@ const Admin = () => {
     { id: "promotions", label: "Coupons", icon: Tag },
     { id: "advertisements", label: "Publicités", icon: Bell },
     { id: "faq", label: "FAQ", icon: HelpCircle },
+    { id: "documentation", label: "Documentation", icon: FileText },
     { id: "settings", label: "Paramètres", icon: Settings },
   ];
 
@@ -276,6 +279,7 @@ const Admin = () => {
           {activeTab === "promotions" && <CouponManagement />}
           {activeTab === "advertisements" && <AdvertisementsManagement />}
           {activeTab === "faq" && <FAQManagement />}
+          {activeTab === "documentation" && <DocumentationManager />}
           {activeTab === "settings" && <PlatformSettings />}
         </div>
       </div>
