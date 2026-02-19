@@ -1,12 +1,12 @@
 import { useState, useEffect, useRef } from "react";
-import { Plus, Edit, Trash2, Image, Video, Type, Loader2, X, Sparkles, RefreshCw } from "lucide-react";
+import { Plus, Edit, Trash2, Image, Video, Type, Loader2, X, Sparkles, RefreshCw, Wand2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -33,6 +33,9 @@ const AdvertisementsManagement = () => {
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [generatingCTA, setGeneratingCTA] = useState(false);
+  const [aiGenerating, setAiGenerating] = useState(false);
+  const [showAiDialog, setShowAiDialog] = useState(false);
+  const [aiInput, setAiInput] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [formData, setFormData] = useState({
@@ -283,20 +286,62 @@ const AdvertisementsManagement = () => {
     }
   };
 
+  const handleAiGenerate = async (withImage: boolean) => {
+    if (!aiInput.trim()) {
+      toast.error("Veuillez entrer un sujet ou une idée.");
+      return;
+    }
+    setAiGenerating(true);
+    setShowAiDialog(false);
+    try {
+      const { data, error } = await supabase.functions.invoke("generate-content", {
+        body: { type: "advertisement", input: aiInput },
+      });
+      if (error) throw error;
+      if (data?.error) throw new Error(data.error);
+
+      setFormData(prev => ({
+        ...prev,
+        title: data.title || "",
+        description: data.description || "",
+        link_url: data.link_url || "/shop",
+        link_text: data.link_text || "En savoir plus",
+        priority: data.priority || 5,
+        media_url: withImage && data.generated_image ? data.generated_image : prev.media_url,
+      }));
+      setIsDialogOpen(true);
+      toast.success("Publicité générée par l'IA ! Vérifiez et enregistrez.");
+    } catch (e: any) {
+      toast.error(e?.message || "Erreur de génération IA");
+    } finally {
+      setAiGenerating(false);
+    }
+  };
+
   return (
     <div>
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
         <div>
           <h1 className="text-2xl font-display font-bold text-foreground">Publicités "À la une"</h1>
           <p className="text-muted-foreground mt-1">Gérez les publicités affichées dans la section Hero</p>
         </div>
-        <Dialog open={isDialogOpen} onOpenChange={(open) => { setIsDialogOpen(open); if (!open) resetForm(); }}>
-          <DialogTrigger asChild>
-            <Button variant="hero">
-              <Plus size={18} />
-              Nouvelle publicité
-            </Button>
-          </DialogTrigger>
+        <div className="flex gap-2">
+          <Button
+            variant="hero"
+            onClick={() => setShowAiDialog(true)}
+            disabled={aiGenerating}
+            className="gap-2"
+          >
+            {aiGenerating ? <Loader2 size={16} className="animate-spin" /> : <Wand2 size={16} />}
+            {aiGenerating ? "Génération..." : "Générer avec l'IA"}
+          </Button>
+          <Dialog open={isDialogOpen} onOpenChange={(open) => { setIsDialogOpen(open); if (!open) resetForm(); }}>
+            <DialogTrigger asChild>
+              <Button variant="default">
+                <Plus size={18} />
+                Nouvelle publicité
+              </Button>
+            </DialogTrigger>
           <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>{editingAd ? "Modifier la publicité" : "Nouvelle publicité"}</DialogTitle>
@@ -511,7 +556,45 @@ const AdvertisementsManagement = () => {
             </div>
           </DialogContent>
         </Dialog>
+        </div>
       </div>
+
+      {/* AI Generation Dialog */}
+      <Dialog open={showAiDialog} onOpenChange={setShowAiDialog}>
+        <DialogContent className="sm:max-w-lg">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Sparkles size={20} className="text-primary" />
+              Générer une publicité avec l'IA
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div>
+              <Label>Sujet ou idée de publicité</Label>
+              <Textarea
+                value={aiInput}
+                onChange={(e) => setAiInput(e.target.value)}
+                placeholder="Ex: Rentrée scolaire 2026, promotion fournitures bureautiques, nouvelle collection..."
+                rows={3}
+                className="mt-2"
+              />
+              <p className="text-xs text-muted-foreground mt-1">
+                Entrez un simple mot ou une phrase. L'IA générera tous les détails de la publicité.
+              </p>
+            </div>
+          </div>
+          <DialogFooter className="flex flex-col sm:flex-row gap-2">
+            <Button variant="outline" onClick={() => handleAiGenerate(false)} disabled={!aiInput.trim()} className="flex-1">
+              <Sparkles size={16} className="mr-2" />
+              Sans image
+            </Button>
+            <Button onClick={() => handleAiGenerate(true)} disabled={!aiInput.trim()} className="flex-1">
+              <Wand2 size={16} className="mr-2" />
+              Avec image IA
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {advertisements.map((ad) => (
