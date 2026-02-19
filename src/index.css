@@ -341,3 +341,66 @@
 .focus-ring {
   @apply focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-2;
 }
+
+/* Article table styles - for TipTap editor and rendered content */
+.article-table,
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  font-size: 0.925rem;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  border: 1px solid hsl(var(--border));
+}
+
+.article-table th,
+.prose table th {
+  background: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+  font-weight: 600;
+  text-align: left;
+  padding: 0.75rem 1rem;
+  border: 1px solid hsl(var(--primary-dark, var(--primary)) / 0.3);
+}
+
+.article-table td,
+.prose table td {
+  padding: 0.65rem 1rem;
+  border: 1px solid hsl(var(--border));
+  vertical-align: top;
+}
+
+.article-table tr:nth-child(even) td,
+.prose table tr:nth-child(even) td {
+  background: hsl(var(--muted) / 0.4);
+}
+
+.article-table tr:hover td,
+.prose table tr:hover td {
+  background: hsl(var(--primary) / 0.06);
+}
+
+/* TipTap table editor specific */
+.ProseMirror .article-table {
+  margin: 1rem 0;
+}
+
+.ProseMirror table .selectedCell {
+  background: hsl(var(--primary) / 0.12);
+}
+
+.ProseMirror table .column-resize-handle {
+  position: absolute;
+  right: -2px;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: hsl(var(--primary));
+  cursor: col-resize;
+}
+
+.ProseMirror .tableWrapper {
+  overflow-x: auto;
+  margin: 1rem 0;
+}

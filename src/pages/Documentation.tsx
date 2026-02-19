@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Book, Database, Shield, Users, CreditCard, Server, Mail, Globe, ChevronRight, Download, FileText, Smartphone, Monitor, Code, Layers, Lock, Bell, Truck, ShoppingCart, BarChart3, MessageSquare, Star, Settings } from "lucide-react";
+import { Book, Database, Shield, Users, CreditCard, Server, Mail, Globe, ChevronRight, Download, FileText, Smartphone, Monitor, Code, Layers, Lock, Bell, Truck, ShoppingCart, BarChart3, MessageSquare, Star, Settings, Printer } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import SEOHead from "@/components/SEOHead";
@@ -524,6 +525,15 @@ const Documentation = () => {
             <aside className="lg:w-72 shrink-0">
               <div className="bg-card border border-border rounded-xl p-4 sticky top-20">
                 <h3 className="font-semibold text-foreground mb-3 text-sm">Table des matières</h3>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="w-full mb-3 gap-2"
+                  onClick={() => window.print()}
+                >
+                  <Printer size={14} />
+                  Télécharger PDF
+                </Button>
                 <nav className="space-y-1">
                   {sections.map((section) => (
                     <button
