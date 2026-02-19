@@ -506,7 +506,28 @@ const Auth = () => {
 
             {isLogin && (
               <div className="flex items-center justify-end">
-                <button type="button" className="text-sm text-primary hover:underline">
+                <button
+                  type="button"
+                  className="text-sm text-primary hover:underline"
+                  onClick={async () => {
+                    const resetEmail = identifier.includes('@') ? identifier : '';
+                    if (!resetEmail) {
+                      toast.error(language === 'fr' ? "Veuillez entrer votre adresse email." : "Please enter your email address.");
+                      return;
+                    }
+                    try {
+                      const { error } = await supabase.auth.resetPasswordForEmail(resetEmail, {
+                        redirectTo: `${window.location.origin}/auth/reset-password`,
+                      });
+                      if (error) throw error;
+                      toast.success(language === 'fr' 
+                        ? "Un lien de réinitialisation a été envoyé à votre email." 
+                        : "A reset link has been sent to your email.");
+                    } catch (err: any) {
+                      toast.error(err.message || "Erreur lors de l'envoi du lien.");
+                    }
+                  }}
+                >
                   {t.auth.forgotPassword}
                 </button>
               </div>

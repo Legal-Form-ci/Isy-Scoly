@@ -36,6 +36,7 @@ import SystemDatabase from "./pages/SystemDatabase";
 import SystemRepository from "./pages/SystemRepository";
 import AuthConfirm from "./pages/AuthConfirm";
 import ResetPassword from "./pages/ResetPassword";
+import Documentation from "./pages/Documentation";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -82,6 +83,7 @@ const App = () => (
                   <Route path="/team" element={<TeamDashboard />} />
                   <Route path="/author" element={<AuthorDashboard />} />
                   <Route path="/faq" element={<FAQ />} />
+                  <Route path="/documentation" element={<Documentation />} />
                   <Route path="/article/pay/:id" element={<ArticlePayment />} />
                   <Route path="/bootstrap-admin" element={<BootstrapAdmin />} />
                   <Route path="/delivery" element={<DeliveryDashboard />} />
