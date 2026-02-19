@@ -17,7 +17,6 @@ const Footer = () => {
     resources: [
       { label: "Actualités", href: "/actualites" },
       { label: t.footer.faq, href: "/faq" },
-      { label: "Documentation", href: "/documentation" },
       { label: t.nav.about, href: "/about" },
       { label: t.nav.contact, href: "/contact" },
     ],

@@ -37,7 +37,7 @@ import SystemDatabase from "./pages/SystemDatabase";
 import SystemRepository from "./pages/SystemRepository";
 import AuthConfirm from "./pages/AuthConfirm";
 import ResetPassword from "./pages/ResetPassword";
-import Documentation from "./pages/Documentation";
+// Documentation is admin-only, no public page
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -84,7 +84,7 @@ const App = () => (
                   <Route path="/team" element={<TeamDashboard />} />
                   <Route path="/author" element={<AuthorDashboard />} />
                   <Route path="/faq" element={<FAQ />} />
-                  <Route path="/documentation" element={<Documentation />} />
+                  {/* Documentation removed from public — admin only */}
                   <Route path="/article/pay/:id" element={<ArticlePayment />} />
                   <Route path="/bootstrap-admin" element={<BootstrapAdmin />} />
                   <Route path="/delivery" element={<DeliveryDashboard />} />
