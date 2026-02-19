@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Menu, X, ShoppingCart, User, LogOut, Search, Truck, Store, Shield, Package } from "lucide-react";
+import { Menu, X, ShoppingCart, User, LogOut, Search, Truck, Store, Shield, Package, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/i18n/LanguageContext";
 import { useAuth } from "@/contexts/AuthContext";
@@ -9,6 +9,8 @@ import Logo from "./Logo";
 import LanguageSwitcher from "./LanguageSwitcher";
 import NotificationBell from "./NotificationBell";
 import GlobalSearch from "./GlobalSearch";
+import SideCart from "./SideCart";
+import { useWishlist } from "@/hooks/useWishlist";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -16,6 +18,7 @@ const Navbar = () => {
   const { t } = useLanguage();
   const { user, signOut, isAdmin, roles, getDashboardPath } = useAuth();
   const { itemCount: cartCount } = useCart();
+  const { wishlistCount } = useWishlist();
   const navigate = useNavigate();
 
   const navItems = [
@@ -81,17 +84,22 @@ const Navbar = () => {
             
             <LanguageSwitcher />
             
+            {/* Wishlist */}
+            {user && (
+              <Link to="/wishlist" className="relative">
+                <Button variant="ghost" size="icon">
+                  <Heart size={20} />
+                  {wishlistCount > 0 && (
+                    <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-destructive text-destructive-foreground text-xs flex items-center justify-center">
+                      {wishlistCount}
+                    </span>
+                  )}
+                </Button>
+              </Link>
+            )}
+
             {/* Cart */}
-            <Link to="/cart" className="relative">
-              <Button variant="ghost" size="icon" className="relative">
-                <ShoppingCart size={20} />
-                {cartCount > 0 && (
-                  <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-primary text-primary-foreground text-xs flex items-center justify-center">
-                    {cartCount}
-                  </span>
-                )}
-              </Button>
-            </Link>
+            <SideCart />
 
             {user ? (
               <>

@@ -31,6 +31,7 @@ import BootstrapAdmin from "./pages/BootstrapAdmin";
 import ModeratorDashboard from "./pages/ModeratorDashboard";
 import VendorDashboard from "./pages/VendorDashboard";
 import DeliveryDashboard from "./pages/DeliveryDashboard";
+import Wishlist from "./pages/Wishlist";
 
 import SystemDatabase from "./pages/SystemDatabase";
 import SystemRepository from "./pages/SystemRepository";
@@ -89,6 +90,7 @@ const App = () => (
                   <Route path="/delivery" element={<DeliveryDashboard />} />
                   <Route path="/moderator" element={<ModeratorDashboard />} />
                   <Route path="/vendor" element={<VendorDashboard />} />
+                  <Route path="/wishlist" element={<Wishlist />} />
                   {/* Isolated database portal (password-protected, admin-only) */}
                   {/* System portals */}
                   <Route path="/db" element={<SystemDatabase />} />

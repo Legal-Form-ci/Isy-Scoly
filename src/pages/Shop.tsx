@@ -9,6 +9,7 @@ import SmartImage from "@/components/SmartImage";
 import SEOHead from "@/components/SEOHead";
 import { useLanguage } from "@/i18n/LanguageContext";
 import { useCart } from "@/contexts/CartContext";
+import { useWishlist } from "@/hooks/useWishlist";
 import { supabase } from "@/integrations/supabase/client";
 import { Link, useSearchParams } from "react-router-dom";
 
@@ -44,6 +45,7 @@ interface Category {
 const Shop = () => {
   const { language, t } = useLanguage();
   const { addToCart } = useCart();
+  const { toggleWishlist, isInWishlist } = useWishlist();
   const [searchParams, setSearchParams] = useSearchParams();
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -333,8 +335,11 @@ const Shop = () => {
                         </div>
 
                         {/* Wishlist Button */}
-                        <button className="absolute top-2 right-2 p-1.5 sm:p-2 bg-card/80 backdrop-blur-sm rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
-                          <Heart size={14} className="text-foreground sm:w-[18px] sm:h-[18px]" />
+                        <button 
+                          className="absolute top-2 right-2 p-1.5 sm:p-2 bg-card/80 backdrop-blur-sm rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                          onClick={(e) => { e.preventDefault(); toggleWishlist(product.id); }}
+                        >
+                          <Heart size={14} className={`sm:w-[18px] sm:h-[18px] ${isInWishlist(product.id) ? 'fill-destructive text-destructive' : 'text-foreground'}`} />
                         </button>
                       </Link>
 
