@@ -17,8 +17,8 @@
     --secondary-foreground: 0 0% 100%;
     --secondary-light: 24 95% 62%;
     
-    /* Emerald Teal - Accent (Growth, Freshness) */
-    --accent: 162 55% 35%;
+    /* Warm Amber - Accent (Energy, Warmth) */
+    --accent: 30 85% 48%;
     --accent-foreground: 0 0% 100%;
     
     /* Backgrounds */
@@ -58,7 +58,7 @@
     --shadow-md: 0 8px 24px -4px hsl(220 30% 15% / 0.12);
     --shadow-lg: 0 16px 48px -8px hsl(220 30% 15% / 0.16);
     --shadow-glow: 0 0 40px hsl(220 65% 18% / 0.25);
-    --shadow-gold: 0 4px 20px hsl(162 55% 35% / 0.35);
+    --shadow-gold: 0 4px 20px hsl(30 85% 48% / 0.35);
 
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
@@ -79,7 +79,7 @@
     --secondary: 24 90% 55%;
     --secondary-foreground: 0 0% 100%;
     
-    --accent: 162 50% 42%;
+    --accent: 30 80% 52%;
     --accent-foreground: 0 0% 100%;
     
     --background: 220 30% 8%;
