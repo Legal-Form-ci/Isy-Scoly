@@ -48,7 +48,7 @@ RÈGLES:
         model: "google/gemini-3-flash-preview",
         messages: [
           { role: "system", content: systemPrompt },
-          { role: "user", content: `Génère un article complet à partir de ce texte: "${content}". ${generateImage ? "Inclus aussi un prompt pour générer une image." : "Pas besoin de prompt image."}` },
+          { role: "user", content: `Génère un article complet à partir de ce texte: "${content}". ${generateImage ? "Inclus aussi un prompt pour générer une image. IMPORTANT pour le prompt image: la scène doit être réaliste, en contexte africain/ivoirien, avec uniquement des personnes noires/africaines. Jamais de personnes blanches/occidentales. Photographie réaliste professionnelle." : "Pas besoin de prompt image."}` },
         ],
         tools: [
           {
@@ -120,7 +120,7 @@ RÈGLES:
           body: JSON.stringify({
             model: "google/gemini-2.5-flash-image",
             messages: [
-              { role: "user", content: article.image_prompt + ". Realistic, professional, high quality, no text overlay, no watermark." },
+              { role: "user", content: article.image_prompt + ". Realistic professional photography in African/Ivorian context. Only Black African people. High quality, natural lighting, no text overlay, no watermark, no cartoon, no illustration." },
             ],
             modalities: ["image", "text"],
           }),
