@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { 
+  Brain,
   LayoutDashboard, 
   Package, 
   FolderTree, 
@@ -55,6 +56,9 @@ import PlatformSettings from "@/components/admin/PlatformSettings";
 import AdvancedStats from "@/components/admin/AdvancedStats";
 import PaymentsTab from "@/components/admin/PaymentsTab";
 import ShareStatsTab from "@/components/admin/ShareStatsTab";
+import AIManager from "@/components/admin/AIManager";
+import PromotionsManagement from "@/components/admin/PromotionsManagement";
+import SocialMediaManager from "@/components/admin/SocialMediaManager";
 
 import { Share2 } from "lucide-react";
 
@@ -68,6 +72,7 @@ type TabType =
   | "authors"
   | "review"
   | "promotions"
+  | "promotions_mgmt"
   | "notifications"
   | "advertisements"
   | "faq"
@@ -79,7 +84,9 @@ type TabType =
   | "commissions"
   | "deliveries"
   | "loyalty"
-  | "payments";
+  | "payments"
+  | "ai_manager"
+  | "social_media";
 
 const Admin = () => {
   const { t, language } = useLanguage();
@@ -123,6 +130,7 @@ const Admin = () => {
 
   const menuItems = [
     { id: "dashboard", label: "Tableau de bord", icon: LayoutDashboard },
+    { id: "ai_manager", label: "🤖 Module IA", icon: Brain },
     { id: "stats", label: "Statistiques", icon: BarChart3 },
     { id: "sharestats", label: "Partages & Analytics", icon: Share2 },
     { id: "products", label: "Produits", icon: Package },
@@ -134,10 +142,12 @@ const Admin = () => {
     { id: "vendors", label: "Vendeurs", icon: Store },
     { id: "commissions", label: "Commissions", icon: DollarSign },
     { id: "loyalty", label: "Fidélité", icon: Gift },
+    { id: "promotions_mgmt", label: "Ventes Flash", icon: Tag },
+    { id: "social_media", label: "Réseaux Sociaux", icon: Share2 },
     { id: "authors", label: "Auteurs", icon: Users },
     { id: "review", label: "Validation", icon: Eye },
     { id: "articles", label: "Actualités", icon: FileText },
-    { id: "promotions", label: "Promotions", icon: Tag },
+    { id: "promotions", label: "Coupons", icon: Tag },
     { id: "advertisements", label: "Publicités", icon: Bell },
     { id: "faq", label: "FAQ", icon: HelpCircle },
     { id: "settings", label: "Paramètres", icon: Settings },
@@ -246,6 +256,7 @@ const Admin = () => {
         {/* Main Content */}
         <div className="flex-1 p-4 sm:p-6 lg:p-8 pb-24 lg:pb-8 pt-16 lg:pt-4">
           {activeTab === "dashboard" && <AdminDashboard />}
+          {activeTab === "ai_manager" && <AIManager />}
           {activeTab === "stats" && <AdvancedStats />}
           {activeTab === "sharestats" && <ShareStatsTab />}
           {activeTab === "products" && <ProductsTab />}
@@ -257,6 +268,8 @@ const Admin = () => {
           {activeTab === "vendors" && <VendorsTab />}
           {activeTab === "commissions" && <CommissionsTab />}
           {activeTab === "loyalty" && <LoyaltyTab />}
+          {activeTab === "promotions_mgmt" && <PromotionsManagement />}
+          {activeTab === "social_media" && <SocialMediaManager />}
           {activeTab === "authors" && <AuthorsManagement />}
           {activeTab === "review" && <PublicationsReview />}
           {activeTab === "articles" && <ArticlesTab />}
