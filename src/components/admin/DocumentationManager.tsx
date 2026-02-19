@@ -659,42 +659,44 @@ const DocumentationManager = () => {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 md:space-y-8 px-1 sm:px-0">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl md:text-3xl font-display font-bold text-foreground">Documentation</h1>
-          <p className="text-muted-foreground text-sm mt-1">Documentation technique complète et guides utilisateur</p>
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-display font-bold text-foreground">Documentation</h1>
+          <p className="text-muted-foreground text-xs sm:text-sm mt-1">Documentation technique complète et guides utilisateur</p>
         </div>
-        <Button onClick={generatePDF} disabled={generating} size="lg" className="gap-2 bg-secondary hover:bg-secondary/90 text-secondary-foreground">
-          {generating ? <RefreshCw size={18} className="animate-spin" /> : <Download size={18} />}
-          {generating ? "Génération..." : "Télécharger le PDF Complet"}
+        <Button onClick={generatePDF} disabled={generating} size="default" className="gap-2 bg-secondary hover:bg-secondary/90 text-secondary-foreground w-full sm:w-auto">
+          {generating ? <RefreshCw size={16} className="animate-spin" /> : <Download size={16} />}
+          <span className="text-sm">{generating ? "Génération..." : "Télécharger le PDF"}</span>
         </Button>
       </div>
 
       {/* Banner */}
-      <div className="bg-primary rounded-xl p-6 flex items-center gap-4">
-        <div className="w-12 h-12 rounded-lg bg-primary-foreground/10 flex items-center justify-center shrink-0">
-          <FileText size={24} className="text-primary-foreground" />
+      <div className="bg-primary rounded-xl p-4 sm:p-6 flex items-center gap-3 sm:gap-4">
+        <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-primary-foreground/10 flex items-center justify-center shrink-0">
+          <FileText size={20} className="text-primary-foreground sm:hidden" />
+          <FileText size={24} className="text-primary-foreground hidden sm:block" />
         </div>
-        <div>
-          <h2 className="text-lg font-display font-bold text-primary-foreground">Documentation Scoly v2.0</h2>
-          <p className="text-primary-foreground/70 text-sm">Guide complet : installation, configuration, utilisation par rôle, maintenance et support</p>
+        <div className="min-w-0">
+          <h2 className="text-base sm:text-lg font-display font-bold text-primary-foreground truncate">Documentation Scoly v2.0</h2>
+          <p className="text-primary-foreground/70 text-xs sm:text-sm line-clamp-2">Guide complet : installation, configuration, utilisation par rôle, maintenance et support</p>
         </div>
       </div>
 
       {/* Section Cards Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
         {sections.map((section, idx) => {
           const Icon = section.icon;
           return (
-            <div key={idx} className="bg-primary rounded-lg p-4 flex items-start gap-3 hover:bg-primary-light transition-colors">
-              <div className="w-9 h-9 rounded-md bg-primary-foreground/10 flex items-center justify-center shrink-0 mt-0.5">
-                <Icon size={18} className="text-secondary" />
+            <div key={idx} className="bg-primary rounded-lg p-3 sm:p-4 flex items-start gap-3 hover:bg-primary-light transition-colors">
+              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-md bg-primary-foreground/10 flex items-center justify-center shrink-0 mt-0.5">
+                <Icon size={16} className="text-secondary sm:hidden" />
+                <Icon size={18} className="text-secondary hidden sm:block" />
               </div>
-              <div>
-                <h3 className="text-sm font-semibold text-primary-foreground">{section.title}</h3>
-                <p className="text-xs text-primary-foreground/60 mt-0.5">{section.desc}</p>
+              <div className="min-w-0">
+                <h3 className="text-xs sm:text-sm font-semibold text-primary-foreground">{section.title}</h3>
+                <p className="text-[10px] sm:text-xs text-primary-foreground/60 mt-0.5 line-clamp-2">{section.desc}</p>
               </div>
             </div>
           );
@@ -702,36 +704,36 @@ const DocumentationManager = () => {
       </div>
 
       {/* Developer & Support */}
-      <div className="bg-primary rounded-xl p-6">
-        <h2 className="text-lg font-display font-bold text-primary-foreground mb-4 flex items-center gap-2">
+      <div className="bg-primary rounded-xl p-4 sm:p-6">
+        <h2 className="text-base sm:text-lg font-display font-bold text-primary-foreground mb-3 sm:mb-4 flex items-center gap-2">
           🔧 Développeur & Support
         </h2>
-        <div className="flex flex-col sm:flex-row items-start gap-6">
+        <div className="flex flex-col items-center sm:items-start sm:flex-row gap-4 sm:gap-6">
           <img
             src="/founder-inocent-koffi.jpg"
             alt="Inocent KOFFI"
-            className="w-24 h-28 rounded-lg object-cover object-top border-2 border-secondary shrink-0"
+            className="w-20 h-24 sm:w-24 sm:h-28 rounded-lg object-cover object-top border-2 border-secondary shrink-0"
           />
-          <div className="space-y-2 text-sm">
-            <div>
+          <div className="space-y-2 text-sm w-full">
+            <div className="text-center sm:text-left">
               <p className="font-bold text-primary-foreground text-base">Inocent KOFFI</p>
               <p className="text-secondary text-xs">Développeur Freelance Full Stack</p>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-1 text-primary-foreground/70">
-              <span className="flex items-center gap-2"><Phone size={14} /> +225 07 59 56 60 87</span>
-              <span className="flex items-center gap-2"><Mail size={14} /> contact@scoly.ci</span>
-              <span className="flex items-center gap-2"><Globe size={14} /> www.scoly.ci</span>
-              <span className="flex items-center gap-2"><ExternalLink size={14} /> cPanel / Safaricloud</span>
+            <div className="grid grid-cols-1 gap-y-1.5 text-primary-foreground/70 text-xs sm:text-sm">
+              <span className="flex items-center gap-2"><Phone size={14} className="shrink-0" /> +225 07 59 56 60 87</span>
+              <span className="flex items-center gap-2"><Mail size={14} className="shrink-0" /> contact@scoly.ci</span>
+              <span className="flex items-center gap-2"><Globe size={14} className="shrink-0" /> www.scoly.ci</span>
+              <span className="flex items-center gap-2"><ExternalLink size={14} className="shrink-0" /> cPanel / Safaricloud</span>
             </div>
           </div>
         </div>
       </div>
 
       {/* Bottom Info */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div className="bg-card border border-border rounded-xl p-5">
-          <h3 className="font-display font-bold text-foreground mb-3">Informations Techniques</h3>
-          <div className="space-y-2 text-sm">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+        <div className="bg-card border border-border rounded-xl p-4 sm:p-5">
+          <h3 className="font-display font-bold text-foreground mb-2 sm:mb-3 text-sm sm:text-base">Informations Techniques</h3>
+          <div className="space-y-1.5 sm:space-y-2 text-xs sm:text-sm">
             {[
               ["Version", "2.0.0"],
               ["Framework", "React 18 + Vite"],
@@ -741,26 +743,26 @@ const DocumentationManager = () => {
               ["IDE", "Visual Studio Code"],
               ["Assistance", "IA Générative"],
             ].map(([k, v]) => (
-              <div key={k} className="flex justify-between">
+              <div key={k} className="flex justify-between gap-2">
                 <span className="text-muted-foreground">{k}</span>
-                <span className="font-medium text-foreground">{v}</span>
+                <span className="font-medium text-foreground text-right">{v}</span>
               </div>
             ))}
           </div>
         </div>
-        <div className="bg-card border border-border rounded-xl p-5">
-          <h3 className="font-display font-bold text-foreground mb-3">Contact Support</h3>
-          <div className="space-y-2 text-sm">
+        <div className="bg-card border border-border rounded-xl p-4 sm:p-5">
+          <h3 className="font-display font-bold text-foreground mb-2 sm:mb-3 text-sm sm:text-base">Contact Support</h3>
+          <div className="space-y-1.5 sm:space-y-2 text-xs sm:text-sm">
             {[
-              ["Email Principal", "contact@scoly.ci"],
+              ["Email", "contact@scoly.ci"],
               ["Téléphone", "+225 07 59 56 60 87"],
               ["Site Web", "www.scoly.ci"],
               ["Hébergeur", "cPanel / Safaricloud"],
               ["cPanel", "cpanel.scoly.ci"],
             ].map(([k, v]) => (
-              <div key={k} className="flex justify-between">
+              <div key={k} className="flex justify-between gap-2">
                 <span className="text-muted-foreground">{k}</span>
-                <span className="font-medium text-foreground">{v}</span>
+                <span className="font-medium text-foreground text-right">{v}</span>
               </div>
             ))}
           </div>
