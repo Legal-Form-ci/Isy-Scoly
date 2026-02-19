@@ -55,9 +55,9 @@ serve(async (req) => {
 
     const itemsList = order.order_items
       .map((item: any) => `<tr>
-        <td style="padding: 12px; border-bottom: 1px solid #eee;">${item.product_name}</td>
-        <td style="padding: 12px; border-bottom: 1px solid #eee; text-align: center;">${item.quantity}</td>
-        <td style="padding: 12px; border-bottom: 1px solid #eee; text-align: right;">${new Intl.NumberFormat("fr-FR").format(item.total_price)} FCFA</td>
+        <td style="padding: 14px 16px; border-bottom: 1px solid #f0f0f0; font-size: 14px; color: #374151;">${item.product_name}</td>
+        <td style="padding: 14px 16px; border-bottom: 1px solid #f0f0f0; text-align: center; font-size: 14px; color: #6b7280;">${item.quantity}</td>
+        <td style="padding: 14px 16px; border-bottom: 1px solid #f0f0f0; text-align: right; font-size: 14px; font-weight: 600; color: #374151;">${new Intl.NumberFormat("fr-FR").format(item.total_price)} FCFA</td>
       </tr>`)
       .join("");
 
@@ -65,78 +65,117 @@ serve(async (req) => {
     let heading = "";
     let message = "";
     let ctaText = "";
-    const ctaUrl = "https://scoofficeplus.ci/account";
+    let statusIcon = "";
+    let statusColor = "";
+    const ctaUrl = "https://scoly.ci/account";
 
     switch (emailType) {
       case "confirmation":
-        subject = `Confirmation de commande #${orderNumber} - ScoOffice+`;
+        subject = `✅ Confirmation de commande #${orderNumber} — Scoly`;
         heading = "Merci pour votre commande !";
         message = `Nous avons bien reçu votre commande et nous la préparons avec soin. Vous recevrez un email lorsqu'elle sera expédiée.`;
         ctaText = "Suivre ma commande";
+        statusIcon = "📦";
+        statusColor = "#10b981";
         break;
       case "shipped":
-        subject = `Votre commande #${orderNumber} est en route - ScoOffice+`;
+        subject = `🚚 Votre commande #${orderNumber} est en route — Scoly`;
         heading = "Votre commande est en route !";
         message = `Bonne nouvelle ! Votre commande a été expédiée et est en cours de livraison. Notre livreur vous contactera bientôt.`;
         ctaText = "Suivre ma livraison";
+        statusIcon = "🚚";
+        statusColor = "#3b82f6";
         break;
       case "delivered":
-        subject = `Votre commande #${orderNumber} a été livrée - ScoOffice+`;
+        subject = `🎉 Votre commande #${orderNumber} a été livrée — Scoly`;
         heading = "Commande livrée !";
-        message = `Votre commande a été livrée. Nous espérons que vous êtes satisfait de vos achats. N'hésitez pas à confirmer la réception dans votre espace client.`;
+        message = `Votre commande a été livrée avec succès. Nous espérons que vous êtes satisfait de vos achats. N'hésitez pas à confirmer la réception dans votre espace client.`;
         ctaText = "Confirmer la réception";
+        statusIcon = "✅";
+        statusColor = "#059669";
         break;
     }
 
     const html = `
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>${subject}</title>
 </head>
-<body style="margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; background-color: #f5f5f5;">
-  <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff;">
-    <div style="background-color: #2563eb; padding: 30px; text-align: center;">
-      <h1 style="color: #ffffff; margin: 0; font-size: 28px;">ScoOffice+</h1>
-      <p style="color: #ffffffcc; margin: 8px 0 0; font-size: 14px;">Fournitures scolaires & bureautiques</p>
-    </div>
-    <div style="padding: 40px 30px;">
-      <h2 style="color: #1f2937; margin: 0 0 10px 0; font-size: 24px;">${heading}</h2>
-      <p style="color: #6b7280; font-size: 16px; line-height: 1.6;">Bonjour ${customerName},</p>
-      <p style="color: #6b7280; font-size: 16px; line-height: 1.6;">${message}</p>
-      <div style="background-color: #f9fafb; border-radius: 8px; padding: 20px; margin: 30px 0;">
-        <p style="margin: 0 0 10px 0; color: #6b7280;">Numéro de commande</p>
-        <p style="margin: 0; font-size: 20px; font-weight: bold; color: #2563eb;">#${orderNumber}</p>
+<body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #f3f4f6; -webkit-font-smoothing: antialiased;">
+  <div style="max-width: 640px; margin: 0 auto; padding: 20px;">
+    <!-- Header -->
+    <div style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%); padding: 40px 32px; border-radius: 16px 16px 0 0; text-align: center;">
+      <div style="margin-bottom: 16px;">
+        <span style="font-size: 32px; font-weight: 800; color: #ffffff; letter-spacing: -0.5px;">Scoly</span>
       </div>
-      <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
+      <p style="color: rgba(255,255,255,0.7); margin: 0; font-size: 13px; letter-spacing: 1px; text-transform: uppercase;">Fournitures scolaires & bureautiques</p>
+    </div>
+
+    <!-- Main Content -->
+    <div style="background-color: #ffffff; padding: 40px 32px;">
+      <!-- Status Badge -->
+      <div style="text-align: center; margin-bottom: 28px;">
+        <span style="display: inline-block; font-size: 48px; line-height: 1;">${statusIcon}</span>
+      </div>
+
+      <h2 style="color: #111827; margin: 0 0 12px 0; font-size: 24px; font-weight: 700; text-align: center; line-height: 1.3;">
+        ${heading}
+      </h2>
+      <p style="color: #6b7280; font-size: 15px; line-height: 1.7; text-align: center; margin: 0 0 8px 0;">
+        Bonjour <strong style="color: #374151;">${customerName}</strong>,
+      </p>
+      <p style="color: #6b7280; font-size: 15px; line-height: 1.7; text-align: center; margin: 0 0 32px 0;">
+        ${message}
+      </p>
+
+      <!-- Order Number Card -->
+      <div style="background: linear-gradient(135deg, #f8fafc, #f1f5f9); border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; margin: 0 0 28px 0; text-align: center;">
+        <p style="margin: 0 0 6px 0; color: #94a3b8; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">Numéro de commande</p>
+        <p style="margin: 0; font-size: 24px; font-weight: 800; color: ${statusColor}; letter-spacing: 1px;">#${orderNumber}</p>
+      </div>
+
+      <!-- Items Table -->
+      <table style="width: 100%; border-collapse: collapse; margin: 0 0 24px 0;">
         <thead>
-          <tr style="background-color: #f3f4f6;">
-            <th style="padding: 12px; text-align: left; color: #374151;">Produit</th>
-            <th style="padding: 12px; text-align: center; color: #374151;">Qté</th>
-            <th style="padding: 12px; text-align: right; color: #374151;">Prix</th>
+          <tr>
+            <th style="padding: 12px 16px; text-align: left; color: #94a3b8; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; border-bottom: 2px solid #f0f0f0;">Produit</th>
+            <th style="padding: 12px 16px; text-align: center; color: #94a3b8; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; border-bottom: 2px solid #f0f0f0;">Qté</th>
+            <th style="padding: 12px 16px; text-align: right; color: #94a3b8; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; border-bottom: 2px solid #f0f0f0;">Prix</th>
           </tr>
         </thead>
         <tbody>${itemsList}</tbody>
         <tfoot>
           <tr>
-            <td colspan="2" style="padding: 12px; text-align: right; font-weight: bold; color: #1f2937;">Total</td>
-            <td style="padding: 12px; text-align: right; font-weight: bold; color: #2563eb; font-size: 18px;">${totalFormatted}</td>
+            <td colspan="2" style="padding: 16px; text-align: right; font-weight: 700; color: #111827; font-size: 15px; border-top: 2px solid #111827;">Total</td>
+            <td style="padding: 16px; text-align: right; font-weight: 800; color: ${statusColor}; font-size: 20px; border-top: 2px solid #111827;">${totalFormatted}</td>
           </tr>
         </tfoot>
       </table>
-      <div style="text-align: center; margin: 30px 0;">
-        <a href="${ctaUrl}" style="display: inline-block; background-color: #2563eb; color: #ffffff; text-decoration: none; padding: 14px 30px; border-radius: 8px; font-weight: bold; font-size: 16px;">${ctaText}</a>
+
+      <!-- CTA Button -->
+      <div style="text-align: center; margin: 32px 0;">
+        <a href="${ctaUrl}" style="display: inline-block; background: linear-gradient(135deg, #0f172a, #1e293b); color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 12px; font-weight: 700; font-size: 15px; letter-spacing: 0.3px; box-shadow: 0 4px 14px rgba(15,23,42,0.3);">${ctaText}</a>
       </div>
+
       ${order.shipping_address ? `
-      <div style="background-color: #fef3c7; border-radius: 8px; padding: 20px; margin: 20px 0;">
-        <p style="margin: 0 0 10px 0; font-weight: bold; color: #92400e;">📍 Adresse de livraison</p>
-        <p style="margin: 0; color: #78350f;">${order.shipping_address}</p>
+      <!-- Shipping Address -->
+      <div style="background-color: #fffbeb; border: 1px solid #fde68a; border-radius: 12px; padding: 20px; margin: 24px 0 0 0;">
+        <p style="margin: 0 0 8px 0; font-weight: 700; color: #92400e; font-size: 14px;">📍 Adresse de livraison</p>
+        <p style="margin: 0; color: #78350f; font-size: 14px; line-height: 1.6;">${order.shipping_address}</p>
       </div>` : ""}
     </div>
-    <div style="background-color: #1f2937; padding: 30px; text-align: center;">
-      <p style="color: #9ca3af; margin: 0 0 10px 0; font-size: 14px;">Besoin d'aide ? Contactez-nous à contact@scoofficeplus.ci</p>
-      <p style="color: #6b7280; margin: 0; font-size: 12px;">© ${new Date().getFullYear()} ScoOffice+. Tous droits réservés.</p>
+
+    <!-- Footer -->
+    <div style="background-color: #0f172a; padding: 32px; border-radius: 0 0 16px 16px; text-align: center;">
+      <p style="color: rgba(255,255,255,0.6); margin: 0 0 8px 0; font-size: 13px;">
+        Besoin d'aide ? Contactez-nous à <a href="mailto:contact@scoly.ci" style="color: #60a5fa; text-decoration: none;">contact@scoly.ci</a>
+      </p>
+      <p style="color: rgba(255,255,255,0.4); margin: 0; font-size: 11px;">
+        © ${new Date().getFullYear()} Scoly. Tous droits réservés. — Abidjan, Côte d'Ivoire
+      </p>
     </div>
   </div>
 </body>
@@ -154,7 +193,7 @@ serve(async (req) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        from: "ScoOffice+ <onboarding@resend.dev>",
+        from: "Scoly <onboarding@resend.dev>",
         to: [recipientEmail],
         subject,
         html,

@@ -108,7 +108,7 @@ const PlatformSettings = () => {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-display font-bold text-foreground">Paramètres de la Plateforme</h1>
-          <p className="text-muted-foreground">Configurez les paramètres généraux d'Izy-Scoly</p>
+          <p className="text-muted-foreground">Configurez les paramètres généraux de Scoly</p>
         </div>
         <Button onClick={handleSaveAll} disabled={saving}>
           <Save size={18} />
@@ -147,7 +147,7 @@ const PlatformSettings = () => {
                 <div>
                   <Label>Nom de la plateforme</Label>
                   <Input 
-                    value={getValue("platform_name", "Izy-Scoly")} 
+                    value={getValue("platform_name", "Scoly")} 
                     onChange={(e) => setValue("platform_name", e.target.value)}
                   />
                 </div>
@@ -157,7 +157,7 @@ const PlatformSettings = () => {
                     type="email"
                     value={getValue("contact_email", "")} 
                     onChange={(e) => setValue("contact_email", e.target.value)}
-                    placeholder="contact@izy-scoly.ci"
+                    placeholder="contact@scoly.ci"
                   />
                 </div>
                 <div>

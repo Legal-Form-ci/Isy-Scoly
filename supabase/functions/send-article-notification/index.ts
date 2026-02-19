@@ -14,7 +14,6 @@ interface NotificationRequest {
   articleId?: string;
   status?: "approved" | "rejected";
   reason?: string;
-  // Generic notification fields
   type?: string;
   userId?: string;
   data?: Record<string, any>;
@@ -50,23 +49,23 @@ const handler = async (req: Request): Promise<Response> => {
 
       switch (type) {
         case 'welcome':
-          title = 'Bienvenue sur ScoOffice+ !';
-          message = `${prefix}${greeting}bienvenue sur ScoOffice+ ! Découvrez notre catalogue de fournitures scolaires et bureautiques avec livraison gratuite partout en Côte d'Ivoire.`;
+          title = 'Bienvenue sur Scoly !';
+          message = `${prefix}${greeting}bienvenue sur Scoly ! Découvrez notre catalogue de fournitures scolaires et bureautiques avec livraison gratuite partout en Côte d'Ivoire.`;
           break;
         case 'security_alert':
           title = 'Alerte de sécurité';
           message = `${prefix}${greeting}une connexion a été détectée sur votre compte depuis ${data?.device || 'un appareil inconnu'}. Si ce n'était pas vous, sécurisez votre compte immédiatement.`;
           break;
         case 'promotion':
-          title = data?.title || 'Offre spéciale ScoOffice+';
+          title = data?.title || 'Offre spéciale Scoly';
           message = `${prefix}${greeting}${data?.message || 'une nouvelle promotion est disponible !'}`;
           break;
         case 'admin_announcement':
-          title = data?.title || 'Annonce ScoOffice+';
+          title = data?.title || 'Annonce Scoly';
           message = `${prefix}${data?.message || ''}`;
           break;
         default:
-          title = 'Notification ScoOffice+';
+          title = 'Notification Scoly';
           message = `${prefix}${greeting}vous avez une nouvelle notification.`;
       }
 
@@ -78,14 +77,13 @@ const handler = async (req: Request): Promise<Response> => {
         data: data || {},
       });
 
-      // Broadcast to all users
       if (type === 'broadcast') {
         const { data: users } = await supabase.from('profiles').select('id').limit(1000);
         if (users && users.length > 0) {
           const notifications = users.map(u => ({
             user_id: u.id,
             type: 'promotion',
-            title: data?.title || 'Annonce ScoOffice+',
+            title: data?.title || 'Annonce Scoly',
             message: `${prefix}${data?.message || 'Nouvelle annonce disponible.'}`,
             data: data || {},
           }));
@@ -130,88 +128,93 @@ const handler = async (req: Request): Promise<Response> => {
       ? `${profile.first_name} ${profile.last_name || ""}`.trim() 
       : "Auteur";
 
-    // Create in-app notification
     await supabase.from('notifications').insert({
       user_id: article.author_id,
       type: 'article',
       title: status === 'approved' ? 'Article publié !' : 'Article à réviser',
       message: `Message généré automatiquement, ne pas répondre. ${
         status === 'approved' 
-          ? `Votre article "${article.title_fr}" a été approuvé et publié sur ScoOffice+.`
+          ? `Votre article "${article.title_fr}" a été approuvé et publié sur Scoly.`
           : `Votre article "${article.title_fr}" nécessite des modifications.${reason ? ' Raison : ' + reason : ''}`
       }`,
       data: { article_id: articleId, status, reason },
     });
 
-    let subject: string;
+    let emailSubject: string;
     let htmlContent: string;
 
     if (status === "approved") {
-      subject = `🎉 Votre article "${article.title_fr}" a été approuvé !`;
+      emailSubject = `🎉 Votre article "${article.title_fr}" a été approuvé !`;
       htmlContent = `
         <!DOCTYPE html>
-        <html>
+        <html lang="fr">
         <head>
           <meta charset="utf-8">
           <style>
-            body { font-family: 'Segoe UI', sans-serif; line-height: 1.6; color: #1a2744; margin: 0; padding: 0; background: #f0f2f5; }
-            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-            .header { background: linear-gradient(135deg, #0f2b4a 0%, #1a4270 100%); padding: 30px; border-radius: 12px 12px 0 0; text-align: center; }
-            .header h1 { color: white; margin: 0; font-size: 22px; }
-            .header p { color: rgba(255,255,255,0.8); margin: 8px 0 0; font-size: 13px; }
-            .content { background: white; padding: 30px; border-radius: 0 0 12px 12px; }
-            .button { display: inline-block; background: #2d8a6e; color: white; padding: 12px 28px; text-decoration: none; border-radius: 8px; margin-top: 20px; font-weight: 600; }
-            .footer { text-align: center; margin-top: 20px; color: #888; font-size: 12px; }
-            .auto-msg { font-size: 11px; color: #999; text-align: center; margin-bottom: 15px; }
+            body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #1a2744; margin: 0; padding: 0; background: #f3f4f6; }
+            .container { max-width: 640px; margin: 0 auto; padding: 20px; }
+            .header { background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%); padding: 40px 32px; border-radius: 16px 16px 0 0; text-align: center; }
+            .header h1 { color: white; margin: 0 0 8px; font-size: 22px; font-weight: 700; }
+            .header .brand { font-size: 28px; font-weight: 800; color: white; margin-bottom: 12px; }
+            .header p { color: rgba(255,255,255,0.6); margin: 0; font-size: 12px; letter-spacing: 1px; text-transform: uppercase; }
+            .content { background: white; padding: 40px 32px; }
+            .button { display: inline-block; background: linear-gradient(135deg, #0f172a, #1e293b); color: white; padding: 16px 40px; text-decoration: none; border-radius: 12px; font-weight: 700; font-size: 15px; box-shadow: 0 4px 14px rgba(15,23,42,0.3); }
+            .footer { background-color: #0f172a; padding: 32px; border-radius: 0 0 16px 16px; text-align: center; }
+            .footer p { color: rgba(255,255,255,0.4); margin: 0; font-size: 11px; }
+            .auto-msg { font-size: 11px; color: #999; text-align: center; margin-bottom: 20px; }
           </style>
         </head>
         <body>
           <div class="container">
             <div class="header">
+              <div class="brand">Scoly</div>
               <h1>🎉 Article Approuvé !</h1>
-              <p>ScoOffice+ — Plateforme Scolaire & Bureautique</p>
+              <p>Fournitures scolaires & bureautiques</p>
             </div>
             <div class="content">
               <p class="auto-msg">Message généré automatiquement, ne pas répondre.</p>
               <p>Bonjour <strong>${authorName}</strong>,</p>
-              <p>Votre article <strong>"${article.title_fr}"</strong> a été approuvé et publié sur ScoOffice+.</p>
+              <p>Votre article <strong>"${article.title_fr}"</strong> a été approuvé et publié sur Scoly.</p>
               <p>Merci pour votre contribution !</p>
               <center>
-                <a href="https://scoofficeplus.ci/actualites" class="button">Voir mon article</a>
+                <a href="https://scoly.ci/actualites" class="button">Voir mon article</a>
               </center>
             </div>
             <div class="footer">
-              <p>© ${new Date().getFullYear()} ScoOffice+ — Tous droits réservés</p>
+              <p>© ${new Date().getFullYear()} Scoly — Tous droits réservés — Abidjan, Côte d'Ivoire</p>
             </div>
           </div>
         </body>
         </html>
       `;
     } else {
-      subject = `📝 Votre article "${article.title_fr}" nécessite des modifications`;
+      emailSubject = `📝 Votre article "${article.title_fr}" nécessite des modifications`;
       htmlContent = `
         <!DOCTYPE html>
-        <html>
+        <html lang="fr">
         <head>
           <meta charset="utf-8">
           <style>
-            body { font-family: 'Segoe UI', sans-serif; line-height: 1.6; color: #1a2744; margin: 0; padding: 0; background: #f0f2f5; }
-            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-            .header { background: linear-gradient(135deg, #d97706 0%, #f59e0b 100%); padding: 30px; border-radius: 12px 12px 0 0; text-align: center; }
-            .header h1 { color: white; margin: 0; font-size: 22px; }
-            .header p { color: rgba(255,255,255,0.8); margin: 8px 0 0; font-size: 13px; }
-            .content { background: white; padding: 30px; border-radius: 0 0 12px 12px; }
-            .reason-box { background: #fef3c7; border-left: 4px solid #f59e0b; padding: 15px; margin: 20px 0; border-radius: 0 8px 8px 0; }
-            .button { display: inline-block; background: #d97706; color: white; padding: 12px 28px; text-decoration: none; border-radius: 8px; margin-top: 20px; font-weight: 600; }
-            .footer { text-align: center; margin-top: 20px; color: #888; font-size: 12px; }
-            .auto-msg { font-size: 11px; color: #999; text-align: center; margin-bottom: 15px; }
+            body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #1a2744; margin: 0; padding: 0; background: #f3f4f6; }
+            .container { max-width: 640px; margin: 0 auto; padding: 20px; }
+            .header { background: linear-gradient(135deg, #d97706 0%, #f59e0b 100%); padding: 40px 32px; border-radius: 16px 16px 0 0; text-align: center; }
+            .header h1 { color: white; margin: 0 0 8px; font-size: 22px; font-weight: 700; }
+            .header .brand { font-size: 28px; font-weight: 800; color: white; margin-bottom: 12px; }
+            .header p { color: rgba(255,255,255,0.7); margin: 0; font-size: 12px; letter-spacing: 1px; text-transform: uppercase; }
+            .content { background: white; padding: 40px 32px; }
+            .reason-box { background: #fffbeb; border-left: 4px solid #f59e0b; padding: 16px 20px; margin: 24px 0; border-radius: 0 12px 12px 0; }
+            .button { display: inline-block; background: linear-gradient(135deg, #d97706, #b45309); color: white; padding: 16px 40px; text-decoration: none; border-radius: 12px; font-weight: 700; font-size: 15px; box-shadow: 0 4px 14px rgba(217,119,6,0.3); }
+            .footer { background-color: #0f172a; padding: 32px; border-radius: 0 0 16px 16px; text-align: center; }
+            .footer p { color: rgba(255,255,255,0.4); margin: 0; font-size: 11px; }
+            .auto-msg { font-size: 11px; color: #999; text-align: center; margin-bottom: 20px; }
           </style>
         </head>
         <body>
           <div class="container">
             <div class="header">
+              <div class="brand">Scoly</div>
               <h1>📝 Article à réviser</h1>
-              <p>ScoOffice+ — Plateforme Scolaire & Bureautique</p>
+              <p>Fournitures scolaires & bureautiques</p>
             </div>
             <div class="content">
               <p class="auto-msg">Message généré automatiquement, ne pas répondre.</p>
@@ -220,11 +223,11 @@ const handler = async (req: Request): Promise<Response> => {
               ${reason ? `<div class="reason-box"><strong>Commentaire :</strong><p>${reason}</p></div>` : ""}
               <p>Modifiez votre article depuis votre espace auteur et soumettez-le à nouveau.</p>
               <center>
-                <a href="https://scoofficeplus.ci/author" class="button">Modifier mon article</a>
+                <a href="https://scoly.ci/author" class="button">Modifier mon article</a>
               </center>
             </div>
             <div class="footer">
-              <p>© ${new Date().getFullYear()} ScoOffice+ — Tous droits réservés</p>
+              <p>© ${new Date().getFullYear()} Scoly — Tous droits réservés — Abidjan, Côte d'Ivoire</p>
             </div>
           </div>
         </body>
@@ -232,7 +235,6 @@ const handler = async (req: Request): Promise<Response> => {
       `;
     }
 
-    // Send email if Resend is configured
     if (RESEND_API_KEY) {
       const emailResponse = await fetch("https://api.resend.com/emails", {
         method: "POST",
@@ -241,9 +243,9 @@ const handler = async (req: Request): Promise<Response> => {
           Authorization: `Bearer ${RESEND_API_KEY}`,
         },
         body: JSON.stringify({
-          from: "ScoOffice+ <onboarding@resend.dev>",
+          from: "Scoly <onboarding@resend.dev>",
           to: [authorEmail],
-          subject,
+          subject: emailSubject,
           html: htmlContent,
         }),
       });
