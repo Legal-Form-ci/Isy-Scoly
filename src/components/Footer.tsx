@@ -17,6 +17,7 @@ const Footer = () => {
     resources: [
       { label: "Actualités", href: "/actualites" },
       { label: t.footer.faq, href: "/faq" },
+      { label: "Documentation", href: "/documentation" },
       { label: t.nav.about, href: "/about" },
       { label: t.nav.contact, href: "/contact" },
     ],
@@ -62,7 +63,12 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 mb-12">
           {/* Brand Column - Logo à gauche */}
           <div className="lg:col-span-2">
-            <Logo variant="white" size="lg" showSlogan />
+            <div className="bg-white/95 rounded-xl px-4 py-2 inline-block">
+              <Logo size="lg" showSlogan={false} />
+            </div>
+            <p className="mt-1 text-primary-foreground/60 text-xs font-medium tracking-tight">
+              Scolaire & Bureautique — Livraison gratuite
+            </p>
             <p className="mt-4 text-primary-foreground/80 max-w-sm leading-relaxed">
               La plateforme de référence en Côte d'Ivoire pour les fournitures scolaires et bureautiques de qualité.
             </p>
