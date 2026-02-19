@@ -3,10 +3,13 @@ import StarterKit from '@tiptap/starter-kit';
 import Image from '@tiptap/extension-image';
 import Youtube from '@tiptap/extension-youtube';
 import Link from '@tiptap/extension-link';
+import { Table } from '@tiptap/extension-table';
+import { TableRow } from '@tiptap/extension-table-row';
+import { TableCell } from '@tiptap/extension-table-cell';
+import { TableHeader } from '@tiptap/extension-table-header';
 import { 
   Bold, 
   Italic, 
-  Underline,
   Strikethrough,
   List, 
   ListOrdered, 
@@ -20,9 +23,8 @@ import {
   Heading3,
   Undo,
   Redo,
-  AlignLeft,
-  AlignCenter,
-  AlignRight
+  TableIcon,
+  Trash2
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -100,6 +102,15 @@ const RichTextEditor = ({ content, onChange, placeholder = "Rédigez votre conte
           class: 'text-primary underline cursor-pointer',
         },
       }),
+      Table.configure({
+        resizable: true,
+        HTMLAttributes: {
+          class: 'article-table',
+        },
+      }),
+      TableRow,
+      TableHeader,
+      TableCell,
     ],
     content,
     onUpdate: ({ editor }) => {
@@ -236,6 +247,50 @@ const RichTextEditor = ({ content, onChange, placeholder = "Rédigez votre conte
 
         <div className="w-px h-6 bg-border mx-1 self-center" />
 
+        {/* Table */}
+        <MenuButton 
+          onClick={() => editor.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run()} 
+          title="Insérer un tableau"
+        >
+          <TableIcon size={16} />
+        </MenuButton>
+        {editor.isActive('table') && (
+          <>
+            <MenuButton 
+              onClick={() => editor.chain().focus().addColumnAfter().run()} 
+              title="Ajouter colonne"
+            >
+              <span className="text-xs font-bold">+C</span>
+            </MenuButton>
+            <MenuButton 
+              onClick={() => editor.chain().focus().addRowAfter().run()} 
+              title="Ajouter ligne"
+            >
+              <span className="text-xs font-bold">+L</span>
+            </MenuButton>
+            <MenuButton 
+              onClick={() => editor.chain().focus().deleteColumn().run()} 
+              title="Supprimer colonne"
+            >
+              <span className="text-xs font-bold text-destructive">-C</span>
+            </MenuButton>
+            <MenuButton 
+              onClick={() => editor.chain().focus().deleteRow().run()} 
+              title="Supprimer ligne"
+            >
+              <span className="text-xs font-bold text-destructive">-L</span>
+            </MenuButton>
+            <MenuButton 
+              onClick={() => editor.chain().focus().deleteTable().run()} 
+              title="Supprimer tableau"
+            >
+              <Trash2 size={14} className="text-destructive" />
+            </MenuButton>
+          </>
+        )}
+
+        <div className="w-px h-6 bg-border mx-1 self-center" />
+
         {/* Media */}
         <Dialog open={isImageDialogOpen} onOpenChange={setIsImageDialogOpen}>
           <DialogTrigger asChild>
@@ -320,7 +375,6 @@ const RichTextEditor = ({ content, onChange, placeholder = "Rédigez votre conte
           </DialogContent>
         </Dialog>
       </div>
-
 
       {/* Editor content */}
       <EditorContent editor={editor} />
