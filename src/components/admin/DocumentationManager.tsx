@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Download, RefreshCw, FileText, Database, Shield, Users, Truck, CreditCard, Cpu, Globe, Settings, BookOpen, Headphones, Phone, Mail, ExternalLink } from "lucide-react";
+import { Download, RefreshCw, FileText, Database, Shield, Users, Truck, CreditCard, Cpu, Globe, Settings, BookOpen, Headphones, Phone, Mail, ExternalLink, ImageIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import jsPDF from "jspdf";
@@ -22,6 +22,19 @@ const sections = [
 
 const DocumentationManager = () => {
   const [generating, setGenerating] = useState(false);
+  const [flyerDownloaded, setFlyerDownloaded] = useState(() => {
+    return localStorage.getItem("flyer-freelance-downloaded") === "true";
+  });
+
+  const handleFlyerDownload = () => {
+    const link = document.createElement("a");
+    link.href = "/flyer-freelance-inocent-koffi.jpg";
+    link.download = "Affiche-Freelance-Inocent-KOFFI.jpg";
+    link.click();
+    setFlyerDownloaded(true);
+    localStorage.setItem("flyer-freelance-downloaded", "true");
+    toast.success("Affiche téléchargée !");
+  };
 
   const loadImageAsBase64 = (src: string): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -620,16 +633,19 @@ const DocumentationManager = () => {
       doc.text("Développeur Freelance Full Stack", M + 44, y + 18);
       doc.setFontSize(10);
       doc.setTextColor(200, 210, 230);
-      doc.text("+225 07 59 56 60 87", M + 44, y + 27);
-      doc.text("contact@scoly.ci", M + 44, y + 34);
-      doc.text("www.scoly.ci", M + 44, y + 41);
-      doc.text("Hébergeur : cPanel / Safaricloud", M + 44, y + 48);
+      doc.text("07 59 56 60 87 (Appels & WhatsApp)", M + 44, y + 27);
+      doc.text("inocent.koffi@agricapital.ci", M + 44, y + 34);
+      doc.text("ikoffi.agricapital.ci", M + 44, y + 41);
+      doc.text("Abidjan, Côte d'Ivoire", M + 44, y + 48);
       y += 62;
 
-      y = subTitle("Support Scoly", y);
-      y = bulletList(["Email : contact@scoly.ci", "Téléphone : +225 07 59 56 60 87", "Site web : www.scoly.ci", "Hébergeur : cPanel / Safaricloud — cpanel.scoly.ci"], y, pg);
+      y = subTitle("Contact Développeur", y);
+      y = bulletList(["Email : inocent.koffi@agricapital.ci", "Téléphone / WhatsApp : 07 59 56 60 87", "Portfolio : ikoffi.agricapital.ci", "Localisation : Abidjan, Côte d'Ivoire"], y, pg);
       y += 4;
-      y = subTitle("Hébergement & Infrastructure", y);
+      y = subTitle("Services Proposés", y);
+      y = bulletList(["Sites Web & E-commerce", "Applications Web & Mobile", "CRM & Logiciels sur mesure", "Formations & Initiation au développement"], y, pg);
+      y += 4;
+      y = subTitle("Hébergement & Infrastructure Scoly", y);
       y = bulletList(["Frontend : cPanel / Safaricloud (déploiement manuel)", "Backend : Supabase Cloud (PostgreSQL + Edge Functions)", "CDN : Cloudflare (optionnel, performance et sécurité)"], y, pg);
       y += 4;
       y = subTitle("Outils de Développement", y);
@@ -720,14 +736,31 @@ const DocumentationManager = () => {
               <p className="text-secondary text-xs">Développeur Freelance Full Stack</p>
             </div>
             <div className="grid grid-cols-1 gap-y-1.5 text-primary-foreground/70 text-xs sm:text-sm">
-              <span className="flex items-center gap-2"><Phone size={14} className="shrink-0" /> +225 07 59 56 60 87</span>
-              <span className="flex items-center gap-2"><Mail size={14} className="shrink-0" /> contact@scoly.ci</span>
-              <span className="flex items-center gap-2"><Globe size={14} className="shrink-0" /> www.scoly.ci</span>
-              <span className="flex items-center gap-2"><ExternalLink size={14} className="shrink-0" /> cPanel / Safaricloud</span>
+              <span className="flex items-center gap-2"><Phone size={14} className="shrink-0" /> 07 59 56 60 87 (Appels & WhatsApp)</span>
+              <span className="flex items-center gap-2"><Mail size={14} className="shrink-0" /> inocent.koffi@agricapital.ci</span>
+              <span className="flex items-center gap-2"><Globe size={14} className="shrink-0" /> ikoffi.agricapital.ci</span>
+              <span className="flex items-center gap-2"><ExternalLink size={14} className="shrink-0" /> Abidjan, Côte d'Ivoire</span>
             </div>
           </div>
         </div>
       </div>
+
+      {/* Flyer Download - One time */}
+      {!flyerDownloaded && (
+        <div className="bg-accent/10 border border-accent rounded-xl p-4 sm:p-5 flex flex-col sm:flex-row items-center gap-3 sm:gap-4">
+          <div className="w-10 h-10 rounded-lg bg-accent/20 flex items-center justify-center shrink-0">
+            <ImageIcon size={20} className="text-accent" />
+          </div>
+          <div className="flex-1 text-center sm:text-left">
+            <h3 className="font-display font-bold text-foreground text-sm sm:text-base">Affiche Freelance</h3>
+            <p className="text-muted-foreground text-xs">Affiche promotionnelle 1500×1500 — Téléchargement unique</p>
+          </div>
+          <Button onClick={handleFlyerDownload} size="sm" variant="accent" className="gap-2 w-full sm:w-auto">
+            <Download size={14} />
+            Télécharger l'affiche
+          </Button>
+        </div>
+      )}
 
       {/* Bottom Info */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
@@ -751,14 +784,14 @@ const DocumentationManager = () => {
           </div>
         </div>
         <div className="bg-card border border-border rounded-xl p-4 sm:p-5">
-          <h3 className="font-display font-bold text-foreground mb-2 sm:mb-3 text-sm sm:text-base">Contact Support</h3>
+          <h3 className="font-display font-bold text-foreground mb-2 sm:mb-3 text-sm sm:text-base">Contact Développeur</h3>
           <div className="space-y-1.5 sm:space-y-2 text-xs sm:text-sm">
             {[
-              ["Email", "contact@scoly.ci"],
-              ["Téléphone", "+225 07 59 56 60 87"],
-              ["Site Web", "www.scoly.ci"],
-              ["Hébergeur", "cPanel / Safaricloud"],
-              ["cPanel", "cpanel.scoly.ci"],
+              ["Email", "inocent.koffi@agricapital.ci"],
+              ["Tél / WhatsApp", "07 59 56 60 87"],
+              ["Portfolio", "ikoffi.agricapital.ci"],
+              ["Localisation", "Abidjan, Côte d'Ivoire"],
+              ["Hébergeur Scoly", "cPanel / Safaricloud"],
             ].map(([k, v]) => (
               <div key={k} className="flex justify-between gap-2">
                 <span className="text-muted-foreground">{k}</span>
