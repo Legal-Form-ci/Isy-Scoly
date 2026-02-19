@@ -13,6 +13,7 @@ import { toast } from "sonner";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ProductImageGallery from "@/components/ProductImageGallery";
+import RecentlyViewed, { addToRecentlyViewed } from "@/components/RecentlyViewed";
 
 interface Product {
   id: string;
@@ -80,6 +81,15 @@ const ProductDetail = () => {
     }
 
     setProduct(data);
+    
+    // Add to recently viewed
+    addToRecentlyViewed({
+      id: data.id,
+      name_fr: data.name_fr,
+      name_en: data.name_en,
+      price: data.price,
+      image_url: data.image_url,
+    });
     
     // Fetch related products
     if (data?.category_id) {
@@ -484,6 +494,7 @@ const ProductDetail = () => {
         </div>
       </div>
 
+      <RecentlyViewed />
       <Footer />
     </main>
   );

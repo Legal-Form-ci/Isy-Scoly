@@ -11,6 +11,7 @@ import CTASection from "@/components/CTASection";
 import Footer from "@/components/Footer";
 import FreeShippingPopup from "@/components/FreeShippingPopup";
 import SEOHead from "@/components/SEOHead";
+import RecentlyViewed from "@/components/RecentlyViewed";
 
 const Index = () => {
   return (
@@ -25,6 +26,7 @@ const Index = () => {
       <HeroSection />
       <FlashDeals />
       <FeaturedProductsCarousel />
+      <RecentlyViewed />
       <SpacesSection />
       <FeaturedArticlesCarousel />
       <FeaturesSection />
