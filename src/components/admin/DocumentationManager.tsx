@@ -345,7 +345,7 @@ const DocumentationManager = () => {
         "Realtime pour les notifications et mises à jour en temps réel",
         "Storage pour les fichiers, images et documents",
         "Auth pour l'authentification multi-méthodes sécurisée",
-        "Lovable Cloud pour l'hébergement automatique et les déploiements",
+        "Supabase Cloud pour l'hébergement du backend et les déploiements",
       ], y, pg);
       y += 3;
       y = subTitle("Intégrations Externes", y);
@@ -355,7 +355,7 @@ const DocumentationManager = () => {
         "IA Générative (Gemini/GPT) — Module IA pour auto-gestion, traduction, génération de contenu et images",
       ], y, pg);
       y += 3;
-      y = infoBox("Architecture Standalone : L'application est 100% autonome après build. Elle peut être déployée sur Lovable Cloud, Vercel, ou tout hébergeur statique. Développée par Inocent KOFFI.", y);
+      y = infoBox("Architecture Standalone : L'application est 100% autonome après build. Elle peut être déployée sur cPanel/Safaricloud, Vercel, ou tout hébergeur statique. Développée sur VSCode avec assistance IA par Inocent KOFFI.", y);
 
       // ==================== PAGE 4-5: DB ====================
       pg.v++; y = newPage(pg.v);
@@ -581,7 +581,7 @@ const DocumentationManager = () => {
       y = bulletList(["Exécutez : npm install (installation des dépendances)", "Exécutez : npm run build (compilation optimisée)", "Le dossier dist/ contient les fichiers statiques à déployer"], y, pg);
       y += 3;
       y = subTitle("Options de Déploiement", y);
-      y = bulletList(["Lovable Cloud — Déploiement automatique en un clic depuis l'éditeur", "Vercel — Import du repository Git, déploiement continu automatique", "cPanel — Upload manuel du contenu dist/ dans public_html avec .htaccess", "Nginx / Apache — Configuration du serveur pour le routing SPA"], y, pg);
+      y = bulletList(["cPanel / Safaricloud — Upload du contenu dist/ dans public_html avec .htaccess", "Vercel — Import du repository Git, déploiement continu automatique", "Nginx / Apache — Configuration du serveur pour le routing SPA"], y, pg);
       y += 3;
       y = subTitle("Maintenance", y);
       y = bulletList(["Sauvegardes automatiques via Edge Function cloud-backup", "Monitoring des logs dans le dashboard Supabase", "Analytics disponibles dans le panel admin", "Mise à jour : rebuild + redéploiement des fichiers dist/"], y, pg);
@@ -596,45 +596,44 @@ const DocumentationManager = () => {
       doc.setFillColor(...NAVY);
       doc.roundedRect(M, y - 2, CW, 55, 3, 3, "F");
 
-      // Founder photo
+      // Founder photo - full visible, auto-adjusted
       if (founderBase64) {
         try {
-          doc.addImage(founderBase64, "JPEG", M + 8, y + 4, 28, 28);
-          // Draw a circle mask effect (white border)
-          doc.setDrawColor(...WHITE);
-          doc.setLineWidth(1.5);
-          doc.circle(M + 22, y + 18, 15, "S");
+          doc.addImage(founderBase64, "JPEG", M + 6, y + 3, 32, 42);
         } catch {}
       } else {
         doc.setFillColor(...WHITE);
-        doc.circle(M + 22, y + 18, 15, "F");
+        doc.circle(M + 22, y + 24, 15, "F");
         doc.setFontSize(12);
         doc.setFont("helvetica", "bold");
         doc.setTextColor(...NAVY);
-        doc.text("IK", M + 22, y + 20, { align: "center" });
+        doc.text("IK", M + 22, y + 26, { align: "center" });
       }
 
       doc.setFontSize(16);
       doc.setFont("helvetica", "bold");
       doc.setTextColor(...WHITE);
-      doc.text("Inocent KOFFI", M + 48, y + 10);
+      doc.text("Inocent KOFFI", M + 44, y + 10);
       doc.setFontSize(11);
       doc.setFont("helvetica", "normal");
       doc.setTextColor(...ORANGE);
-      doc.text("Développeur Freelance Full Stack", M + 48, y + 18);
+      doc.text("Développeur Freelance Full Stack", M + 44, y + 18);
       doc.setFontSize(10);
       doc.setTextColor(200, 210, 230);
-      doc.text("+225 07 59 56 60 87", M + 48, y + 27);
-      doc.text("inocent.koffi@agricapital.ci", M + 48, y + 34);
-      doc.text("www.ikoffi.agricapital.ci", M + 48, y + 41);
-      doc.text("AgriCapital CI", M + 48, y + 48);
+      doc.text("+225 07 59 56 60 87", M + 44, y + 27);
+      doc.text("contact@scoly.ci", M + 44, y + 34);
+      doc.text("www.scoly.ci", M + 44, y + 41);
+      doc.text("Hébergeur : cPanel / Safaricloud", M + 44, y + 48);
       y += 62;
 
       y = subTitle("Support Scoly", y);
-      y = bulletList(["Email : contact@scoly.ci", "Téléphone : +225 07 59 56 60 87", "Site web : www.scoly.ci"], y, pg);
+      y = bulletList(["Email : contact@scoly.ci", "Téléphone : +225 07 59 56 60 87", "Site web : www.scoly.ci", "Hébergeur : cPanel / Safaricloud — cpanel.scoly.ci"], y, pg);
       y += 4;
-      y = subTitle("Hébergement", y);
-      y = bulletList(["Frontend : Lovable Cloud (déploiement automatique)", "Backend : Supabase Cloud (PostgreSQL + Edge Functions)", "CDN : Cloudflare (optionnel, performance et sécurité)"], y, pg);
+      y = subTitle("Hébergement & Infrastructure", y);
+      y = bulletList(["Frontend : cPanel / Safaricloud (déploiement manuel)", "Backend : Supabase Cloud (PostgreSQL + Edge Functions)", "CDN : Cloudflare (optionnel, performance et sécurité)"], y, pg);
+      y += 4;
+      y = subTitle("Outils de Développement", y);
+      y = bulletList(["IDE : Visual Studio Code (VSCode)", "Assistance IA : Intelligence artificielle générative pour le développement", "Contrôle de version : Git & GitHub", "Tests & Debug : Chrome DevTools, Supabase Dashboard", "Design : Tailwind CSS + Shadcn/ui (composants accessibles)"], y, pg);
 
       y += 10;
       doc.setFillColor(...NAVY);
@@ -711,7 +710,7 @@ const DocumentationManager = () => {
           <img
             src="/founder-inocent-koffi.jpg"
             alt="Inocent KOFFI"
-            className="w-20 h-20 rounded-full object-cover border-2 border-secondary shrink-0"
+            className="w-24 h-28 rounded-lg object-cover object-top border-2 border-secondary shrink-0"
           />
           <div className="space-y-2 text-sm">
             <div>
@@ -720,9 +719,9 @@ const DocumentationManager = () => {
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-1 text-primary-foreground/70">
               <span className="flex items-center gap-2"><Phone size={14} /> +225 07 59 56 60 87</span>
-              <span className="flex items-center gap-2"><Mail size={14} /> inocent.koffi@agricapital.ci</span>
-              <span className="flex items-center gap-2"><Globe size={14} /> www.ikoffi.agricapital.ci</span>
-              <span className="flex items-center gap-2"><ExternalLink size={14} /> AgriCapital CI</span>
+              <span className="flex items-center gap-2"><Mail size={14} /> contact@scoly.ci</span>
+              <span className="flex items-center gap-2"><Globe size={14} /> www.scoly.ci</span>
+              <span className="flex items-center gap-2"><ExternalLink size={14} /> cPanel / Safaricloud</span>
             </div>
           </div>
         </div>
@@ -739,6 +738,8 @@ const DocumentationManager = () => {
               ["Backend", "Supabase Cloud"],
               ["Paiement", "KkiaPay"],
               ["Langues", "FR, EN, DE, ES"],
+              ["IDE", "Visual Studio Code"],
+              ["Assistance", "IA Générative"],
             ].map(([k, v]) => (
               <div key={k} className="flex justify-between">
                 <span className="text-muted-foreground">{k}</span>
@@ -754,7 +755,8 @@ const DocumentationManager = () => {
               ["Email Principal", "contact@scoly.ci"],
               ["Téléphone", "+225 07 59 56 60 87"],
               ["Site Web", "www.scoly.ci"],
-              ["Hébergeur", "Lovable Cloud"],
+              ["Hébergeur", "cPanel / Safaricloud"],
+              ["cPanel", "cpanel.scoly.ci"],
             ].map(([k, v]) => (
               <div key={k} className="flex justify-between">
                 <span className="text-muted-foreground">{k}</span>
