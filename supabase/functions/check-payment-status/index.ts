@@ -7,7 +7,6 @@ const corsHeaders = {
 };
 
 serve(async (req) => {
-  // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
@@ -15,39 +14,55 @@ serve(async (req) => {
   try {
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
     const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
-    
-    const supabase = createClient(supabaseUrl, supabaseServiceKey);
+    const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY')!;
 
+    // Validate JWT
+    const authHeader = req.headers.get('Authorization');
+    if (!authHeader?.startsWith('Bearer ')) {
+      return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+        status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      });
+    }
+
+    const token = authHeader.replace('Bearer ', '');
+    const supabaseAuth = createClient(supabaseUrl, supabaseAnonKey);
+    const { data: { user }, error: authError } = await supabaseAuth.auth.getUser(token);
+
+    if (authError || !user) {
+      return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+        status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      });
+    }
+
+    const supabase = createClient(supabaseUrl, supabaseServiceKey);
     const { paymentId, orderId } = await req.json();
 
-    console.log('Checking payment status:', { paymentId, orderId });
-
-    let query = supabase
-      .from('payments')
-      .select('id, status, transaction_id, payment_reference, payment_method, amount, created_at, completed_at, metadata');
-
-    if (paymentId) {
-      query = query.eq('id', paymentId);
-    } else if (orderId) {
-      query = query.eq('order_id', orderId).order('created_at', { ascending: false }).limit(1);
-    } else {
+    if (!paymentId && !orderId) {
       return new Response(
         JSON.stringify({ error: 'paymentId ou orderId requis' }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
+    let query = supabase
+      .from('payments')
+      .select('id, status, transaction_id, payment_reference, payment_method, amount, created_at, completed_at, metadata, user_id')
+      .eq('user_id', user.id); // Ensure user only accesses their own payments
+
+    if (paymentId) {
+      query = query.eq('id', paymentId);
+    } else if (orderId) {
+      query = query.eq('order_id', orderId).order('created_at', { ascending: false }).limit(1);
+    }
+
     const { data: payment, error } = await query.single();
 
     if (error || !payment) {
-      console.error('Payment not found:', error);
       return new Response(
         JSON.stringify({ error: 'Paiement non trouvé' }),
         { status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
-
-    console.log('Payment status:', payment.status);
 
     return new Response(
       JSON.stringify({
@@ -67,9 +82,8 @@ serve(async (req) => {
     );
   } catch (error) {
     console.error('Error checking payment status:', error);
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     return new Response(
-      JSON.stringify({ error: 'Erreur serveur', details: errorMessage }),
+      JSON.stringify({ error: 'Erreur serveur' }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   }
