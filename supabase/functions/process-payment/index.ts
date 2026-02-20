@@ -11,14 +11,12 @@ interface PaymentRequest {
   amount: number;
   paymentMethod: 'orange' | 'mtn' | 'moov' | 'wave' | 'kkiapay';
   phoneNumber?: string;
-  userId: string;
   customerEmail?: string;
   customerName?: string;
   description?: string;
 }
 
 serve(async (req) => {
-  // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
@@ -26,49 +24,58 @@ serve(async (req) => {
   try {
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
     const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
-    
+    const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY')!;
+
+    // Validate JWT and get authenticated user
+    const authHeader = req.headers.get('Authorization');
+    if (!authHeader?.startsWith('Bearer ')) {
+      return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+        status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      });
+    }
+
+    const token = authHeader.replace('Bearer ', '');
+    const supabaseAuth = createClient(supabaseUrl, supabaseAnonKey);
+    const { data: { user }, error: authError } = await supabaseAuth.auth.getUser(token);
+
+    if (authError || !user) {
+      return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+        status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      });
+    }
+
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
-
-    const { orderId, amount, paymentMethod, phoneNumber, userId, customerEmail, customerName, description }: PaymentRequest = await req.json();
-
-    console.log('Payment request received:', { orderId, amount, paymentMethod, phoneNumber, userId });
+    const { orderId, amount, paymentMethod, phoneNumber, customerEmail, customerName, description }: PaymentRequest = await req.json();
 
     // Validate input
-    if (!orderId || !amount || !userId) {
+    if (!orderId || !amount) {
       return new Response(
-        JSON.stringify({ error: 'Paramètres manquants (orderId, amount, userId requis)' }),
+        JSON.stringify({ error: 'Paramètres manquants (orderId, amount requis)' }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
-    // Check if order exists and belongs to user
+    // Check if order exists and belongs to the authenticated user (not client-supplied userId)
     const { data: order, error: orderError } = await supabase
       .from('orders')
       .select('id, total_amount, status, user_id')
       .eq('id', orderId)
+      .eq('user_id', user.id) // Enforce ownership server-side
       .single();
 
     if (orderError || !order) {
-      console.error('Order not found:', orderError);
       return new Response(
-        JSON.stringify({ error: 'Commande non trouvée' }),
+        JSON.stringify({ error: 'Commande non trouvée ou accès non autorisé' }),
         { status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
-    if (order.user_id !== userId) {
-      return new Response(
-        JSON.stringify({ error: 'Accès non autorisé' }),
-        { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
-
-    // Create payment record for KkiaPay
+    // Create payment record
     const { data: payment, error: paymentError } = await supabase
       .from('payments')
       .insert({
         order_id: orderId,
-        user_id: userId,
+        user_id: user.id, // Use authenticated user ID, not client-supplied
         amount,
         payment_method: paymentMethod || 'kkiapay',
         phone_number: phoneNumber,
@@ -92,10 +99,6 @@ serve(async (req) => {
       );
     }
 
-    console.log('Payment record created:', payment.id);
-
-    // KkiaPay payments are initiated from the frontend widget
-    // The webhook will update the status when payment completes
     return new Response(
       JSON.stringify({
         success: true,
@@ -109,9 +112,8 @@ serve(async (req) => {
 
   } catch (error) {
     console.error('Error processing payment:', error);
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     return new Response(
-      JSON.stringify({ error: 'Erreur serveur', details: errorMessage }),
+      JSON.stringify({ error: 'Erreur serveur' }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   }

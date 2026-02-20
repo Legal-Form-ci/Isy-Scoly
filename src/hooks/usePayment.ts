@@ -32,7 +32,7 @@ export const usePayment = () => {
     amount: number,
     paymentMethod: PaymentMethod,
     phoneNumber: string,
-    userId: string,
+    _userId: string, // Kept for API compatibility, but auth is enforced server-side
     customerEmail?: string,
     customerName?: string
   ): Promise<PaymentResult> => {
@@ -46,7 +46,6 @@ export const usePayment = () => {
           amount,
           paymentMethod,
           phoneNumber,
-          userId,
           customerEmail,
           customerName
         }
