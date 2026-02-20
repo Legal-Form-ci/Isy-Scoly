@@ -219,19 +219,7 @@ const ArticleDetail = () => {
   const incrementViews = async () => {
     if (!id) return;
     try {
-      // Increment views directly
-      const { data: currentArticle } = await supabase
-        .from('articles')
-        .select('views')
-        .eq('id', id)
-        .single();
-      
-      if (currentArticle) {
-        await supabase
-          .from('articles')
-          .update({ views: (currentArticle.views || 0) + 1 })
-          .eq('id', id);
-      }
+      await supabase.rpc('increment_article_views', { _article_id: id });
     } catch (error) {
       console.error('Error incrementing views:', error);
     }
