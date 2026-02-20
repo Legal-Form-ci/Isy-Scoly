@@ -198,6 +198,7 @@ const HeroAdvertisements = () => {
               alt={currentItem.title}
               className="w-full h-full object-cover"
               fallbackSrc="/placeholder.svg"
+              priority={true}
             />
           ) : currentItem.media_type === "video" && currentItem.media_url ? (
             <video

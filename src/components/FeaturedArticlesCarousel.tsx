@@ -151,8 +151,7 @@ const FeaturedArticlesCarousel = () => {
                         src={article.cover_image}
                         alt={getLocalizedTitle(article)}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                        decoding="async"
-                        referrerPolicy="no-referrer"
+                        priority={currentIndex === 0}
                       />
                     ) : (
                       <div className="w-full h-full bg-primary flex items-center justify-center">

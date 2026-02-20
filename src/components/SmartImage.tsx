@@ -4,18 +4,23 @@ import React from "react";
 type SmartImageProps = Omit<React.ImgHTMLAttributes<HTMLImageElement>, "src"> & {
   src?: string | null;
   fallbackSrc?: string;
+  priority?: boolean; // true = eager load (above-the-fold images)
 };
 
 /**
- * Image robuste (production): lazy-load + fallback si URL cassée.
- * Se met à jour quand src change (fix carousel).
- * Utilise forwardRef pour compatibilité avec les refs React.
+ * Image robuste et optimisée :
+ * - priority=true → loading="eager" + fetchpriority="high" (LCP, hero images)
+ * - priority=false (default) → loading="lazy" (images hors-écran)
+ * - Fallback si URL cassée
+ * - Reset quand src change (fix carousel)
  */
 const SmartImage = forwardRef<HTMLImageElement, SmartImageProps>(function SmartImage(
   {
     src,
     fallbackSrc = "/placeholder.svg",
-    loading = "lazy",
+    priority = false,
+    loading,
+    decoding = "async",
     ...props
   },
   ref
@@ -41,12 +46,18 @@ const SmartImage = forwardRef<HTMLImageElement, SmartImageProps>(function SmartI
     props.onError?.(e);
   };
 
+  // priority images load eagerly for best LCP
+  const resolvedLoading = loading ?? (priority ? "eager" : "lazy");
+
   return (
     <img
       {...props}
       ref={ref}
       src={currentSrc}
-      loading={loading}
+      loading={resolvedLoading}
+      decoding={decoding}
+      // @ts-ignore – fetchpriority is a valid HTML attribute
+      fetchpriority={priority ? "high" : "auto"}
       onError={handleError}
     />
   );
