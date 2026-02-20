@@ -260,12 +260,12 @@ const Shop = () => {
               </div>
 
               {/* Free Shipping Banner */}
-              <div className="bg-green-50 dark:bg-green-950/20 border border-green-200 dark:border-green-900 rounded-xl p-4">
-                <div className="flex items-center gap-2 text-green-700 dark:text-green-400 mb-2">
-                  <Truck size={20} />
+              <div className="bg-muted border border-border rounded-xl p-4">
+                <div className="flex items-center gap-2 text-foreground mb-2">
+                  <Truck size={20} className="text-secondary" />
                   <span className="font-semibold">Livraison gratuite</span>
                 </div>
-                <p className="text-sm text-green-600 dark:text-green-500">
+                <p className="text-sm text-muted-foreground">
                   Sur toutes vos commandes, partout en Côte d'Ivoire
                 </p>
               </div>
@@ -327,7 +327,7 @@ const Shop = () => {
 
                         {/* Free Shipping Badge */}
                         <div className="absolute bottom-2 left-2">
-                          <Badge className="bg-green-500 text-white text-[9px] sm:text-[10px] px-1 py-0.5">
+                          <Badge className="bg-secondary text-secondary-foreground text-[9px] sm:text-[10px] px-1 py-0.5">
                             <Truck size={10} className="mr-0.5" />
                             <span className="hidden sm:inline">Livraison gratuite</span>
                             <span className="sm:hidden">Gratuit</span>
@@ -353,9 +353,9 @@ const Shop = () => {
 
                         <div className="flex items-center gap-0.5 mt-1 sm:mt-2">
                           {[...Array(5)].map((_, i) => (
-                            <Star key={i} size={10} className="fill-accent text-accent sm:w-3.5 sm:h-3.5" />
+                            <Star key={i} size={10} className={`sm:w-3.5 sm:h-3.5 ${i < 4 ? 'fill-accent text-accent' : 'fill-muted text-muted-foreground'}`} />
                           ))}
-                          <span className="text-[10px] sm:text-xs text-muted-foreground ml-1">(0)</span>
+                          <span className="text-[10px] sm:text-xs text-muted-foreground ml-1">(4.0)</span>
                         </div>
 
                         <div className="flex flex-col sm:flex-row sm:items-center gap-0.5 sm:gap-2 mt-2 sm:mt-3">

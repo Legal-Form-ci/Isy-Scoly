@@ -144,7 +144,7 @@ const Footer = () => {
               © {new Date().getFullYear()} Scoly. Tous droits réservés.
             </p>
             <a
-              href="https://www.scoly.ci"
+              href="https://ikoffi.agricapital.ci"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-2 text-primary-foreground/60 text-xs hover:text-accent transition-colors"
@@ -155,7 +155,7 @@ const Footer = () => {
                 className="w-6 h-6 rounded-full object-cover object-top border border-primary-foreground/30"
                 loading="lazy"
               />
-              <span>Plateforme développée par Inocent KOFFI</span>
+              <span>Développée par Inocent KOFFI</span>
             </a>
           </div>
 
