@@ -705,7 +705,7 @@ const DocumentationManager = () => {
         {sections.map((section, idx) => {
           const Icon = section.icon;
           return (
-            <div key={idx} className="bg-primary rounded-lg p-3 sm:p-4 flex items-start gap-3 hover:bg-primary-light transition-colors">
+            <div key={idx} className="bg-primary rounded-lg p-3 sm:p-4 flex items-start gap-3 hover:opacity-90 transition-opacity">
               <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-md bg-primary-foreground/10 flex items-center justify-center shrink-0 mt-0.5">
                 <Icon size={16} className="text-secondary sm:hidden" />
                 <Icon size={18} className="text-secondary hidden sm:block" />

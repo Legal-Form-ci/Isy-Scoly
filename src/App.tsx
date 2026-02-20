@@ -107,7 +107,6 @@ const App = () => (
                   <Route path="/auth/confirm" element={<AuthConfirm />} />
                   <Route path="/auth/reset-password" element={<ResetPassword />} />
                   <Route path="*" element={<NotFound />} />
-                  <Route path="*" element={<NotFound />} />
                 </Routes>
                 <ScIA />
                 

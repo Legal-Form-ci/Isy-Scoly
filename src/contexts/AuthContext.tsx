@@ -117,30 +117,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       }
     });
 
-    // THEN check for existing session
+    // THEN check for existing session — roles are handled by onAuthStateChange above
     supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      setLoading(false);
-
-      if (session?.user) {
-        fetchRoles(session.user.id);
-        rolesChannel = supabase
-          .channel(`user-roles-${session.user.id}`)
-          .on(
-            'postgres_changes',
-            {
-              event: '*',
-              schema: 'public',
-              table: 'user_roles',
-              filter: `user_id=eq.${session.user.id}`,
-            },
-            () => fetchRoles(session.user!.id)
-          )
-          .subscribe();
-      }
-
+      // Only set loading state if onAuthStateChange hasn't fired yet
       if (!session?.user) {
+        setLoading(false);
         setRolesLoading(false);
       }
     });
