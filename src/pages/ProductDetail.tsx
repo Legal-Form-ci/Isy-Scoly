@@ -65,8 +65,18 @@ const ProductDetail = () => {
     if (id) {
       fetchProduct();
       fetchReviews();
+      incrementProductViews();
     }
   }, [id]);
+
+  const incrementProductViews = async () => {
+    if (!id) return;
+    try {
+      await supabase.rpc('increment_product_views', { _product_id: id });
+    } catch (error) {
+      console.error('Error incrementing product views:', error);
+    }
+  };
 
   const fetchProduct = async () => {
     const { data, error } = await supabase

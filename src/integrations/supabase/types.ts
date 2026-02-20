@@ -1158,6 +1158,7 @@ export type Database = {
           subject: string | null
           updated_at: string | null
           vendor_id: string | null
+          views: number
         }
         Insert: {
           author_details?: string | null
@@ -1195,6 +1196,7 @@ export type Database = {
           subject?: string | null
           updated_at?: string | null
           vendor_id?: string | null
+          views?: number
         }
         Update: {
           author_details?: string | null
@@ -1232,6 +1234,7 @@ export type Database = {
           subject?: string | null
           updated_at?: string | null
           vendor_id?: string | null
+          views?: number
         }
         Relationships: [
           {
@@ -1745,6 +1748,14 @@ export type Database = {
           isOneToOne: true
           isSetofReturn: false
         }
+      }
+      increment_article_views: {
+        Args: { _article_id: string }
+        Returns: undefined
+      }
+      increment_product_views: {
+        Args: { _product_id: string }
+        Returns: undefined
       }
       redeem_loyalty_points: {
         Args: { _points_required: number; _reward_type: string }
