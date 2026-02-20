@@ -176,8 +176,18 @@ const Actualites = () => {
 
           {/* Articles Grid */}
           {loading ? (
-            <div className="flex items-center justify-center h-64">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[...Array(6)].map((_, i) => (
+                <div key={i} className="bg-card rounded-xl overflow-hidden border border-border animate-pulse">
+                  <div className="aspect-video bg-muted" />
+                  <div className="p-4 space-y-3">
+                    <div className="h-3 bg-muted rounded w-1/4" />
+                    <div className="h-4 bg-muted rounded w-3/4" />
+                    <div className="h-3 bg-muted rounded w-full" />
+                    <div className="h-3 bg-muted rounded w-2/3" />
+                  </div>
+                </div>
+              ))}
             </div>
           ) : filteredArticles.length === 0 ? (
             <div className="text-center py-16">
@@ -207,6 +217,7 @@ const Actualites = () => {
                           alt={getTitle(article)}
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                           fallbackSrc="/placeholder.svg"
+                          priority={false}
                         />
                         {article.is_premium && (
                           <Badge className="absolute top-4 right-4 bg-accent">Premium</Badge>

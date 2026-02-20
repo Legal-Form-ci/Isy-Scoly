@@ -127,6 +127,7 @@ const FlashDeals = () => {
                     alt={getProductName(product)}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                     fallbackSrc="/placeholder.svg"
+                    priority={false}
                   />
                 </div>
               </Link>

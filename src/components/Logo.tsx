@@ -27,6 +27,10 @@ const Logo = ({ variant = "default", size = "md", showSlogan = false }: LogoProp
         className={`${sizeClasses[size]} w-auto object-contain ${
           variant === "white" ? "brightness-0 invert" : ""
         }`}
+        loading="eager"
+        // @ts-ignore
+        fetchpriority="high"
+        decoding="sync"
       />
       {showSlogan && (
         <span

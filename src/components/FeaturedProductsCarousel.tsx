@@ -134,6 +134,7 @@ const FeaturedProductsCarousel = () => {
                       alt={getLocalizedName(product)}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                       fallbackSrc="/placeholder.svg"
+                      priority={currentIndex === 0}
                     />
                     {product.discount_percent > 0 && (
                       <span className="absolute top-2 left-2 px-1.5 py-0.5 sm:px-2 sm:py-1 bg-destructive text-destructive-foreground text-[10px] sm:text-xs font-medium rounded">
