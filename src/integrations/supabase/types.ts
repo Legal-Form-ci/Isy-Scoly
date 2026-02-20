@@ -1497,6 +1497,45 @@ export type Database = {
           },
         ]
       }
+      user_addresses: {
+        Row: {
+          address: string
+          city: string
+          created_at: string | null
+          id: string
+          is_default: boolean
+          name: string
+          phone: string | null
+          region: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          address: string
+          city: string
+          created_at?: string | null
+          id?: string
+          is_default?: boolean
+          name: string
+          phone?: string | null
+          region: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          address?: string
+          city?: string
+          created_at?: string | null
+          id?: string
+          is_default?: boolean
+          name?: string
+          phone?: string | null
+          region?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           id: string
@@ -1569,6 +1608,30 @@ export type Database = {
           total_sales?: number | null
           updated_at?: string | null
           user_id?: string
+        }
+        Relationships: []
+      }
+      view_tracking: {
+        Row: {
+          entity_id: string
+          entity_type: string
+          id: string
+          session_fingerprint: string
+          viewed_at: string
+        }
+        Insert: {
+          entity_id: string
+          entity_type: string
+          id?: string
+          session_fingerprint: string
+          viewed_at?: string
+        }
+        Update: {
+          entity_id?: string
+          entity_type?: string
+          id?: string
+          session_fingerprint?: string
+          viewed_at?: string
         }
         Relationships: []
       }
@@ -1652,6 +1715,7 @@ export type Database = {
           remaining_attempts: number
         }[]
       }
+      cleanup_old_view_tracking: { Args: never; Returns: undefined }
       get_admin_stats: {
         Args: never
         Returns: {

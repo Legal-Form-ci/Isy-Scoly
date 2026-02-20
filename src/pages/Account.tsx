@@ -114,7 +114,7 @@ const Account = () => {
     fetchProfile();
     fetchOrders();
     fetchNotifications();
-    // Simulate loyalty points based on orders
+    fetchAddresses();
   }, [user, navigate]);
 
   const fetchProfile = async () => {
@@ -338,17 +338,83 @@ const Account = () => {
     }
   };
 
-  const handleAddAddress = () => {
-    const id = Date.now().toString();
-    setAddresses(prev => [...prev, { ...newAddress, id }]);
-    setNewAddress({ name: '', address: '', city: '', region: '', phone: '', isDefault: false });
-    setIsAddressDialogOpen(false);
-    toast({ title: "Adresse ajoutée", description: "L'adresse a été enregistrée." });
+  const fetchAddresses = async () => {
+    if (!user) return;
+    try {
+      const { data, error } = await supabase
+        .from('user_addresses' as any)
+        .select('*')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false });
+      if (!error && data) {
+        setAddresses((data as any[]).map(a => ({
+          id: a.id,
+          name: a.name,
+          address: a.address,
+          city: a.city,
+          region: a.region,
+          phone: a.phone || '',
+          isDefault: a.is_default,
+        })));
+      }
+    } catch (err) {
+      console.error('Error fetching addresses:', err);
+    }
   };
 
-  const handleRemoveAddress = (id: string) => {
-    setAddresses(prev => prev.filter(a => a.id !== id));
-    toast({ title: "Adresse supprimée" });
+  const handleAddAddress = async () => {
+    if (!user) return;
+    if (!newAddress.name || !newAddress.address || !newAddress.city || !newAddress.region) {
+      toast({ title: "Champs manquants", description: "Veuillez remplir tous les champs obligatoires.", variant: "destructive" });
+      return;
+    }
+    try {
+      const { data, error } = await supabase
+        .from('user_addresses' as any)
+        .insert({
+          user_id: user.id,
+          name: newAddress.name.trim(),
+          address: newAddress.address.trim(),
+          city: newAddress.city.trim(),
+          region: newAddress.region.trim(),
+          phone: newAddress.phone?.trim() || null,
+          is_default: newAddress.isDefault,
+        })
+        .select()
+        .single();
+      if (error) throw error;
+      setAddresses(prev => [...prev, {
+        id: (data as any).id,
+        name: (data as any).name,
+        address: (data as any).address,
+        city: (data as any).city,
+        region: (data as any).region,
+        phone: (data as any).phone || '',
+        isDefault: (data as any).is_default,
+      }]);
+      setNewAddress({ name: '', address: '', city: '', region: '', phone: '', isDefault: false });
+      setIsAddressDialogOpen(false);
+      toast({ title: "Adresse ajoutée", description: "L'adresse a été enregistrée avec succès." });
+    } catch (err) {
+      console.error('Error saving address:', err);
+      toast({ title: "Erreur", description: "Impossible d'enregistrer l'adresse.", variant: "destructive" });
+    }
+  };
+
+  const handleRemoveAddress = async (id: string) => {
+    try {
+      const { error } = await supabase
+        .from('user_addresses' as any)
+        .delete()
+        .eq('id', id)
+        .eq('user_id', user?.id);
+      if (error) throw error;
+      setAddresses(prev => prev.filter(a => a.id !== id));
+      toast({ title: "Adresse supprimée" });
+    } catch (err) {
+      console.error('Error deleting address:', err);
+      toast({ title: "Erreur", description: "Impossible de supprimer l'adresse.", variant: "destructive" });
+    }
   };
 
   const handleLogout = async () => {
@@ -383,12 +449,13 @@ const Account = () => {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'pending': return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400';
-      case 'confirmed': return 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400';
-      case 'shipped': return 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400';
-      case 'delivered': return 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400';
-      case 'cancelled': return 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400';
-      default: return 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400';
+      case 'pending': return 'bg-yellow-100 text-yellow-800 border-yellow-200';
+      case 'confirmed': return 'bg-blue-100 text-blue-800 border-blue-200';
+      case 'processing': return 'bg-purple-100 text-purple-800 border-purple-200';
+      case 'shipped': return 'bg-indigo-100 text-indigo-800 border-indigo-200';
+      case 'delivered': return 'bg-green-100 text-green-800 border-green-200';
+      case 'cancelled': return 'bg-red-100 text-red-800 border-red-200';
+      default: return 'bg-muted text-muted-foreground border-border';
     }
   };
 
@@ -442,8 +509,8 @@ const Account = () => {
             <Card>
               <CardContent className="p-4">
                 <div className="flex items-center gap-3">
-                  <div className="p-2 rounded-lg bg-green-100 dark:bg-green-900/20">
-                    <CheckCircle size={20} className="text-green-600" />
+                  <div className="p-2 rounded-lg bg-primary/10">
+                    <CheckCircle size={20} className="text-primary" />
                   </div>
                   <div>
                     <p className="text-xs text-muted-foreground">Livrées</p>
@@ -555,7 +622,7 @@ const Account = () => {
                               {formatPrice(order.total_amount)}
                             </p>
                             {order.discount_amount > 0 && (
-                              <p className="text-xs text-green-600">
+                              <p className="text-xs text-primary font-medium">
                                 -{formatPrice(order.discount_amount)} économisé
                               </p>
                             )}
@@ -591,7 +658,7 @@ const Account = () => {
                           )}
                           
                           {order.delivery_delivered_at && (
-                            <Badge variant="outline" className="text-xs text-green-600 border-green-600">
+                            <Badge variant="outline" className="text-xs text-primary border-primary">
                               <CheckCircle size={12} className="mr-1" />
                               Livré
                             </Badge>
@@ -672,9 +739,9 @@ const Account = () => {
                       >
                         <div className="flex items-start gap-3">
                           <div className={`p-2 rounded-full flex-shrink-0 ${
-                            notification.type === 'order' ? 'bg-blue-100 text-blue-600 dark:bg-blue-900/30' :
-                            notification.type === 'delivery' ? 'bg-green-100 text-green-600 dark:bg-green-900/30' :
-                            'bg-gray-100 text-gray-600 dark:bg-gray-900/30'
+                            notification.type === 'order' ? 'bg-primary/10 text-primary' :
+                            notification.type === 'delivery' ? 'bg-secondary/20 text-secondary-foreground' :
+                            'bg-muted text-muted-foreground'
                           }`}>
                             {notification.type === 'order' ? <ShoppingBag size={16} /> :
                              notification.type === 'delivery' ? <Truck size={16} /> :
