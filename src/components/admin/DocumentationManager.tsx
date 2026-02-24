@@ -332,7 +332,7 @@ const DocumentationManager = () => {
         "Scoly Universitaire — Ouvrages et fournitures universitaires",
         "Scoly Bureautique — Fournitures de bureau professionnelles",
         "Scoly Librairie — Littérature, contes et œuvres intégrales",
-        "ScoOffice Plus — Marque premium de fournitures",
+        "Scoly Librairie — Littérature, contes et œuvres intégrales",
       ], y, pg);
 
       // ==================== PAGE 3: ARCHITECTURE ====================

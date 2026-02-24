@@ -13,7 +13,7 @@ serve(async (req) => {
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
 
-    const systemPrompt = `Tu es un rédacteur professionnel pour ScoOffice+, une plateforme de fournitures scolaires et bureautiques en Côte d'Ivoire.
+    const systemPrompt = `Tu es un rédacteur professionnel pour Scoly, une plateforme de fournitures scolaires et bureautiques en Côte d'Ivoire.
 
 À partir du texte brut fourni par l'utilisateur (même un simple mot), tu dois générer un article complet et professionnel.
 

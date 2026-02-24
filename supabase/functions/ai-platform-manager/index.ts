@@ -40,7 +40,7 @@ serve(async (req) => {
         body: JSON.stringify({
           model: "google/gemini-3-flash-preview",
           messages: [
-            { role: "system", content: `Tu es un expert e-commerce pour ScoOffice+/Scoly, plateforme de fournitures scolaires en Côte d'Ivoire. Analyse les données et propose des actions concrètes.` },
+            { role: "system", content: `Tu es un expert e-commerce pour Scoly, plateforme de fournitures scolaires et bureautiques en Côte d'Ivoire. Analyse les données et propose des actions concrètes.` },
             { role: "user", content: `Analyse ces données:
 - ${products.length} produits actifs
 - ${orders.length} commandes récentes (revenus: ${orders.reduce((s, o) => s + o.total_amount, 0)} FCFA)

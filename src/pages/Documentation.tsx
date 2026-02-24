@@ -73,7 +73,7 @@ const Documentation = () => {
 
             <h3 className="text-xl font-semibold text-foreground mt-8">Espaces de la Plateforme</h3>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-              {["Scoly Primaire", "Scoly Secondaire", "Scoly Universitaire", "Scoly Bureautique", "Scoly Librairie", "ScoOffice Plus"].map((cat, i) => (
+              {["Scoly Primaire", "Scoly Secondaire", "Scoly Universitaire", "Scoly Bureautique", "Scoly Librairie"].map((cat, i) => (
                 <div key={i} className="bg-primary/10 text-primary rounded-lg px-4 py-3 text-center font-medium text-sm">
                   {cat}
                 </div>

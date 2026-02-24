@@ -112,7 +112,7 @@ serve(async (req) => {
           // Test OVH S3 connection
           try {
             // Simple HEAD request to test bucket access
-            const url = `${credentials.ovhEndpoint}/${credentials.ovhBucket || 'scooffice-backups'}`;
+            const url = `${credentials.ovhEndpoint}/${credentials.ovhBucket || 'scoly-backups'}`;
             const response = await fetch(url, {
               method: 'HEAD',
               headers: {
@@ -168,7 +168,7 @@ serve(async (req) => {
       }
 
       const backupContent = JSON.stringify(backupData, null, 2);
-      const fileName = `scooffice-backup-${new Date().toISOString().split('T')[0]}.json`;
+      const fileName = `scoly-backup-${new Date().toISOString().split('T')[0]}.json`;
 
       // For cloud providers, we'd upload here
       // For now, return the data for download

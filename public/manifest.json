@@ -1,6 +1,6 @@
 {
-  "name": "ScoOffice+",
-  "short_name": "ScoOffice+",
+  "name": "Scoly",
+  "short_name": "Scoly",
   "description": "Fournitures scolaires et bureautiques en Côte d'Ivoire",
   "start_url": "/",
   "display": "standalone",
@@ -9,9 +9,9 @@
   "orientation": "portrait-primary",
   "icons": [
     {
-      "src": "/favicon.svg",
+      "src": "/logo-scoly.png",
       "sizes": "any",
-      "type": "image/svg+xml",
+      "type": "image/png",
       "purpose": "any maskable"
     }
   ],

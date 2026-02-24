@@ -186,7 +186,7 @@ const DatabaseManagement = () => {
       const metadata = {
         exportedAt: new Date().toISOString(),
         version: '2.0',
-        platform: 'Izy-Scoly',
+        platform: 'Scoly',
         tables: selectedTables,
         format: exportFormat,
         totalRecords: 0,
@@ -210,7 +210,7 @@ const DatabaseManagement = () => {
 
       // Excel export using our professional export utility
       if (exportFormat === 'xlsx') {
-        exportToExcel(exportDataObj, 'izy-scoly-backup');
+        exportToExcel(exportDataObj, 'scoly-backup');
         toast.success(`Export Excel professionnel téléchargé (${metadata.totalRecords} enregistrements)`);
         setExporting(false);
         return;
@@ -232,14 +232,14 @@ const DatabaseManagement = () => {
               notes: 'Images and files are stored as URLs to Supabase storage. Ensure storage buckets exist before restore.'
             }
           }, null, 2);
-          filename = `izy-scoly-backup-${new Date().toISOString().split('T')[0]}.json`;
+          filename = `scoly-backup-${new Date().toISOString().split('T')[0]}.json`;
           mimeType = 'application/json';
           break;
         case 'sql':
         default:
           const sqlParts: string[] = [];
           sqlParts.push(`-- =============================================`);
-          sqlParts.push(`-- IZY-SCOLY Database Backup`);
+          sqlParts.push(`-- SCOLY Database Backup`);
           sqlParts.push(`-- Generated: ${new Date().toISOString()}`);
           sqlParts.push(`-- Tables: ${selectedTables.join(', ')}`);
           sqlParts.push(`-- Total Records: ${metadata.totalRecords}`);
@@ -272,7 +272,7 @@ const DatabaseManagement = () => {
             }
           }
           content = sqlParts.join('\n');
-          filename = `izy-scoly-backup-${new Date().toISOString().split('T')[0]}.sql`;
+          filename = `scoly-backup-${new Date().toISOString().split('T')[0]}.sql`;
           mimeType = 'application/sql';
           break;
       }

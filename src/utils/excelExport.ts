@@ -191,7 +191,7 @@ export function exportToExcel(
   if (options.includeMetadata !== false) {
     const metadataRows = [
       ['═══════════════════════════════════════════════════'],
-      ['IZY-SCOLY - Export Base de Données'],
+      ['SCOLY - Export Base de Données'],
       ['═══════════════════════════════════════════════════'],
       [''],
       ['Date d\'export:', new Date().toLocaleString('fr-FR')],

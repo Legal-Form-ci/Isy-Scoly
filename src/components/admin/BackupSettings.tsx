@@ -216,7 +216,7 @@ const BackupSettings = () => {
           const url = URL.createObjectURL(blob);
           const a = document.createElement('a');
           a.href = url;
-          a.download = data.fileName || `izy-scoly-backup-${new Date().toISOString().split('T')[0]}.json`;
+          a.download = data.fileName || `scoly-backup-${new Date().toISOString().split('T')[0]}.json`;
           document.body.appendChild(a);
           a.click();
           document.body.removeChild(a);
@@ -499,7 +499,7 @@ const BackupSettings = () => {
                   <Input
                     value={credentials.ovhBucket}
                     onChange={(e) => setCredentials(prev => ({ ...prev, ovhBucket: e.target.value }))}
-                    placeholder="izy-scoly-backups"
+                    placeholder="scoly-backups"
                   />
                 </div>
               </>
