@@ -1,5 +1,5 @@
 /**
- * Configuration Supabase Externe pour Izy-Scoly
+ * Configuration Supabase Externe pour Scoly
  * ==============================================
  * 
  * Connexion configurée vers le projet Supabase externe.

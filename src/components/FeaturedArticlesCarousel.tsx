@@ -106,7 +106,7 @@ const FeaturedArticlesCarousel = () => {
               Publications populaires
             </h2>
             <p className="text-muted-foreground mt-2">
-              Les articles les plus lus d'Izy-scoly
+              Les articles les plus lus de Scoly
             </p>
           </div>
           <div className="flex gap-2">

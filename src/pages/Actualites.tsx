@@ -108,7 +108,7 @@ const Actualites = () => {
       <SEOHead 
         title="Actualités - Articles et publications éducatives"
         description="Découvrez nos articles, guides pratiques et conseils pour réussir à l'école et au bureau. Actualités éducatives en Côte d'Ivoire."
-        url="https://scoofficeplus.ci/actualites"
+        url="https://scoly.ci/actualites"
         type="website"
         keywords={["actualités", "éducation", "articles", "guides", "Côte d'Ivoire", "école"]}
       />
@@ -120,7 +120,7 @@ const Actualites = () => {
           <div className="max-w-3xl mx-auto text-center text-primary-foreground">
             <div className="flex items-center justify-center gap-2 mb-4">
               <BookOpen size={32} />
-              <span className="text-lg font-medium">Actualités ScoOffice+</span>
+              <span className="text-lg font-medium">Actualités Scoly</span>
             </div>
             <h1 className="text-4xl lg:text-5xl font-display font-bold mb-6">
               Actualités & Publications
@@ -232,7 +232,7 @@ const Actualites = () => {
                         {getTitle(article)}
                       </h3>
                       <p className="text-muted-foreground text-sm line-clamp-3">
-                        {getExcerpt(article) || "Découvrez cet article passionnant sur ScoOffice+..."}
+                        {getExcerpt(article) || "Découvrez cet article passionnant sur Scoly..."}
                       </p>
                     </CardContent>
                     <CardFooter className="p-4 pt-0 flex items-center justify-between text-sm text-muted-foreground">
@@ -270,7 +270,7 @@ const Actualites = () => {
             </h2>
             <p className="text-lg text-muted-foreground mb-8">
               Partagez vos connaissances avec des milliers d'étudiants et professionnels en publiant vos articles, 
-              ouvrages et ressources éducatives et bureautiques sur ScoOffice+.
+              ouvrages et ressources éducatives et bureautiques sur Scoly.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               {user ? (

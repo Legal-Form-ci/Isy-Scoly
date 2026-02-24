@@ -24,8 +24,8 @@ interface FAQItem {
 const defaultFAQs: FAQItem[] = [
   {
     id: "1",
-    question_fr: "Comment passer une commande sur ScoOffice+ ?",
-    question_en: "How do I place an order on ScoOffice+?",
+    question_fr: "Comment passer une commande sur Scoly ?",
+    question_en: "How do I place an order on Scoly?",
     answer_fr: "Pour passer une commande, parcourez notre catalogue, ajoutez les produits souhaités à votre panier, puis procédez au paiement via Mobile Money (Orange, MTN, Moov ou Wave). Vous recevrez une confirmation par SMS.",
     answer_en: "To place an order, browse our catalog, add the desired products to your cart, then proceed to payment via Mobile Money (Orange, MTN, Moov or Wave). You will receive a confirmation by SMS.",
     category: "commandes",
@@ -69,8 +69,8 @@ const defaultFAQs: FAQItem[] = [
   },
   {
     id: "6",
-    question_fr: "Comment devenir auteur sur ScoOffice+ ?",
-    question_en: "How do I become an author on ScoOffice+?",
+    question_fr: "Comment devenir auteur sur Scoly ?",
+    question_en: "How do I become an author on Scoly?",
     answer_fr: "Créez un compte et accédez à l'espace Auteur depuis le menu. Vous pourrez rédiger et soumettre des articles qui seront examinés par notre équipe de modération avant publication.",
     answer_en: "Create an account and access the Author space from the menu. You can write and submit articles that will be reviewed by our moderation team before publication.",
     category: "auteurs",
@@ -80,8 +80,8 @@ const defaultFAQs: FAQItem[] = [
     id: "7",
     question_fr: "Comment contacter le service client ?",
     question_en: "How do I contact customer service?",
-    answer_fr: "Vous pouvez nous contacter via WhatsApp au +225 07 59 56 60 87, par email à contact@scoofficeplus.ci, ou via le formulaire de contact sur notre site.",
-    answer_en: "You can contact us via WhatsApp at +225 07 59 56 60 87, by email at contact@scoofficeplus.ci, or via the contact form on our website.",
+    answer_fr: "Vous pouvez nous contacter via WhatsApp au +225 07 59 56 60 87, par email à contact@scoly.ci, ou via le formulaire de contact sur notre site.",
+    answer_en: "You can contact us via WhatsApp at +225 07 59 56 60 87, by email at contact@scoly.ci, or via the contact form on our website.",
     category: "support",
     sort_order: 7
   },
@@ -150,9 +150,9 @@ const FAQ = () => {
     <main className="min-h-screen bg-background">
       <SEOHead 
         title="FAQ - Questions fréquentes"
-        description="Trouvez les réponses à vos questions sur les commandes, livraisons, paiements et retours sur Izy-scoly."
-        url="https://izy-scoly.ci/faq"
-        keywords={["FAQ", "questions", "aide", "support", "Izy-scoly"]}
+        description="Trouvez les réponses à vos questions sur les commandes, livraisons, paiements et retours sur Scoly."
+        url="https://scoly.ci/faq"
+        keywords={["FAQ", "questions", "aide", "support", "Scoly"]}
       />
       <Navbar />
       

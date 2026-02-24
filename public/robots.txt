@@ -1,5 +1,5 @@
-# Robots.txt for ScoOffice+
-# https://scoofficeplus.ci
+# Robots.txt for Scoly
+# https://scoly.ci
 
 User-agent: *
 Allow: /
@@ -38,4 +38,4 @@ User-agent: WhatsApp
 Allow: /
 
 # Sitemap location
-Sitemap: https://scoofficeplus.ci/sitemap.xml
+Sitemap: https://scoly.ci/sitemap.xml

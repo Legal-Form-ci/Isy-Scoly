@@ -25,7 +25,7 @@ serve(async (req) => {
       throw new Error("LOVABLE_API_KEY is not configured");
     }
 
-    const prompt = `Tu es un expert marketing pour une plateforme e-commerce de fournitures scolaires et bureautiques en Côte d'Ivoire appelée "ScoOffice+".
+    const prompt = `Tu es un expert marketing pour une plateforme e-commerce de fournitures scolaires et bureautiques en Côte d'Ivoire appelée "Scoly".
 
 Génère un CTA (Call-to-Action) pour cette publicité:
 - Titre: ${title}

@@ -427,7 +427,7 @@ const AdminDashboard = () => {
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
-    link.download = `izy-scoly-stats-${new Date().toISOString().split('T')[0]}.csv`;
+    link.download = `scoly-stats-${new Date().toISOString().split('T')[0]}.csv`;
     link.click();
   };
 

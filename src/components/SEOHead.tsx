@@ -17,21 +17,21 @@ interface SEOHeadProps {
 }
 
 const SEOHead = ({
-  title = "ScoOffice+ — Fournitures scolaires et bureautiques en Côte d'Ivoire",
-  description = "ScoOffice+, votre référence en Côte d'Ivoire pour les fournitures scolaires et bureautiques de qualité. Livraison gratuite sur toutes vos commandes.",
-  image = "https://storage.googleapis.com/gpt-engineer-file-uploads/N5s3POmB0UXlBsjpPjYGFV887wu2/social-images/social-1766722146657-6282.png",
-  url = "https://scoofficeplus.ci",
+  title = "Scoly — Fournitures scolaires et bureautiques en Côte d'Ivoire",
+  description = "Scoly, votre référence en Côte d'Ivoire pour les fournitures scolaires et bureautiques de qualité. Livraison gratuite sur toutes vos commandes.",
+  image = "/logo-scoly.png",
+  url = "https://scoly.ci",
   type = "website",
   author,
   publishedTime,
   modifiedTime,
-  keywords = ["fournitures scolaires", "bureautique", "Côte d'Ivoire", "Abidjan", "livraison gratuite", "ScoOffice+"],
+  keywords = ["fournitures scolaires", "bureautique", "Côte d'Ivoire", "Abidjan", "livraison gratuite", "Scoly"],
   price,
   currency = "XOF",
   availability,
   noindex = false
 }: SEOHeadProps) => {
-  const fullTitle = title.includes("ScoOffice") ? title : `${title} | ScoOffice+`;
+  const fullTitle = title.includes("Scoly") ? title : `${title} | Scoly`;
   
   const structuredData = type === 'product' && price ? {
     "@context": "https://schema.org",
@@ -46,7 +46,7 @@ const SEOHead = ({
       "availability": availability ? `https://schema.org/${availability}` : "https://schema.org/InStock",
       "seller": {
         "@type": "Organization",
-        "name": "ScoOffice+"
+        "name": "Scoly"
       }
     }
   } : type === 'article' ? {
@@ -63,10 +63,10 @@ const SEOHead = ({
     "dateModified": modifiedTime || publishedTime,
     "publisher": {
       "@type": "Organization",
-      "name": "ScoOffice+",
+      "name": "Scoly",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://scoofficeplus.ci/favicon.svg"
+        "url": "https://scoly.ci/logo-scoly.png"
       }
     }
   } : null;
@@ -89,7 +89,7 @@ const SEOHead = ({
       <meta property="og:image" content={image} />
       <meta property="og:image:width" content="1200" />
       <meta property="og:image:height" content="630" />
-      <meta property="og:site_name" content="ScoOffice+" />
+      <meta property="og:site_name" content="Scoly" />
       <meta property="og:locale" content="fr_CI" />
       
       {/* Twitter */}

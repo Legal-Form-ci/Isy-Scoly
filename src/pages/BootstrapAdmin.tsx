@@ -84,7 +84,7 @@ const BootstrapAdmin = () => {
               <ShieldCheck className="h-8 w-8 text-primary" />
             </motion.div>
             <CardTitle className="text-2xl font-display">Configuration Super Admin</CardTitle>
-            <CardDescription>Créez le compte administrateur ScoOffice+ et importez les manuels scolaires</CardDescription>
+            <CardDescription>Créez le compte administrateur Scoly et importez les manuels scolaires</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             <div className="space-y-2">
@@ -115,8 +115,8 @@ const BootstrapAdmin = () => {
                 <CheckCircle className="h-4 w-4" />
                 <div className="text-sm">
                   <p className="font-semibold">Compte Super Admin créé !</p>
-                  <p><strong>Email :</strong> admin@scooffice.ci</p>
-                  <p><strong>Mot de passe :</strong> @AdminScoOffice2026</p>
+                  <p><strong>Email :</strong> admin@scoly.ci</p>
+                  <p><strong>Mot de passe :</strong> @AdminScoly2026</p>
                 </div>
               </motion.div>
             )}
