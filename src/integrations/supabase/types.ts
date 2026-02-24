@@ -1715,6 +1715,7 @@ export type Database = {
           remaining_attempts: number
         }[]
       }
+      cleanup_old_login_sessions: { Args: never; Returns: undefined }
       cleanup_old_view_tracking: { Args: never; Returns: undefined }
       get_admin_stats: {
         Args: never

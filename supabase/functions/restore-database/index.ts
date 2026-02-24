@@ -241,7 +241,7 @@ serve(async (req) => {
     );
   } catch (e) {
     console.error("restore-database error", e);
-    return new Response(JSON.stringify({ success: false, error: "Internal error", details: String(e) }), {
+    return new Response(JSON.stringify({ success: false, error: "Une erreur interne est survenue" }), {
       status: 500,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
