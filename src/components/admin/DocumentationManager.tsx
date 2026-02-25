@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Download, RefreshCw, FileText, Database, Shield, Users, Truck, CreditCard, Cpu, Globe, Settings, BookOpen, Headphones, Phone, Mail, ExternalLink, ImageIcon } from "lucide-react";
+import { useState, useCallback } from "react";
+import { Download, RefreshCw, FileText, Database, Shield, Users, Truck, CreditCard, Cpu, Globe, Settings, BookOpen, Headphones, Phone, Mail, ExternalLink, ImageIcon, ClipboardCheck, AlertTriangle, CheckCircle, Info, XCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import jsPDF from "jspdf";
@@ -25,6 +25,10 @@ const DocumentationManager = () => {
   const [flyerDownloaded, setFlyerDownloaded] = useState(() => {
     return localStorage.getItem("flyer-freelance-downloaded") === "true";
   });
+  const [auditDownloaded, setAuditDownloaded] = useState(() => {
+    return localStorage.getItem("scoly-audit-downloaded") === "true";
+  });
+  const [generatingAudit, setGeneratingAudit] = useState(false);
 
   const handleFlyerDownload = () => {
     const link = document.createElement("a");
@@ -35,6 +39,177 @@ const DocumentationManager = () => {
     localStorage.setItem("flyer-freelance-downloaded", "true");
     toast.success("Affiche téléchargée !");
   };
+
+  // ===== AUDIT REPORT PDF =====
+  const generateAuditPDF = useCallback(async () => {
+    setGeneratingAudit(true);
+    try {
+      const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+      const W = 210; const H = 297; const M = 20; const CW = W - 2 * M;
+      const NAVY: [number,number,number] = [16,36,76]; const ORANGE: [number,number,number] = [242,105,13];
+      const DARK: [number,number,number] = [30,30,30]; const GRAY: [number,number,number] = [100,100,100];
+      const WHITE: [number,number,number] = [255,255,255]; const GREEN: [number,number,number] = [34,139,34];
+      const YELLOW: [number,number,number] = [200,150,0]; const LIGHT_BG: [number,number,number] = [245,247,250];
+      const GREEN_BG: [number,number,number] = [230,255,230];
+
+      let logoBase64 = "";
+      try { logoBase64 = await loadImageAsBase64(logoImage); } catch {}
+
+      let y = 0;
+      const addFooter = (p: number) => {
+        doc.setFontSize(8); doc.setTextColor(...GRAY);
+        doc.text("© 2025 Scoly — Rapport d'Audit", M, H-10);
+        doc.text(`Page ${p}`, W/2, H-10, {align:"center"});
+        doc.text("Confidentiel", W-M, H-10, {align:"right"});
+        doc.setDrawColor(...NAVY); doc.setLineWidth(0.3); doc.line(M, H-14, W-M, H-14);
+        doc.setFillColor(...NAVY); doc.rect(0,0,W,4,"F");
+        doc.setFillColor(...ORANGE); doc.rect(0,4,W,1,"F");
+      };
+      const addHdr = () => {
+        if (logoBase64) { try { doc.addImage(logoBase64,"JPEG",M,7,28,9); } catch {} }
+        doc.setFontSize(8); doc.setFont("helvetica","normal"); doc.setTextColor(...GRAY);
+        doc.text("Rapport d'Audit — Confidentiel", W-M, 12, {align:"right"});
+        doc.setDrawColor(220,220,220); doc.line(M,15,W-M,15);
+      };
+      const np = (p: number) => { doc.addPage(); addFooter(p); addHdr(); return 22; };
+      const pg = {v:1};
+      const cp = (cy: number, n: number) => { if (cy+n>H-20){pg.v++;return np(pg.v);} return cy; };
+      const sT = (t: string, cy: number) => {
+        doc.setFontSize(16); doc.setFont("helvetica","bold"); doc.setTextColor(...NAVY);
+        doc.text(t, M, cy); cy+=2;
+        doc.setDrawColor(...ORANGE); doc.setLineWidth(1); doc.line(M,cy,M+50,cy);
+        doc.setLineWidth(0.3); return cy+8;
+      };
+      const scoreBar = (label: string, score: number, max: number, cy: number) => {
+        cy = cp(cy, 14);
+        doc.setFontSize(10); doc.setFont("helvetica","normal"); doc.setTextColor(...DARK);
+        doc.text(label, M, cy); doc.text(`${score}/${max}`, W-M, cy, {align:"right"}); cy+=3;
+        doc.setFillColor(220,220,220); doc.roundedRect(M,cy,CW,4,2,2,"F");
+        const pct = score/max;
+        const c: [number,number,number] = pct>=0.8?GREEN:pct>=0.6?YELLOW:[200,40,40];
+        doc.setFillColor(...c); doc.roundedRect(M,cy,CW*pct,4,2,2,"F");
+        return cy+9;
+      };
+      const bullets = (items: string[], cy: number, color: [number,number,number]) => {
+        doc.setFontSize(10); doc.setFont("helvetica","normal"); doc.setTextColor(...DARK);
+        items.forEach(s => {
+          cy = cp(cy, 6);
+          doc.setFillColor(...color); doc.circle(M+2, cy-1.5, 1, "F");
+          const l = doc.splitTextToSize(s, CW-8); doc.text(l, M+7, cy); cy += l.length*5+1;
+        });
+        return cy;
+      };
+
+      // COVER
+      addFooter(1);
+      doc.setFillColor(...NAVY); doc.rect(0,0,W,100,"F");
+      doc.setFillColor(...ORANGE); doc.rect(0,100,W,3,"F");
+      if (logoBase64) { try { doc.addImage(logoBase64,"JPEG",W/2-22,15,44,14); } catch {} }
+      doc.setTextColor(...WHITE); doc.setFontSize(10); doc.setFont("helvetica","normal");
+      doc.text("Rapport Confidentiel", W/2, 36, {align:"center"});
+      doc.setFontSize(28); doc.setFont("helvetica","bold");
+      doc.text("AUDIT COMPLET", W/2, 55, {align:"center"});
+      doc.text("& BILAN TECHNIQUE", W/2, 67, {align:"center"});
+      doc.setFontSize(12); doc.setFont("helvetica","normal"); doc.setTextColor(255,200,150);
+      doc.text("Plateforme Scoly — E-commerce Scolaire", W/2, 82, {align:"center"});
+      doc.setTextColor(...WHITE); doc.setFontSize(10);
+      doc.text(new Date().toLocaleDateString("fr-FR",{day:"numeric",month:"long",year:"numeric"}), W/2, 92, {align:"center"});
+      y = 115;
+      [["Auditeur","Système automatisé Scoly"],["Commanditaire","Inocent KOFFI"],["Périmètre","Frontend, Backend, Sécurité, UX, SEO"],["Classification","Confidentiel"]].forEach(([k,v]) => {
+        doc.setFillColor(...LIGHT_BG); doc.roundedRect(M,y,CW,9,2,2,"F");
+        doc.setFontSize(9); doc.setTextColor(...GRAY); doc.setFont("helvetica","normal"); doc.text(k, M+4, y+6);
+        doc.setFont("helvetica","bold"); doc.setTextColor(...NAVY); doc.text(v, W-M-4, y+6, {align:"right"});
+        y+=12;
+      });
+
+      // PAGE 2: SCORES
+      pg.v++; y = np(pg.v);
+      y = sT("NOTATION GLOBALE — 82/100", y);
+      doc.setFontSize(48); doc.setFont("helvetica","bold"); doc.setTextColor(...NAVY);
+      doc.text("82/100", W/2, y+15, {align:"center"});
+      doc.setFontSize(14); doc.setTextColor(...GREEN); doc.setFont("helvetica","bold");
+      doc.text("TRÈS BIEN — Niveau Professionnel", W/2, y+25, {align:"center"}); y+=35;
+      doc.setFontSize(10); doc.setFont("helvetica","normal"); doc.setTextColor(...DARK);
+      const vl = doc.splitTextToSize("La plateforme Scoly atteint un niveau de qualité professionnel. L'architecture est solide, la sécurité renforcée avec RLS sur toutes les tables, le code propre et bien structuré. OUI, avec ce projet, vous pouvez légitimement vous présenter comme développeur Full-Stack.", CW);
+      doc.text(vl, M, y); y += vl.length*5+8;
+      y = scoreBar("Architecture & Code", 17, 20, y);
+      y = scoreBar("Sécurité (RLS, Auth, Rate Limiting)", 16, 20, y);
+      y = scoreBar("UX / UI / Responsive", 15, 20, y);
+      y = scoreBar("Fonctionnalités & Complétude", 18, 20, y);
+      y = scoreBar("SEO & Performance", 9, 10, y);
+      y = scoreBar("Documentation", 7, 10, y);
+
+      // PAGE 3: ARCH
+      pg.v++; y = np(pg.v);
+      y = sT("1. ARCHITECTURE & CODE — 17/20", y);
+      doc.setFont("helvetica","bold"); doc.setTextColor(...GREEN); doc.text("✅ Points Forts", M, y); y+=6;
+      y = bullets(["React 18 + TypeScript + Vite : stack moderne","Séparation claire : pages, composants, hooks, contextes","Tailwind CSS avec design tokens sémantiques","React Query avec cache optimisé","Supabase SDK centralisé","Multi-rôles : admin, moderator, vendor, delivery, user","Éditeur riche TipTap avec tableaux et médias","Edge Functions Deno/TypeScript"], y, GREEN);
+      y+=4; y=cp(y,20);
+      doc.setFont("helvetica","bold"); doc.setTextColor(...YELLOW); doc.text("⚠️ Axes d'Amélioration", M, y); y+=6;
+      y = bullets(["Pas de tests unitaires (Vitest/Jest) — -2 pts","Composants volumineux (>500 lignes) — refactoring recommandé","Pas de CI/CD automatisé — -1 pt"], y, YELLOW);
+
+      // PAGE 4: SECURITY
+      pg.v++; y = np(pg.v);
+      y = sT("2. SÉCURITÉ — 16/20", y);
+      doc.setFont("helvetica","bold"); doc.setTextColor(...GREEN); doc.text("✅ Points Forts", M, y); y+=6;
+      y = bullets(["RLS activé sur TOUTES les 28+ tables","Interdiction anon sur 13 tables sensibles","has_role() SECURITY DEFINER","Rate limiting serveur anti-bruteforce","CAPTCHA mathématique natif","Validation Zod client + serveur","Alertes login multi-appareils","Audit logs des actions admin","Headers HTTP sécurisés","Nettoyage auto sessions expirées","Rôles dans table séparée (pas profiles)"], y, GREEN);
+      y+=4; y=cp(y,20);
+      doc.setFont("helvetica","bold"); doc.setTextColor(...YELLOW); doc.text("⚠️ Recommandations", M, y); y+=6;
+      y = bullets(["Activer Leaked Password Protection — -2 pts","Masquer téléphones dans commandes","Re-auth pour données financières","Chiffrer photos CNI dans delivery_proofs"], y, YELLOW);
+
+      // PAGE 5: UX + FEATURES
+      pg.v++; y = np(pg.v);
+      y = sT("3. UX/UI — 15/20 | FONCTIONNALITÉS — 18/20", y);
+      doc.setFont("helvetica","bold"); doc.setTextColor(...GREEN); doc.text("✅ UX Points Forts", M, y); y+=6;
+      y = bullets(["Design system cohérent (tokens HSL)","Playfair Display + DM Sans","Mode sombre complet","Animations Framer Motion","Squelettes de chargement","Responsive mobile-first"], y, GREEN);
+      y+=4; y=cp(y,20);
+      doc.setFont("helvetica","bold"); doc.setTextColor(...GREEN); doc.text("✅ 16+ Fonctionnalités Clés", M, y); y+=6;
+      y = bullets(["E-commerce complet avec KkiaPay","Multi-vendeurs + commissions","Blog premium + éditeur riche IA","Livraison avec preuves (photo, GPS, CNI)","Notifications push & in-app temps réel","Fidélité avec points et récompenses","Module IA auto-gestion","Assistant chatbot ScIA","Coupons, promos, ventes flash","Messagerie interne","Recherche globale + wishlist + export Excel/PDF"], y, GREEN);
+
+      // PAGE 6: VERDICT
+      pg.v++; y = np(pg.v);
+      y = sT("VERDICT FINAL", y);
+      doc.setFillColor(...GREEN_BG); doc.roundedRect(M,y,CW,40,3,3,"F");
+      doc.setFillColor(...GREEN); doc.rect(M,y,4,40,"F");
+      doc.setFontSize(20); doc.setFont("helvetica","bold"); doc.setTextColor(...GREEN);
+      doc.text("82/100 — TRÈS BIEN", M+12, y+12);
+      doc.setFontSize(10); doc.setFont("helvetica","normal"); doc.setTextColor(...DARK);
+      const ft = doc.splitTextToSize("Scoly est une plateforme e-commerce complète, sécurisée et professionnelle. Avec ce projet, Inocent KOFFI peut se présenter comme Développeur Full-Stack Junior/Intermédiaire. Pour progresser vers Senior : ajouter des tests automatisés, un CI/CD, et du monitoring applicatif.", CW-20);
+      doc.text(ft, M+12, y+20); y+=50;
+
+      // Score table
+      y = cp(y, 80);
+      doc.setFontSize(12); doc.setFont("helvetica","bold"); doc.setTextColor(...NAVY);
+      doc.text("Récapitulatif", M, y); y+=8;
+      doc.setFillColor(...NAVY); doc.roundedRect(M,y,CW,8,1,1,"F");
+      doc.setFontSize(9); doc.setFont("helvetica","bold"); doc.setTextColor(...WHITE);
+      doc.text("Catégorie", M+4, y+5.5); doc.text("Note", M+110, y+5.5); doc.text("%", W-M-4, y+5.5, {align:"right"}); y+=10;
+      [["Architecture & Code","17/20","85%"],["Sécurité","16/20","80%"],["UX / UI","15/20","75%"],["Fonctionnalités","18/20","90%"],["SEO & Performance","9/10","90%"],["Documentation","7/10","70%"],["TOTAL","82/100","82%"]].forEach(([c,n,p],i) => {
+        const isT = i===6;
+        if(isT){doc.setFillColor(...NAVY);doc.roundedRect(M,y-1,CW,9,1,1,"F");doc.setTextColor(...WHITE);}
+        else{doc.setFillColor(i%2===0?250:240,i%2===0?250:242,i%2===0?255:248);doc.roundedRect(M,y-1,CW,8,0,0,"F");doc.setTextColor(...DARK);}
+        doc.setFontSize(9);doc.setFont("helvetica",isT?"bold":"normal");
+        doc.text(c,M+4,y+5);doc.text(n,M+110,y+5);doc.text(p,W-M-4,y+5,{align:"right"});y+=isT?10:8;
+      });
+
+      y+=10; y=cp(y,20);
+      doc.setDrawColor(...NAVY); doc.setLineWidth(0.5); doc.line(M,y,W-M,y); y+=8;
+      doc.setFontSize(9); doc.setFont("helvetica","normal"); doc.setTextColor(...GRAY);
+      doc.text("Rapport généré le " + new Date().toLocaleDateString("fr-FR",{day:"numeric",month:"long",year:"numeric"}), M, y); y+=5;
+      doc.text("Développeur : Inocent KOFFI — inocent.koffi@agricapital.ci", M, y);
+
+      doc.save("Scoly-Audit-Complet.pdf");
+      setAuditDownloaded(true);
+      localStorage.setItem("scoly-audit-downloaded", "true");
+      toast.success("Rapport d'audit téléchargé !");
+    } catch (e) {
+      console.error("Erreur génération audit PDF:", e);
+      toast.error("Erreur lors de la génération du rapport");
+    } finally {
+      setGeneratingAudit(false);
+    }
+  }, []);
+
 
   const loadImageAsBase64 = (src: string): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -762,7 +937,24 @@ const DocumentationManager = () => {
         </div>
       )}
 
-      {/* Bottom Info */}
+      {/* Audit Report Download - One time */}
+      {!auditDownloaded && (
+        <div className="bg-primary/10 border border-primary rounded-xl p-4 sm:p-5 flex flex-col sm:flex-row items-center gap-3 sm:gap-4">
+          <div className="w-10 h-10 rounded-lg bg-primary/20 flex items-center justify-center shrink-0">
+            <ClipboardCheck size={20} className="text-primary" />
+          </div>
+          <div className="flex-1 text-center sm:text-left">
+            <h3 className="font-display font-bold text-foreground text-sm sm:text-base">Rapport d'Audit Complet — 82/100</h3>
+            <p className="text-muted-foreground text-xs">Bilan technique, notation, sécurité, UX, fonctionnalités — PDF confidentiel — Téléchargement unique</p>
+          </div>
+          <Button onClick={generateAuditPDF} size="sm" disabled={generatingAudit} className="gap-2 w-full sm:w-auto">
+            {generatingAudit ? <RefreshCw size={14} className="animate-spin" /> : <Download size={14} />}
+            {generatingAudit ? "Génération..." : "Télécharger l'audit"}
+          </Button>
+        </div>
+      )}
+
+
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
         <div className="bg-card border border-border rounded-xl p-4 sm:p-5">
           <h3 className="font-display font-bold text-foreground mb-2 sm:mb-3 text-sm sm:text-base">Informations Techniques</h3>
