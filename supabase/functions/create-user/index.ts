@@ -99,7 +99,7 @@ serve(async (req) => {
 
     if (createError) {
       console.error('Error creating user:', createError);
-      return new Response(JSON.stringify({ error: createError.message }), {
+      return new Response(JSON.stringify({ error: 'Erreur lors de la création de l\'utilisateur. Veuillez réessayer.' }), {
         status: 500,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
@@ -152,8 +152,7 @@ serve(async (req) => {
 
   } catch (error) {
     console.error('Create user error:', error);
-    const errorMessage = error instanceof Error ? error.message : 'Erreur inconnue';
-    return new Response(JSON.stringify({ error: errorMessage }), {
+    return new Response(JSON.stringify({ error: 'Une erreur interne est survenue' }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });

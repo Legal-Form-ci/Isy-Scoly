@@ -6,6 +6,13 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+function generateSecurePassword(): string {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%&*';
+  const array = new Uint8Array(24);
+  crypto.getRandomValues(array);
+  return Array.from(array, b => chars[b % chars.length]).join('');
+}
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -41,8 +48,8 @@ serve(async (req) => {
       },
     });
 
-    const adminEmail = 'scoly.ci@gmail.com';
-    const adminPassword = '@Scoly2026';
+    const adminEmail = Deno.env.get('ADMIN_EMAIL') || 'scoly.ci@gmail.com';
+    const adminPassword = generateSecurePassword();
 
     // Check if user already exists
     const { data: existingUsers } = await supabaseAdmin.auth.admin.listUsers();
@@ -54,7 +61,7 @@ serve(async (req) => {
       console.log('Admin user already exists, updating role...');
       userId = existingAdmin.id;
     } else {
-      // Create the admin user
+      // Create the admin user with generated password
       console.log('Creating admin user...');
       const { data: newUser, error: createError } = await supabaseAdmin.auth.admin.createUser({
         email: adminEmail,
@@ -68,7 +75,7 @@ serve(async (req) => {
 
       if (createError) {
         console.error('Error creating admin user:', createError);
-        return new Response(JSON.stringify({ error: createError.message }), {
+        return new Response(JSON.stringify({ error: 'Erreur lors de la création du compte admin' }), {
           status: 500,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         });
@@ -87,7 +94,6 @@ serve(async (req) => {
       .single();
 
     if (!existingRole) {
-      // Assign admin role
       const { error: roleError } = await supabaseAdmin
         .from('user_roles')
         .upsert({
@@ -99,7 +105,7 @@ serve(async (req) => {
 
       if (roleError) {
         console.error('Error assigning admin role:', roleError);
-        return new Response(JSON.stringify({ error: roleError.message }), {
+        return new Response(JSON.stringify({ error: 'Erreur lors de l\'attribution du rôle' }), {
           status: 500,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         });
@@ -133,21 +139,27 @@ serve(async (req) => {
       }
     }
 
+    // Send password reset email so admin can set their own password
+    if (!existingAdmin) {
+      await supabaseAdmin.auth.admin.generateLink({
+        type: 'recovery',
+        email: adminEmail,
+      });
+      console.log('Password recovery link generated for admin');
+    }
+
     return new Response(JSON.stringify({ 
       success: true, 
-      message: 'Super admin créé avec succès',
-      credentials: {
-        email: adminEmail,
-        password: adminPassword,
-      }
+      message: existingAdmin 
+        ? 'Admin role vérifié. Utilisez la réinitialisation de mot de passe si nécessaire.'
+        : 'Super admin créé. Un email de réinitialisation de mot de passe a été envoyé à ' + adminEmail,
     }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
 
   } catch (error) {
     console.error('Bootstrap error:', error);
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-    return new Response(JSON.stringify({ error: errorMessage }), {
+    return new Response(JSON.stringify({ error: 'Une erreur interne est survenue' }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
