@@ -15,7 +15,7 @@ import RecentlyViewed from "@/components/RecentlyViewed";
 
 const Index = () => {
   return (
-    <main className="min-h-screen bg-background">
+    <main id="main-content" className="min-h-screen bg-background">
       <SEOHead 
         title="Scoly — Fournitures scolaires et bureautiques en Côte d'Ivoire"
         description="Votre référence pour les fournitures scolaires et bureautiques de qualité. Livraison gratuite partout en Côte d'Ivoire."
