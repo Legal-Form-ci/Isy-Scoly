@@ -161,16 +161,28 @@ serve(async (req) => {
       
       perTable[table] = { imported: 0, total: rows.length, deleted: 0, errors: [] };
 
-      // Sanitize rows - remove any undefined values and ensure valid data
+    // Sanitize rows - remove undefined values, validate types, strip dangerous content
+      const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
       const sanitizedRows = rows.map((row: any) => {
+        if (typeof row !== 'object' || row === null || Array.isArray(row)) return null;
         const sanitized: Record<string, any> = {};
         for (const [key, value] of Object.entries(row)) {
-          if (value !== undefined) {
+          if (value === undefined) continue;
+          // Validate key format (alphanumeric + underscore only)
+          if (!/^[a-z_][a-z0-9_]*$/i.test(key)) continue;
+          // Validate UUID fields
+          if (key === 'id' || key.endsWith('_id')) {
+            if (value !== null && typeof value === 'string' && !UUID_REGEX.test(value)) continue;
+          }
+          // Sanitize string values - strip script tags
+          if (typeof value === 'string') {
+            sanitized[key] = value.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
+          } else {
             sanitized[key] = value;
           }
         }
         return sanitized;
-      });
+      }).filter(Boolean);
 
       // Insert in batches with error handling per batch
       const batchSize = 100; // Smaller batches for reliability
