@@ -1,12 +1,12 @@
 /**
- * Configuration Supabase Externe - Izy-scoly
- * ===========================================
+ * Configuration Supabase Externe - Scoly
+ * =======================================
  * 
  * Ce fichier configure la connexion à votre projet Supabase externe.
  * IMPORTANT: Ne jamais exposer la clé service_role ici - uniquement la clé anon/publique
  */
 
-window.__IZY_SCOLY_CONFIG__ = {
+window.__SCOLY_CONFIG__ = {
   // URL de votre projet Supabase externe
   SUPABASE_URL: "https://duxbzpsezdhvhprwjwmk.supabase.co",
   
@@ -17,8 +17,8 @@ window.__IZY_SCOLY_CONFIG__ = {
   PROJECT_ID: "duxbzpsezdhvhprwjwmk",
   
   // Configuration de l'application
-  APP_DOMAIN: "https://izy-scoly.ci",
-  APP_VERSION: "2.1.0",
-  APP_NAME: "Izy-scoly",
+  APP_DOMAIN: "https://scoly.ci",
+  APP_VERSION: "2.2.0",
+  APP_NAME: "Scoly",
   APP_DESCRIPTION: "Plateforme éducative et e-commerce pour la Côte d'Ivoire"
 };
