@@ -1,3 +1,4 @@
+import { lazy, Suspense } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -8,46 +9,50 @@ import { LanguageProvider } from "@/i18n/LanguageContext";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { CartProvider } from "@/contexts/CartContext";
 import ScrollToTop from "@/components/ScrollToTop";
-import Index from "./pages/Index";
-import Auth from "./pages/Auth";
-import Shop from "./pages/Shop";
-import Cart from "./pages/Cart";
-import Checkout from "./pages/Checkout";
-import About from "./pages/About";
-import Contact from "./pages/Contact";
-import Account from "./pages/Account";
-import Admin from "./pages/Admin";
-import ProductDetail from "./pages/ProductDetail";
-import Actualites from "./pages/Actualites";
-import ArticleDetail from "./pages/ArticleDetail";
-import WriteArticle from "./pages/WriteArticle";
-import TeamDashboard from "./pages/TeamDashboard";
-import AuthorDashboard from "./pages/AuthorDashboard";
-import FAQ from "./pages/FAQ";
-import ArticlePayment from "./pages/ArticlePayment";
-import ScIA from "./components/ScIA";
-import NotFound from "./pages/NotFound";
-import BootstrapAdmin from "./pages/BootstrapAdmin";
-import ModeratorDashboard from "./pages/ModeratorDashboard";
-import VendorDashboard from "./pages/VendorDashboard";
-import DeliveryDashboard from "./pages/DeliveryDashboard";
-import Wishlist from "./pages/Wishlist";
-import MentionsLegales from "./pages/MentionsLegales";
-import TermsOfUse from "./pages/TermsOfUse";
-import PrivacyPolicy from "./pages/PrivacyPolicy";
-import CookiesPolicy from "./pages/CookiesPolicy";
+import ErrorBoundary from "@/components/ErrorBoundary";
+import PageLoader from "@/components/PageLoader";
 
-import SystemDatabase from "./pages/SystemDatabase";
-import SystemRepository from "./pages/SystemRepository";
-import AuthConfirm from "./pages/AuthConfirm";
-import ResetPassword from "./pages/ResetPassword";
-// Documentation is admin-only, no public page
+// Critical path - eager load
+import Index from "./pages/Index";
+
+// Lazy-loaded pages for code splitting
+const Auth = lazy(() => import("./pages/Auth"));
+const Shop = lazy(() => import("./pages/Shop"));
+const Cart = lazy(() => import("./pages/Cart"));
+const Checkout = lazy(() => import("./pages/Checkout"));
+const About = lazy(() => import("./pages/About"));
+const Contact = lazy(() => import("./pages/Contact"));
+const Account = lazy(() => import("./pages/Account"));
+const Admin = lazy(() => import("./pages/Admin"));
+const ProductDetail = lazy(() => import("./pages/ProductDetail"));
+const Actualites = lazy(() => import("./pages/Actualites"));
+const ArticleDetail = lazy(() => import("./pages/ArticleDetail"));
+const WriteArticle = lazy(() => import("./pages/WriteArticle"));
+const TeamDashboard = lazy(() => import("./pages/TeamDashboard"));
+const AuthorDashboard = lazy(() => import("./pages/AuthorDashboard"));
+const FAQ = lazy(() => import("./pages/FAQ"));
+const ArticlePayment = lazy(() => import("./pages/ArticlePayment"));
+const ScIA = lazy(() => import("./components/ScIA"));
+const NotFound = lazy(() => import("./pages/NotFound"));
+const BootstrapAdmin = lazy(() => import("./pages/BootstrapAdmin"));
+const ModeratorDashboard = lazy(() => import("./pages/ModeratorDashboard"));
+const VendorDashboard = lazy(() => import("./pages/VendorDashboard"));
+const DeliveryDashboard = lazy(() => import("./pages/DeliveryDashboard"));
+const Wishlist = lazy(() => import("./pages/Wishlist"));
+const MentionsLegales = lazy(() => import("./pages/MentionsLegales"));
+const TermsOfUse = lazy(() => import("./pages/TermsOfUse"));
+const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
+const CookiesPolicy = lazy(() => import("./pages/CookiesPolicy"));
+const SystemDatabase = lazy(() => import("./pages/SystemDatabase"));
+const SystemRepository = lazy(() => import("./pages/SystemRepository"));
+const AuthConfirm = lazy(() => import("./pages/AuthConfirm"));
+const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 1000 * 60 * 5, // 5 minutes
-      gcTime: 1000 * 60 * 30, // 30 minutes (formerly cacheTime)
+      staleTime: 1000 * 60 * 5,
+      gcTime: 1000 * 60 * 30,
       retry: 2,
       refetchOnWindowFocus: false,
     },
@@ -55,68 +60,74 @@ const queryClient = new QueryClient({
 });
 
 const App = () => (
-  <HelmetProvider>
-    <QueryClientProvider client={queryClient}>
-      <LanguageProvider>
-        <AuthProvider>
-          <CartProvider>
-            <TooltipProvider>
-              <Toaster />
-              <Sonner />
-              <BrowserRouter>
-                <ScrollToTop />
-                <Routes>
-                  <Route path="/" element={<Index />} />
-                  <Route path="/auth" element={<Auth />} />
-                  <Route path="/shop" element={<Shop />} />
-                  <Route path="/boutique" element={<Shop />} />
-                  <Route path="/shop/product/:id" element={<ProductDetail />} />
-                  <Route path="/product/:id" element={<ProductDetail />} />
-                  <Route path="/cart" element={<Cart />} />
-                  <Route path="/panier" element={<Cart />} />
-                  <Route path="/checkout" element={<Checkout />} />
-                  <Route path="/about" element={<About />} />
-                  <Route path="/a-propos" element={<About />} />
-                  <Route path="/contact" element={<Contact />} />
-                  <Route path="/account" element={<Account />} />
-                  <Route path="/compte" element={<Account />} />
-                  <Route path="/admin" element={<Admin />} />
-                  <Route path="/actualites" element={<Actualites />} />
-                  <Route path="/actualites/write" element={<WriteArticle />} />
-                  <Route path="/actualites/edit/:id" element={<WriteArticle />} />
-                  <Route path="/actualites/:id" element={<ArticleDetail />} />
-                  <Route path="/team" element={<TeamDashboard />} />
-                  <Route path="/author" element={<AuthorDashboard />} />
-                  <Route path="/faq" element={<FAQ />} />
-                  {/* Documentation removed from public — admin only */}
-                  <Route path="/article/pay/:id" element={<ArticlePayment />} />
-                  <Route path="/bootstrap-admin" element={<BootstrapAdmin />} />
-                  <Route path="/delivery" element={<DeliveryDashboard />} />
-                  <Route path="/moderator" element={<ModeratorDashboard />} />
-                  <Route path="/vendor" element={<VendorDashboard />} />
-                  <Route path="/wishlist" element={<Wishlist />} />
-                  <Route path="/mentions-legales" element={<MentionsLegales />} />
-                  <Route path="/terms" element={<TermsOfUse />} />
-                  <Route path="/privacy" element={<PrivacyPolicy />} />
-                  <Route path="/cookies" element={<CookiesPolicy />} />
-                  {/* Isolated database portal (password-protected, admin-only) */}
-                  {/* System portals */}
-                  <Route path="/db" element={<SystemDatabase />} />
-                  <Route path="/system/repo" element={<SystemRepository />} />
-                  {/* Auth redirect pages */}
-                  <Route path="/auth/confirm" element={<AuthConfirm />} />
-                  <Route path="/auth/reset-password" element={<ResetPassword />} />
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
-                <ScIA />
-                
-              </BrowserRouter>
-            </TooltipProvider>
-          </CartProvider>
-        </AuthProvider>
-      </LanguageProvider>
-    </QueryClientProvider>
-  </HelmetProvider>
+  <ErrorBoundary>
+    <HelmetProvider>
+      <QueryClientProvider client={queryClient}>
+        <LanguageProvider>
+          <AuthProvider>
+            <CartProvider>
+              <TooltipProvider>
+                <Toaster />
+                <Sonner />
+                <BrowserRouter>
+                  <ScrollToTop />
+                  {/* Skip to content - Accessibility */}
+                  <a
+                    href="#main-content"
+                    className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100] focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded-md focus:outline-none"
+                  >
+                    Aller au contenu principal
+                  </a>
+                  <Suspense fallback={<PageLoader />}>
+                    <Routes>
+                      <Route path="/" element={<Index />} />
+                      <Route path="/auth" element={<Auth />} />
+                      <Route path="/shop" element={<Shop />} />
+                      <Route path="/boutique" element={<Shop />} />
+                      <Route path="/shop/product/:id" element={<ProductDetail />} />
+                      <Route path="/product/:id" element={<ProductDetail />} />
+                      <Route path="/cart" element={<Cart />} />
+                      <Route path="/panier" element={<Cart />} />
+                      <Route path="/checkout" element={<Checkout />} />
+                      <Route path="/about" element={<About />} />
+                      <Route path="/a-propos" element={<About />} />
+                      <Route path="/contact" element={<Contact />} />
+                      <Route path="/account" element={<Account />} />
+                      <Route path="/compte" element={<Account />} />
+                      <Route path="/admin" element={<Admin />} />
+                      <Route path="/actualites" element={<Actualites />} />
+                      <Route path="/actualites/write" element={<WriteArticle />} />
+                      <Route path="/actualites/edit/:id" element={<WriteArticle />} />
+                      <Route path="/actualites/:id" element={<ArticleDetail />} />
+                      <Route path="/team" element={<TeamDashboard />} />
+                      <Route path="/author" element={<AuthorDashboard />} />
+                      <Route path="/faq" element={<FAQ />} />
+                      <Route path="/article/pay/:id" element={<ArticlePayment />} />
+                      <Route path="/bootstrap-admin" element={<BootstrapAdmin />} />
+                      <Route path="/delivery" element={<DeliveryDashboard />} />
+                      <Route path="/moderator" element={<ModeratorDashboard />} />
+                      <Route path="/vendor" element={<VendorDashboard />} />
+                      <Route path="/wishlist" element={<Wishlist />} />
+                      <Route path="/mentions-legales" element={<MentionsLegales />} />
+                      <Route path="/terms" element={<TermsOfUse />} />
+                      <Route path="/privacy" element={<PrivacyPolicy />} />
+                      <Route path="/cookies" element={<CookiesPolicy />} />
+                      <Route path="/db" element={<SystemDatabase />} />
+                      <Route path="/system/repo" element={<SystemRepository />} />
+                      <Route path="/auth/confirm" element={<AuthConfirm />} />
+                      <Route path="/auth/reset-password" element={<ResetPassword />} />
+                      <Route path="*" element={<NotFound />} />
+                    </Routes>
+                    <ScIA />
+                  </Suspense>
+                </BrowserRouter>
+              </TooltipProvider>
+            </CartProvider>
+          </AuthProvider>
+        </LanguageProvider>
+      </QueryClientProvider>
+    </HelmetProvider>
+  </ErrorBoundary>
 );
 
 export default App;

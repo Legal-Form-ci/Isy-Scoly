@@ -36,7 +36,7 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="bg-foreground text-primary-foreground pt-16 pb-8" id="contact">
+    <footer className="bg-foreground text-primary-foreground pt-16 pb-8" id="contact" role="contentinfo" aria-label="Pied de page">
       <div className="container mx-auto px-4">
         {/* Social Share Bar */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12 pb-8 border-b border-primary-foreground/20">
