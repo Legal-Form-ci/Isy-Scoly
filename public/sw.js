@@ -1,5 +1,5 @@
 // Service Worker for PWA Web Push Notifications
-const CACHE_NAME = 'izy-scoly-v1';
+const CACHE_NAME = 'scoly-v2';
 
 // Install event
 self.addEventListener('install', (event) => {
@@ -18,11 +18,11 @@ self.addEventListener('push', (event) => {
   console.log('[Service Worker] Push received:', event);
 
   let data = {
-    title: 'Izy-scoly',
+    title: 'Scoly',
     body: 'Nouvelle notification',
     icon: '/favicon.svg',
     badge: '/favicon.svg',
-    tag: 'izy-scoly-notification',
+    tag: 'scoly-notification',
     data: {}
   };
 
@@ -83,14 +83,12 @@ self.addEventListener('notificationclick', (event) => {
   event.waitUntil(
     clients.matchAll({ type: 'window', includeUncontrolled: true })
       .then((clientList) => {
-        // If a window is already open, focus it
         for (const client of clientList) {
           if (client.url.includes(self.location.origin) && 'focus' in client) {
             client.navigate(targetUrl);
             return client.focus();
           }
         }
-        // Otherwise open a new window
         if (clients.openWindow) {
           return clients.openWindow(targetUrl);
         }
