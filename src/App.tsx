@@ -11,6 +11,7 @@ import { CartProvider } from "@/contexts/CartContext";
 import ScrollToTop from "@/components/ScrollToTop";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import PageLoader from "@/components/PageLoader";
+import WhatsAppButton from "@/components/WhatsAppButton";
 
 // Critical path - eager load
 import Index from "./pages/Index";
@@ -119,6 +120,7 @@ const App = () => (
                       <Route path="*" element={<NotFound />} />
                     </Routes>
                     <ScIA />
+                    <WhatsAppButton />
                   </Suspense>
                 </BrowserRouter>
               </TooltipProvider>

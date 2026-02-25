@@ -123,7 +123,7 @@ serve(async (req) => {
           id: userId,
           first_name: 'Super',
           last_name: 'Admin',
-          phone: '+225 07 59 56 60 87',
+          phone: '+225 07 58 46 59 33',
         });
 
       if (profileError) {

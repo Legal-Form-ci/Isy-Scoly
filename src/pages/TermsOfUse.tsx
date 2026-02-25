@@ -54,7 +54,7 @@ const TermsOfUse = () => (
 
         <section>
           <h2 className="text-xl font-semibold text-foreground">9. Contact</h2>
-          <p>Pour toute question relative aux présentes CGU, contactez-nous à <a href="mailto:contact@scoly.ci" className="text-primary hover:underline">contact@scoly.ci</a> ou au +225 07 59 56 60 87.</p>
+          <p>Pour toute question relative aux présentes CGU, contactez-nous à <a href="mailto:contact@scoly.ci" className="text-primary hover:underline">contact@scoly.ci</a> ou au +225 07 58 46 59 33.</p>
         </section>
       </div>
     </div>

@@ -83,11 +83,11 @@ const Footer = () => {
                 contact@scoly.ci
               </a>
               <a
-                href="tel:+2250759566087"
+                href="tel:+2250758465933"
                 className="flex items-center gap-3 text-primary-foreground/80 hover:text-accent transition-colors"
               >
                 <Phone size={18} />
-                +225 07 59 56 60 87
+                +225 07 58 46 59 33
               </a>
               <div className="flex items-center gap-3 text-primary-foreground/80">
                 <MapPin size={18} />
