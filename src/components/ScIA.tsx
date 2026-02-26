@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import DOMPurify from "dompurify";
 import { 
   Bot, 
   X, 
@@ -271,7 +272,7 @@ const ScIA = () => {
       line = line.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
       return (
         <span key={i}>
-          <span dangerouslySetInnerHTML={{ __html: line }} />
+          <span dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(line, { ALLOWED_TAGS: ['strong','em','a','br','span'], ALLOWED_ATTR: ['href','target','rel'] }) }} />
           {i < content.split("\n").length - 1 && <br />}
         </span>
       );

@@ -1,5 +1,3 @@
-import * as XLSX from 'xlsx';
-
 interface TableData {
   [tableName: string]: any[];
 }
@@ -12,6 +10,32 @@ interface ExportOptions {
 
 // Column display names for better readability
 const COLUMN_LABELS: Record<string, Record<string, string>> = {
+  users: {
+    id: 'ID',
+    first_name: 'Prénom',
+    last_name: 'Nom',
+    email: 'Email',
+    created_at: 'Date création',
+  },
+  loyalty_rewards: {
+    id: 'ID Récompense',
+    user_id: 'ID Utilisateur',
+    reward_type: 'Type de Récompense',
+    points_spent: 'Points dépensés',
+    coupon_code: 'Code Coupon',
+    created_at: 'Date création',
+  },
+  vendor_settings: {
+    id: 'ID Vendeur',
+    user_id: 'ID Utilisateur',
+    store_name: 'Nom du magasin',
+    store_description: 'Description du magasin',
+    logo_url: 'Logo URL',
+    banner_url: 'Banner URL',
+    city: 'Ville',
+    is_verified: 'Vérifié',
+    created_at: 'Date création',
+  },
   profiles: {
     id: 'ID Utilisateur',
     email: 'Email',
@@ -127,12 +151,10 @@ const ROLE_TRANSLATIONS: Record<string, string> = {
 function formatValue(value: any, columnName: string): any {
   if (value === null || value === undefined) return '';
   
-  // Boolean formatting
   if (typeof value === 'boolean') {
     return value ? 'Oui' : 'Non';
   }
   
-  // Date formatting
   if (columnName.includes('_at') || columnName.includes('date')) {
     try {
       const date = new Date(value);
@@ -150,22 +172,18 @@ function formatValue(value: any, columnName: string): any {
     }
   }
   
-  // Status translation
   if (columnName === 'status') {
     return STATUS_TRANSLATIONS[value] || value;
   }
   
-  // Role translation
   if (columnName === 'role') {
     return ROLE_TRANSLATIONS[value] || value;
   }
   
-  // JSON objects
   if (typeof value === 'object') {
     return JSON.stringify(value);
   }
   
-  // Currency formatting
   if (columnName.includes('amount') || columnName.includes('price') || columnName === 'total_sales') {
     const num = parseFloat(value);
     if (!isNaN(num)) {
@@ -180,104 +198,60 @@ function getColumnLabel(tableName: string, columnName: string): string {
   return COLUMN_LABELS[tableName]?.[columnName] || columnName;
 }
 
+// Escape CSV cell value
+function escapeCsvCell(value: any): string {
+  const str = String(value ?? '');
+  if (str.includes(',') || str.includes('"') || str.includes('\n') || str.includes('\r')) {
+    return '"' + str.replace(/"/g, '""') + '"';
+  }
+  return str;
+}
+
+// Convert table data to CSV string
+function tableToCsv(tableName: string, tableData: any[]): string {
+  if (!tableData || tableData.length === 0) {
+    return `Table: ${tableName}\nAucune donnée\n`;
+  }
+
+  const columns = Object.keys(tableData[0]);
+  const headerRow = columns.map(col => escapeCsvCell(getColumnLabel(tableName, col)));
+  const dataRows = tableData.map(row =>
+    columns.map(col => escapeCsvCell(formatValue(row[col], col)))
+  );
+
+  return [headerRow.join(','), ...dataRows.map(r => r.join(','))].join('\n');
+}
+
 export function exportToExcel(
   data: TableData, 
   filename: string = 'export',
   options: ExportOptions = {}
 ): void {
-  const workbook = XLSX.utils.book_new();
-  
-  // Create metadata sheet
+  // Build a single CSV with all tables separated by headers
+  const sections: string[] = [];
+
   if (options.includeMetadata !== false) {
-    const metadataRows = [
-      ['═══════════════════════════════════════════════════'],
-      ['SCOLY - Export Base de Données'],
-      ['═══════════════════════════════════════════════════'],
-      [''],
-      ['Date d\'export:', new Date().toLocaleString('fr-FR')],
-      ['Version:', '2.0'],
-      ['Tables exportées:', Object.keys(data).length],
-      ['Total enregistrements:', Object.values(data).reduce((a, t) => a + t.length, 0)],
-      [''],
-      ['═══════════════════════════════════════════════════'],
-      ['Détail par table:'],
-      ['═══════════════════════════════════════════════════'],
-    ];
-    
-    Object.entries(data).forEach(([tableName, tableData]) => {
-      metadataRows.push([tableName, `${tableData.length} enregistrements`]);
-    });
-    
-    metadataRows.push(['']);
-    metadataRows.push(['═══════════════════════════════════════════════════']);
-    metadataRows.push(['Instructions:']);
-    metadataRows.push(['- Chaque onglet contient les données d\'une table']);
-    metadataRows.push(['- Les colonnes sont nommées de façon lisible']);
-    metadataRows.push(['- Les dates sont au format FR']);
-    metadataRows.push(['- Les statuts sont traduits en français']);
-    metadataRows.push(['═══════════════════════════════════════════════════']);
-    
-    const metadataSheet = XLSX.utils.aoa_to_sheet(metadataRows);
-    
-    // Style metadata
-    metadataSheet['!cols'] = [{ wch: 40 }, { wch: 30 }];
-    
-    XLSX.utils.book_append_sheet(workbook, metadataSheet, '📊 Résumé');
+    sections.push('SCOLY - Export Base de Données');
+    sections.push(`Date d'export: ${new Date().toLocaleString('fr-FR')}`);
+    sections.push(`Tables exportées: ${Object.keys(data).length}`);
+    sections.push(`Total enregistrements: ${Object.values(data).reduce((a, t) => a + t.length, 0)}`);
+    sections.push('');
   }
-  
-  // Create sheet for each table
+
   Object.entries(data).forEach(([tableName, tableData]) => {
-    if (!tableData || tableData.length === 0) {
-      // Empty table - create sheet with message
-      const emptySheet = XLSX.utils.aoa_to_sheet([
-        [`Table: ${tableName}`],
-        ['Aucune donnée'],
-      ]);
-      const safeSheetName = tableName.substring(0, 31).replace(/[\/\\\?\*\[\]]/g, '_');
-      XLSX.utils.book_append_sheet(workbook, emptySheet, safeSheetName);
-      return;
-    }
-    
-    // Get all columns from first row
-    const columns = Object.keys(tableData[0]);
-    
-    // Create header row with friendly names
-    const headerRow = columns.map(col => getColumnLabel(tableName, col));
-    
-    // Create data rows with formatted values
-    const dataRows = tableData.map(row => 
-      columns.map(col => formatValue(row[col], col))
-    );
-    
-    // Combine header and data
-    const sheetData = [headerRow, ...dataRows];
-    
-    const worksheet = XLSX.utils.aoa_to_sheet(sheetData);
-    
-    // Auto-fit column widths
-    const colWidths = columns.map((col, i) => {
-      const headerWidth = headerRow[i].length;
-      const maxDataWidth = Math.max(
-        ...dataRows.slice(0, 100).map(row => String(row[i] || '').length)
-      );
-      return { wch: Math.min(Math.max(headerWidth, maxDataWidth, 10), 50) };
-    });
-    worksheet['!cols'] = colWidths;
-    
-    // Truncate sheet name to 31 chars (Excel limit) and remove invalid chars
-    const safeSheetName = tableName.substring(0, 31).replace(/[\/\\\?\*\[\]]/g, '_');
-    
-    XLSX.utils.book_append_sheet(workbook, worksheet, safeSheetName);
+    sections.push(`=== ${tableName} (${tableData.length} enregistrements) ===`);
+    sections.push(tableToCsv(tableName, tableData));
+    sections.push('');
   });
-  
-  // Generate and download
-  const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
-  const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+
+  const csvContent = sections.join('\n');
+  // BOM for Excel UTF-8 compatibility
+  const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
   
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
   link.href = url;
-  link.download = `${filename}-${new Date().toISOString().split('T')[0]}.xlsx`;
+  link.download = `${filename}-${new Date().toISOString().split('T')[0]}.csv`;
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
