@@ -53,6 +53,8 @@ const SchoolDetail = lazy(() => import("./pages/SchoolDetail"));
 const SmartKits = lazy(() => import("./pages/SmartKits"));
 const Referral = lazy(() => import("./pages/Referral"));
 const Resources = lazy(() => import("./pages/Resources"));
+const FeaturesPresentation = lazy(() => import("./pages/FeaturesPresentation"));
+const Documentation = lazy(() => import("./pages/Documentation"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -127,6 +129,8 @@ const App = () => (
                       <Route path="/kits" element={<SmartKits />} />
                       <Route path="/parrainage" element={<Referral />} />
                       <Route path="/ressources" element={<Resources />} />
+                      <Route path="/fonctionnalites" element={<FeaturesPresentation />} />
+                      <Route path="/documentation" element={<Documentation />} />
                       <Route path="*" element={<NotFound />} />
                     </Routes>
                     <ScIA />

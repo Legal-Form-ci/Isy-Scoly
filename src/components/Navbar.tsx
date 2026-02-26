@@ -56,12 +56,12 @@ const Navbar = () => {
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center gap-6">
+          <div className="hidden xl:flex items-center gap-5">
             {navItems.map((item) => (
               <Link
                 key={item.href}
                 to={item.href}
-                className="text-foreground/80 hover:text-primary font-medium transition-colors text-sm"
+                className="text-foreground/80 hover:text-primary font-medium transition-colors text-sm whitespace-nowrap"
               >
                 {item.label}
               </Link>
@@ -170,7 +170,7 @@ const Navbar = () => {
             <Button
               variant="ghost"
               size="icon"
-              className="lg:hidden"
+              className="xl:hidden"
               onClick={() => setIsOpen(!isOpen)}
             >
               {isOpen ? <X size={24} /> : <Menu size={24} />}
@@ -187,7 +187,7 @@ const Navbar = () => {
 
         {/* Mobile Menu */}
         {isOpen && (
-          <div className="lg:hidden py-4 border-t border-border">
+          <div className="xl:hidden py-4 border-t border-border">{/* mobile menu */}
             <div className="flex flex-col gap-2">
               {navItems.map((item) => (
                 <Link

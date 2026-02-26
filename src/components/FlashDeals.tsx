@@ -121,9 +121,9 @@ const FlashDeals = () => {
               </div>
 
               <Link to={`/shop/product/${product.id}`}>
-                <div className="aspect-square overflow-hidden">
+                <div className="aspect-square overflow-hidden bg-muted">
                   <SmartImage
-                    src={product.image_url}
+                    src={product.image_url || (product.images && product.images.length > 0 ? product.images[0] : null)}
                     alt={getProductName(product)}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                     fallbackSrc="/placeholder.svg"

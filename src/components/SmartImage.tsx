@@ -25,17 +25,15 @@ const SmartImage = forwardRef<HTMLImageElement, SmartImageProps>(function SmartI
   },
   ref
 ) {
-  const [currentSrc, setCurrentSrc] = useState(src || fallbackSrc);
+  const effectiveSrc = src || fallbackSrc;
+  const [currentSrc, setCurrentSrc] = useState(effectiveSrc);
   const [hasError, setHasError] = useState(false);
 
   // Reset when src changes (fix carousel issue)
   useEffect(() => {
-    if (src) {
-      setCurrentSrc(src);
-      setHasError(false);
-    } else {
-      setCurrentSrc(fallbackSrc);
-    }
+    const newSrc = src || fallbackSrc;
+    setCurrentSrc(newSrc);
+    setHasError(false);
   }, [src, fallbackSrc]);
 
   const handleError = (e: React.SyntheticEvent<HTMLImageElement>) => {

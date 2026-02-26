@@ -15,6 +15,10 @@ const Footer = () => {
       { label: "Scoly Librairie", href: "/shop?category=scoly-librairie" },
     ],
     resources: [
+      { label: "Écoles", href: "/ecoles" },
+      { label: "Kits scolaires", href: "/kits" },
+      { label: "Ressources éducatives", href: "/ressources" },
+      { label: "Parrainage", href: "/parrainage" },
       { label: "Actualités", href: "/actualites" },
       { label: t.footer.faq, href: "/faq" },
       { label: t.nav.about, href: "/about" },

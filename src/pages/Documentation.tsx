@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Book, Database, Shield, Users, CreditCard, Server, Mail, Globe, ChevronRight, Download, FileText, Smartphone, Monitor, Code, Layers, Lock, Bell, Truck, ShoppingCart, BarChart3, MessageSquare, Star, Settings, Printer, Brain, Share2, Gift, Tag, Eye, Heart } from "lucide-react";
+import { Book, Database, Shield, Users, CreditCard, Server, Mail, Globe, ChevronRight, Download, FileText, Smartphone, Monitor, Code, Layers, Lock, Bell, Truck, ShoppingCart, BarChart3, MessageSquare, Star, Settings, Printer, Brain, Share2, Gift, Tag, Eye, Heart, GraduationCap, Package, UserPlus, BookOpen, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -13,18 +13,19 @@ const Documentation = () => {
 
   const sections = [
     { id: "presentation", icon: <Book size={18} />, title: "1. Présentation", titleEn: "1. Overview" },
-    { id: "architecture", icon: <Layers size={18} />, title: "2. Architecture technique", titleEn: "2. Technical Architecture" },
-    { id: "database", icon: <Database size={18} />, title: "3. Base de données", titleEn: "3. Database" },
-    { id: "admin", icon: <Shield size={18} />, title: "4. Guide Administrateur", titleEn: "4. Admin Guide" },
-    { id: "roles", icon: <Users size={18} />, title: "5. Rôles & Permissions", titleEn: "5. Roles & Permissions" },
-    { id: "client", icon: <ShoppingCart size={18} />, title: "6. Guide Client", titleEn: "6. Client Guide" },
-    { id: "ecommerce", icon: <Heart size={18} />, title: "7. E-commerce Avancé", titleEn: "7. Advanced E-commerce" },
-    { id: "payment", icon: <CreditCard size={18} />, title: "8. Système de paiement", titleEn: "8. Payment System" },
-    { id: "ai", icon: <Brain size={18} />, title: "9. Module IA", titleEn: "9. AI Module" },
-    { id: "edge", icon: <Server size={18} />, title: "10. Edge Functions & API", titleEn: "10. Edge Functions & API" },
-    { id: "security", icon: <Lock size={18} />, title: "11. Sécurité", titleEn: "11. Security" },
-    { id: "deployment", icon: <Globe size={18} />, title: "12. Déploiement", titleEn: "12. Deployment" },
-    { id: "developer", icon: <Code size={18} />, title: "13. Développeur", titleEn: "13. Developer" },
+    { id: "newfeatures", icon: <Star size={18} />, title: "2. Nouveautés v3.0", titleEn: "2. New Features v3.0" },
+    { id: "architecture", icon: <Layers size={18} />, title: "3. Architecture technique", titleEn: "3. Technical Architecture" },
+    { id: "database", icon: <Database size={18} />, title: "4. Base de données", titleEn: "4. Database" },
+    { id: "admin", icon: <Shield size={18} />, title: "5. Guide Administrateur", titleEn: "5. Admin Guide" },
+    { id: "roles", icon: <Users size={18} />, title: "6. Rôles & Permissions", titleEn: "6. Roles & Permissions" },
+    { id: "client", icon: <ShoppingCart size={18} />, title: "7. Guide Client", titleEn: "7. Client Guide" },
+    { id: "ecommerce", icon: <Heart size={18} />, title: "8. E-commerce Avancé", titleEn: "8. Advanced E-commerce" },
+    { id: "payment", icon: <CreditCard size={18} />, title: "9. Système de paiement", titleEn: "9. Payment System" },
+    { id: "ai", icon: <Brain size={18} />, title: "10. Module IA", titleEn: "10. AI Module" },
+    { id: "edge", icon: <Server size={18} />, title: "11. Edge Functions & API", titleEn: "11. Edge Functions & API" },
+    { id: "security", icon: <Lock size={18} />, title: "12. Sécurité", titleEn: "12. Security" },
+    { id: "deployment", icon: <Globe size={18} />, title: "13. Déploiement", titleEn: "13. Deployment" },
+    { id: "developer", icon: <Code size={18} />, title: "14. Développeur", titleEn: "14. Developer" },
   ];
 
   const handleDownloadPDF = () => {
@@ -78,6 +79,84 @@ const Documentation = () => {
                   {cat}
                 </div>
               ))}
+            </div>
+          </div>
+        );
+
+      case "newfeatures":
+        return (
+          <div className="space-y-6 doc-section">
+            <h2 className="text-3xl font-display font-bold text-foreground">Nouveautés Scoly 3.0</h2>
+            
+            <div className="bg-primary/5 border border-primary/20 rounded-xl p-6">
+              <p className="text-muted-foreground leading-relaxed">
+                Scoly 3.0 introduit 4 fonctionnalités stratégiques majeures pour digitaliser la rentrée scolaire en Côte d'Ivoire. 
+                Ces modules ont été conçus par <strong className="text-foreground">Inocent KOFFI</strong> pour répondre aux besoins 
+                spécifiques des parents, élèves et établissements scolaires.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {[
+                { icon: <GraduationCap size={20} />, title: "🎓 Espace Écoles", desc: "Répertoire d'écoles, listes de fournitures officielles par classe, commande groupée en 1 clic, programme fidélité écoles.", url: "/ecoles" },
+                { icon: <Package size={20} />, title: "📦 Kits Intelligents", desc: "Génération automatique de kits scolaires selon le niveau (CP1→Terminale) et la série (A, C, D). Ajout au panier en 1 clic.", url: "/kits" },
+                { icon: <UserPlus size={20} />, title: "🤝 Programme Parrainage", desc: "Codes uniques, partage WhatsApp/SMS, crédits automatiques (500 FCFA parrain / 300 FCFA filleul), niveaux ambassadeur.", url: "/parrainage" },
+                { icon: <BookOpen size={20} />, title: "📚 Marketplace Éducative", desc: "Exercices, sujets d'examen, vidéos, fiches de cours. Contenus gratuits et premium par matière et niveau.", url: "/ressources" },
+              ].map((item, i) => (
+                <div key={i} className="bg-card border border-border rounded-lg p-4 flex gap-3">
+                  <div className="text-primary mt-0.5 shrink-0">{item.icon}</div>
+                  <div>
+                    <h4 className="font-semibold text-foreground text-sm">{item.title}</h4>
+                    <p className="text-muted-foreground text-xs mt-1">{item.desc}</p>
+                    <code className="text-xs text-primary bg-primary/10 px-2 py-0.5 rounded mt-2 inline-block">{item.url}</code>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <h3 className="text-xl font-semibold text-foreground mt-8">Nouvelles Tables Base de Données</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              {[
+                { name: "schools", desc: "Répertoire des établissements scolaires" },
+                { name: "school_supply_lists", desc: "Listes de fournitures par école et classe" },
+                { name: "school_supply_items", desc: "Articles dans les listes de fournitures" },
+                { name: "school_loyalty", desc: "Programme fidélité écoles (Bronze→Platinum)" },
+                { name: "referrals", desc: "Parrainages avec codes uniques" },
+                { name: "referral_rewards", desc: "Récompenses de parrainage" },
+                { name: "resources", desc: "Contenus éducatifs (exercices, vidéos, PDF)" },
+                { name: "educational_content", desc: "Contenus éducatifs avancés" },
+              ].map((table, i) => (
+                <div key={i} className="bg-card border border-border rounded-lg p-3 flex items-center gap-3">
+                  <Database size={16} className="text-primary shrink-0" />
+                  <div>
+                    <code className="text-sm font-mono font-semibold text-foreground">{table.name}</code>
+                    <p className="text-xs text-muted-foreground">{table.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <h3 className="text-xl font-semibold text-foreground mt-8">Admin — Nouveaux Onglets</h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+              {[
+                { title: "Écoles", desc: "Gestion des établissements et listes" },
+                { title: "Ressources Édu", desc: "Modération des contenus éducatifs" },
+                { title: "Parrainages", desc: "Suivi des codes et récompenses" },
+              ].map((tab, i) => (
+                <div key={i} className="bg-primary/10 text-primary rounded-lg px-4 py-3 text-center">
+                  <p className="font-medium text-sm">{tab.title}</p>
+                  <p className="text-xs mt-1 opacity-80">{tab.desc}</p>
+                </div>
+              ))}
+            </div>
+
+            <div className="bg-accent/5 border border-accent/20 rounded-xl p-4 flex items-center justify-between flex-wrap gap-3">
+              <p className="text-sm text-muted-foreground">
+                <strong className="text-foreground">📄 Document complet :</strong> Consultez la présentation détaillée des nouvelles fonctionnalités avec contexte, objectifs et guide d'utilisation.
+              </p>
+              <a href="/fonctionnalites" className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline">
+                Voir le document <ExternalLink size={14} />
+              </a>
             </div>
           </div>
         );
@@ -691,7 +770,7 @@ const Documentation = () => {
             <div className="bg-primary/5 border border-primary/20 rounded-xl p-6">
               <h3 className="text-lg font-semibold text-primary mb-3">Informations du Projet</h3>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-                <div><span className="text-muted-foreground">Version</span><p className="font-semibold text-foreground">2.0.0</p></div>
+                <div><span className="text-muted-foreground">Version</span><p className="font-semibold text-foreground">3.0.0</p></div>
                 <div><span className="text-muted-foreground">Licence</span><p className="font-semibold text-foreground">Propriétaire</p></div>
                 <div><span className="text-muted-foreground">Date</span><p className="font-semibold text-foreground">Février 2026</p></div>
                 <div><span className="text-muted-foreground">Statut</span><p className="font-semibold text-foreground">Production</p></div>
@@ -772,8 +851,8 @@ const Documentation = () => {
               </div>
             </div>
             <h1 className="text-3xl lg:text-4xl font-display font-bold mb-2">Documentation Officielle</h1>
-            <p className="text-lg opacity-90">Scoly 2.0 — Guide Technique & Utilisateur</p>
-            <p className="text-sm opacity-70 mt-1">Version 2.0.0 • Février 2026 • Production</p>
+            <p className="text-lg opacity-90">Scoly 3.0 — Guide Technique & Utilisateur</p>
+            <p className="text-sm opacity-70 mt-1">Version 3.0.0 • Février 2026 • Production</p>
           </div>
         </div>
       </section>

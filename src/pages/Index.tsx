@@ -3,6 +3,7 @@ import HeroSection from "@/components/HeroSection";
 import FeaturedProductsCarousel from "@/components/FeaturedProductsCarousel";
 import FeaturedArticlesCarousel from "@/components/FeaturedArticlesCarousel";
 import FlashDeals from "@/components/FlashDeals";
+import NewFeaturesSection from "@/components/NewFeaturesSection";
 import SpacesSection from "@/components/SpacesSection";
 import FeaturesSection from "@/components/FeaturesSection";
 import PaymentSection from "@/components/PaymentSection";
@@ -26,6 +27,7 @@ const Index = () => {
       <HeroSection />
       <FlashDeals />
       <FeaturedProductsCarousel />
+      <NewFeaturesSection />
       <RecentlyViewed />
       <SpacesSection />
       <FeaturedArticlesCarousel />
