@@ -26,7 +26,10 @@ import {
   Database,
   HelpCircle,
   FileText,
-  Menu
+  Menu,
+  GraduationCap,
+  BookOpen,
+  UserPlus
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -88,7 +91,10 @@ type TabType =
   | "payments"
   | "ai_manager"
   | "social_media"
-  | "documentation";
+  | "documentation"
+  | "schools"
+  | "resources"
+  | "referrals";
 
 const Admin = () => {
   const { t, language } = useLanguage();
@@ -146,6 +152,9 @@ const Admin = () => {
     { id: "loyalty", label: "Fidélité", icon: Gift },
     { id: "promotions_mgmt", label: "Ventes Flash", icon: Tag },
     { id: "social_media", label: "Réseaux Sociaux", icon: Share2 },
+    { id: "schools", label: "Écoles", icon: GraduationCap },
+    { id: "resources", label: "Ressources Édu", icon: BookOpen },
+    { id: "referrals", label: "Parrainages", icon: UserPlus },
     { id: "authors", label: "Auteurs", icon: Users },
     { id: "review", label: "Validation", icon: Eye },
     { id: "articles", label: "Actualités", icon: FileText },
@@ -280,6 +289,9 @@ const Admin = () => {
           {activeTab === "advertisements" && <AdvertisementsManagement />}
           {activeTab === "faq" && <FAQManagement />}
           {activeTab === "documentation" && <DocumentationManager />}
+          {activeTab === "schools" && <SchoolsAdminTab />}
+          {activeTab === "resources" && <ResourcesAdminTab />}
+          {activeTab === "referrals" && <ReferralsAdminTab />}
           {activeTab === "settings" && <PlatformSettings />}
         </div>
       </div>
@@ -1280,6 +1292,198 @@ const ArticlesTab = () => {
           </table>
         </div>
       </div>
+    </div>
+  );
+};
+
+// Schools Admin Tab
+const SchoolsAdminTab = () => {
+  const [schools, setSchools] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchSchools();
+  }, []);
+
+  const fetchSchools = async () => {
+    setLoading(true);
+    const { data } = await supabase.from("schools").select("*").order("name");
+    setSchools(data || []);
+    setLoading(false);
+  };
+
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-8">
+        <h1 className="text-2xl font-display font-bold text-foreground">Gestion des Écoles</h1>
+        <Badge variant="outline">{schools.length} écoles</Badge>
+      </div>
+      {loading ? (
+        <div className="text-center py-12 text-muted-foreground">Chargement...</div>
+      ) : schools.length === 0 ? (
+        <div className="text-center py-12 bg-card border border-border rounded-xl">
+          <GraduationCap size={48} className="mx-auto text-muted-foreground mb-4" />
+          <p className="text-muted-foreground">Aucune école enregistrée.</p>
+          <p className="text-xs text-muted-foreground mt-1">Les écoles seront ajoutées via la base de données.</p>
+        </div>
+      ) : (
+        <div className="bg-card rounded-xl border border-border overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead className="bg-muted">
+                <tr>
+                  <th className="text-left p-3">Nom</th>
+                  <th className="text-left p-3 hidden sm:table-cell">Ville</th>
+                  <th className="text-left p-3 hidden md:table-cell">Type</th>
+                  <th className="text-left p-3">Statut</th>
+                </tr>
+              </thead>
+              <tbody>
+                {schools.map((school) => (
+                  <tr key={school.id} className="border-t border-border">
+                    <td className="p-3 font-medium">{school.name}</td>
+                    <td className="p-3 hidden sm:table-cell text-muted-foreground">{school.city}</td>
+                    <td className="p-3 hidden md:table-cell text-muted-foreground">{school.type}</td>
+                    <td className="p-3">
+                      <Badge variant={school.is_verified ? "default" : "secondary"}>
+                        {school.is_verified ? "Vérifiée" : "En attente"}
+                      </Badge>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+// Resources Admin Tab
+const ResourcesAdminTab = () => {
+  const [resources, setResources] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchResources();
+  }, []);
+
+  const fetchResources = async () => {
+    setLoading(true);
+    const { data } = await supabase.from("resources").select("*").order("created_at", { ascending: false });
+    setResources(data || []);
+    setLoading(false);
+  };
+
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-8">
+        <h1 className="text-2xl font-display font-bold text-foreground">Ressources Éducatives</h1>
+        <Badge variant="outline">{resources.length} ressources</Badge>
+      </div>
+      {loading ? (
+        <div className="text-center py-12 text-muted-foreground">Chargement...</div>
+      ) : resources.length === 0 ? (
+        <div className="text-center py-12 bg-card border border-border rounded-xl">
+          <BookOpen size={48} className="mx-auto text-muted-foreground mb-4" />
+          <p className="text-muted-foreground">Aucune ressource éducative.</p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {resources.map((res) => (
+            <div key={res.id} className="bg-card border border-border rounded-xl p-4">
+              <div className="flex justify-between items-start">
+                <div>
+                  <h3 className="font-medium text-foreground">{res.title_fr}</h3>
+                  <p className="text-xs text-muted-foreground mt-1">{res.category} • {res.subject || 'Général'}</p>
+                </div>
+                <Badge variant={res.is_free ? "default" : "secondary"}>
+                  {res.is_free ? "Gratuit" : `${res.price} FCFA`}
+                </Badge>
+              </div>
+              <div className="flex gap-2 mt-3 text-xs text-muted-foreground">
+                <span>📥 {res.downloads || 0} téléchargements</span>
+                <span>📚 {res.grade_level || 'Tous niveaux'}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+// Referrals Admin Tab
+const ReferralsAdminTab = () => {
+  const [referrals, setReferrals] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchReferrals();
+  }, []);
+
+  const fetchReferrals = async () => {
+    setLoading(true);
+    const { data } = await supabase.from("referrals").select("*").order("created_at", { ascending: false }).limit(50);
+    setReferrals(data || []);
+    setLoading(false);
+  };
+
+  const completedCount = referrals.filter(r => r.status === 'completed').length;
+
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-8">
+        <h1 className="text-2xl font-display font-bold text-foreground">Programme de Parrainage</h1>
+        <div className="flex gap-2">
+          <Badge variant="outline">{referrals.length} parrainages</Badge>
+          <Badge variant="default">{completedCount} complétés</Badge>
+        </div>
+      </div>
+      {loading ? (
+        <div className="text-center py-12 text-muted-foreground">Chargement...</div>
+      ) : referrals.length === 0 ? (
+        <div className="text-center py-12 bg-card border border-border rounded-xl">
+          <UserPlus size={48} className="mx-auto text-muted-foreground mb-4" />
+          <p className="text-muted-foreground">Aucun parrainage enregistré.</p>
+        </div>
+      ) : (
+        <div className="bg-card rounded-xl border border-border overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead className="bg-muted">
+                <tr>
+                  <th className="text-left p-3">Code</th>
+                  <th className="text-left p-3 hidden sm:table-cell">Date</th>
+                  <th className="text-left p-3">Statut</th>
+                  <th className="text-left p-3 hidden md:table-cell">Récompense</th>
+                </tr>
+              </thead>
+              <tbody>
+                {referrals.map((ref) => (
+                  <tr key={ref.id} className="border-t border-border">
+                    <td className="p-3 font-mono font-medium">{ref.referral_code}</td>
+                    <td className="p-3 hidden sm:table-cell text-muted-foreground">
+                      {new Date(ref.created_at).toLocaleDateString('fr-FR')}
+                    </td>
+                    <td className="p-3">
+                      <Badge variant={ref.status === 'completed' ? 'default' : 'secondary'}>
+                        {ref.status === 'completed' ? 'Complété' : 'En attente'}
+                      </Badge>
+                    </td>
+                    <td className="p-3 hidden md:table-cell">
+                      <Badge variant={ref.reward_given ? 'default' : 'outline'}>
+                        {ref.reward_given ? '✅ Donnée' : '⏳ En attente'}
+                      </Badge>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
