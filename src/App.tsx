@@ -48,6 +48,11 @@ const SystemDatabase = lazy(() => import("./pages/SystemDatabase"));
 const SystemRepository = lazy(() => import("./pages/SystemRepository"));
 const AuthConfirm = lazy(() => import("./pages/AuthConfirm"));
 const ResetPassword = lazy(() => import("./pages/ResetPassword"));
+const Schools = lazy(() => import("./pages/Schools"));
+const SchoolDetail = lazy(() => import("./pages/SchoolDetail"));
+const SmartKits = lazy(() => import("./pages/SmartKits"));
+const Referral = lazy(() => import("./pages/Referral"));
+const Resources = lazy(() => import("./pages/Resources"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -117,6 +122,11 @@ const App = () => (
                       <Route path="/system/repo" element={<SystemRepository />} />
                       <Route path="/auth/confirm" element={<AuthConfirm />} />
                       <Route path="/auth/reset-password" element={<ResetPassword />} />
+                      <Route path="/ecoles" element={<Schools />} />
+                      <Route path="/ecoles/:id" element={<SchoolDetail />} />
+                      <Route path="/kits" element={<SmartKits />} />
+                      <Route path="/parrainage" element={<Referral />} />
+                      <Route path="/ressources" element={<Resources />} />
                       <Route path="*" element={<NotFound />} />
                     </Routes>
                     <ScIA />
