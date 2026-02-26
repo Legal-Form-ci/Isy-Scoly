@@ -680,6 +680,66 @@ export type Database = {
           },
         ]
       }
+      educational_content: {
+        Row: {
+          author_id: string
+          content_type: string
+          created_at: string | null
+          description: string | null
+          downloads: number | null
+          file_url: string | null
+          grade_level: string | null
+          id: string
+          is_approved: boolean | null
+          is_free: boolean | null
+          preview_url: string | null
+          price: number | null
+          rating_avg: number | null
+          rating_count: number | null
+          subject: string | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          author_id: string
+          content_type?: string
+          created_at?: string | null
+          description?: string | null
+          downloads?: number | null
+          file_url?: string | null
+          grade_level?: string | null
+          id?: string
+          is_approved?: boolean | null
+          is_free?: boolean | null
+          preview_url?: string | null
+          price?: number | null
+          rating_avg?: number | null
+          rating_count?: number | null
+          subject?: string | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          author_id?: string
+          content_type?: string
+          created_at?: string | null
+          description?: string | null
+          downloads?: number | null
+          file_url?: string | null
+          grade_level?: string | null
+          id?: string
+          is_approved?: boolean | null
+          is_free?: boolean | null
+          preview_url?: string | null
+          price?: number | null
+          rating_avg?: number | null
+          rating_count?: number | null
+          subject?: string | null
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       email_logs: {
         Row: {
           email_type: string
@@ -1393,6 +1453,83 @@ export type Database = {
         }
         Relationships: []
       }
+      referral_rewards: {
+        Row: {
+          amount: number
+          claimed_at: string | null
+          created_at: string | null
+          expires_at: string | null
+          id: string
+          is_claimed: boolean | null
+          referral_id: string
+          reward_type: string
+          user_id: string
+        }
+        Insert: {
+          amount?: number
+          claimed_at?: string | null
+          created_at?: string | null
+          expires_at?: string | null
+          id?: string
+          is_claimed?: boolean | null
+          referral_id: string
+          reward_type?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          claimed_at?: string | null
+          created_at?: string | null
+          expires_at?: string | null
+          id?: string
+          is_claimed?: boolean | null
+          referral_id?: string
+          reward_type?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "referral_rewards_referral_id_fkey"
+            columns: ["referral_id"]
+            isOneToOne: false
+            referencedRelation: "referrals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      referrals: {
+        Row: {
+          completed_at: string | null
+          created_at: string | null
+          id: string
+          referral_code: string
+          referred_id: string | null
+          referrer_id: string
+          reward_given: boolean | null
+          status: string | null
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string | null
+          id?: string
+          referral_code: string
+          referred_id?: string | null
+          referrer_id: string
+          reward_given?: boolean | null
+          status?: string | null
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string | null
+          id?: string
+          referral_code?: string
+          referred_id?: string | null
+          referrer_id?: string
+          reward_given?: boolean | null
+          status?: string | null
+        }
+        Relationships: []
+      }
       resources: {
         Row: {
           author_id: string | null
@@ -1496,6 +1633,292 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      school_loyalty: {
+        Row: {
+          created_at: string | null
+          id: string
+          school_id: string
+          tier: string | null
+          total_orders: number | null
+          total_points: number | null
+          total_spent: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          school_id: string
+          tier?: string | null
+          total_orders?: number | null
+          total_points?: number | null
+          total_spent?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          school_id?: string
+          tier?: string | null
+          total_orders?: number | null
+          total_points?: number | null
+          total_spent?: number | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "school_loyalty_school_id_fkey"
+            columns: ["school_id"]
+            isOneToOne: true
+            referencedRelation: "schools"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      school_supply_items: {
+        Row: {
+          id: string
+          is_required: boolean | null
+          item_name: string
+          list_id: string
+          notes: string | null
+          product_id: string | null
+          quantity: number
+          sort_order: number | null
+        }
+        Insert: {
+          id?: string
+          is_required?: boolean | null
+          item_name: string
+          list_id: string
+          notes?: string | null
+          product_id?: string | null
+          quantity?: number
+          sort_order?: number | null
+        }
+        Update: {
+          id?: string
+          is_required?: boolean | null
+          item_name?: string
+          list_id?: string
+          notes?: string | null
+          product_id?: string | null
+          quantity?: number
+          sort_order?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "school_supply_items_list_id_fkey"
+            columns: ["list_id"]
+            isOneToOne: false
+            referencedRelation: "school_supply_lists"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "school_supply_items_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      school_supply_lists: {
+        Row: {
+          created_at: string | null
+          created_by: string
+          grade_level: string
+          id: string
+          is_published: boolean | null
+          name: string
+          school_id: string
+          school_year: string
+          series: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          created_by: string
+          grade_level: string
+          id?: string
+          is_published?: boolean | null
+          name: string
+          school_id: string
+          school_year?: string
+          series?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string
+          grade_level?: string
+          id?: string
+          is_published?: boolean | null
+          name?: string
+          school_id?: string
+          school_year?: string
+          series?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "school_supply_lists_school_id_fkey"
+            columns: ["school_id"]
+            isOneToOne: false
+            referencedRelation: "schools"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      schools: {
+        Row: {
+          address: string | null
+          admin_user_id: string | null
+          city: string | null
+          code: string | null
+          created_at: string | null
+          email: string | null
+          id: string
+          is_active: boolean | null
+          is_verified: boolean | null
+          logo_url: string | null
+          name: string
+          phone: string | null
+          region: string | null
+          student_count: number | null
+          type: string
+          updated_at: string | null
+          website: string | null
+        }
+        Insert: {
+          address?: string | null
+          admin_user_id?: string | null
+          city?: string | null
+          code?: string | null
+          created_at?: string | null
+          email?: string | null
+          id?: string
+          is_active?: boolean | null
+          is_verified?: boolean | null
+          logo_url?: string | null
+          name: string
+          phone?: string | null
+          region?: string | null
+          student_count?: number | null
+          type?: string
+          updated_at?: string | null
+          website?: string | null
+        }
+        Update: {
+          address?: string | null
+          admin_user_id?: string | null
+          city?: string | null
+          code?: string | null
+          created_at?: string | null
+          email?: string | null
+          id?: string
+          is_active?: boolean | null
+          is_verified?: boolean | null
+          logo_url?: string | null
+          name?: string
+          phone?: string | null
+          region?: string | null
+          student_count?: number | null
+          type?: string
+          updated_at?: string | null
+          website?: string | null
+        }
+        Relationships: []
+      }
+      smart_kit_items: {
+        Row: {
+          id: string
+          is_required: boolean | null
+          item_name: string
+          kit_id: string
+          product_id: string | null
+          quantity: number
+          sort_order: number | null
+        }
+        Insert: {
+          id?: string
+          is_required?: boolean | null
+          item_name: string
+          kit_id: string
+          product_id?: string | null
+          quantity?: number
+          sort_order?: number | null
+        }
+        Update: {
+          id?: string
+          is_required?: boolean | null
+          item_name?: string
+          kit_id?: string
+          product_id?: string | null
+          quantity?: number
+          sort_order?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "smart_kit_items_kit_id_fkey"
+            columns: ["kit_id"]
+            isOneToOne: false
+            referencedRelation: "smart_kits"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "smart_kit_items_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      smart_kits: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          discount_price: number | null
+          grade_level: string
+          id: string
+          image_url: string | null
+          is_active: boolean | null
+          name: string
+          school_type: string | null
+          series: string | null
+          total_price: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          discount_price?: number | null
+          grade_level: string
+          id?: string
+          image_url?: string | null
+          is_active?: boolean | null
+          name: string
+          school_type?: string | null
+          series?: string | null
+          total_price?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          discount_price?: number | null
+          grade_level?: string
+          id?: string
+          image_url?: string | null
+          is_active?: boolean | null
+          name?: string
+          school_type?: string | null
+          series?: string | null
+          total_price?: number | null
+          updated_at?: string | null
+        }
+        Relationships: []
       }
       user_addresses: {
         Row: {
@@ -1717,6 +2140,7 @@ export type Database = {
       }
       cleanup_old_login_sessions: { Args: never; Returns: undefined }
       cleanup_old_view_tracking: { Args: never; Returns: undefined }
+      generate_referral_code: { Args: never; Returns: string }
       get_admin_stats: {
         Args: never
         Returns: {

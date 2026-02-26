@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import DOMPurify from "dompurify";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { 
   Calendar, 
@@ -615,7 +616,7 @@ const ArticleDetail = () => {
           {canViewContent() ? (
             <div 
               className="prose prose-lg dark:prose-invert max-w-none mb-12"
-              dangerouslySetInnerHTML={{ __html: getContent() || getExcerpt() || "" }}
+              dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(getContent() || getExcerpt() || "", { ALLOWED_TAGS: ['h1','h2','h3','h4','h5','h6','p','ul','ol','li','strong','em','a','br','table','tr','td','th','thead','tbody','img','blockquote','pre','code','span','div','figure','figcaption','hr','sub','sup'], ALLOWED_ATTR: ['href','target','rel','class','src','alt','width','height','style'] }) }}
             />
           ) : (
             <div className="mb-12">
@@ -624,7 +625,7 @@ const ArticleDetail = () => {
                 style={{ maxHeight: '200px', overflow: 'hidden' }}
               >
                 <div 
-                  dangerouslySetInnerHTML={{ __html: getExcerpt() || "" }}
+                  dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(getExcerpt() || "", { ALLOWED_TAGS: ['h1','h2','h3','h4','h5','h6','p','ul','ol','li','strong','em','a','br','span'], ALLOWED_ATTR: ['href','target','rel','class'] }) }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent" />
               </div>

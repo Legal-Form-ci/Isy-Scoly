@@ -104,7 +104,7 @@ const DatabaseManagement = () => {
   const [loading, setLoading] = useState(true);
   const [exporting, setExporting] = useState(false);
   const [selectedTables, setSelectedTables] = useState<string[]>([]);
-  const [exportFormat, setExportFormat] = useState<'xlsx' | 'json' | 'sql'>('xlsx');
+  const [exportFormat, setExportFormat] = useState<'csv' | 'json' | 'sql'>('csv');
   const [previewData, setPreviewData] = useState<any>(null);
   const [previewTable, setPreviewTable] = useState<string | null>(null);
   const [restoring, setRestoring] = useState(false);
@@ -208,10 +208,10 @@ const DatabaseManagement = () => {
         }
       }
 
-      // Excel export using our professional export utility
-      if (exportFormat === 'xlsx') {
+      // CSV export using our professional export utility
+      if (exportFormat === 'csv') {
         exportToExcel(exportDataObj, 'scoly-backup');
-        toast.success(`Export Excel professionnel téléchargé (${metadata.totalRecords} enregistrements)`);
+        toast.success(`Export CSV professionnel téléchargé (${metadata.totalRecords} enregistrements)`);
         setExporting(false);
         return;
       }
@@ -586,15 +586,15 @@ const DatabaseManagement = () => {
                 </div>
                 <div>
                   <Label>Format d'export</Label>
-                  <Select value={exportFormat} onValueChange={(v: 'xlsx' | 'json' | 'sql') => setExportFormat(v)}>
+                  <Select value={exportFormat} onValueChange={(v: 'csv' | 'json' | 'sql') => setExportFormat(v)}>
                     <SelectTrigger className="mt-2">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="xlsx">
+                      <SelectItem value="csv">
                         <div className="flex items-center gap-2">
                           <FileSpreadsheet size={16} className="text-green-600" />
-                          Excel (.xlsx) - Recommandé
+                          CSV (.csv) - Recommandé
                         </div>
                       </SelectItem>
                       <SelectItem value="json">
