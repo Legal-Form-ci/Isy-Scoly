@@ -1,9 +1,12 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { School, Search, BookOpen, Users, ShoppingCart, ChevronRight, Star, MapPin, GraduationCap, ClipboardList } from "lucide-react";
+import { School, Search, BookOpen, Users, ShoppingCart, ChevronRight, Star, MapPin, GraduationCap, ClipboardList, Send, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import SEOHead from "@/components/SEOHead";
@@ -12,7 +15,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
-
+import { toast } from "sonner";
 const Schools = () => {
   const { t } = useLanguage();
   const { user } = useAuth();
@@ -262,29 +265,130 @@ const Schools = () => {
         </section>
       )}
 
-      {/* CTA for schools */}
-      <section className="py-16">
+      {/* School Registration Form */}
+      <section className="py-16" id="inscription">
         <div className="container mx-auto px-4">
-          <div className="bg-primary rounded-2xl p-8 md:p-12 text-center">
-            <Users className="w-12 h-12 mx-auto text-secondary mb-4" />
-            <h2 className="text-2xl md:text-3xl font-display font-bold text-primary-foreground mb-4">
-              Vous êtes directeur d'établissement ?
-            </h2>
-            <p className="text-primary-foreground/80 max-w-xl mx-auto mb-6">
-              Inscrivez votre école sur Scoly et publiez vos listes de fournitures.
-              Vos parents d'élèves commanderont en un clic.
-            </p>
-            <Link to="/contact">
-              <Button variant="secondary" size="lg">
-                Inscrire mon établissement
-              </Button>
-            </Link>
+          <div className="bg-primary rounded-2xl p-8 md:p-12">
+            <div className="max-w-2xl mx-auto">
+              <Users className="w-12 h-12 mx-auto text-secondary mb-4" />
+              <h2 className="text-2xl md:text-3xl font-display font-bold text-primary-foreground mb-4 text-center">
+                Inscrire votre établissement
+              </h2>
+              <p className="text-primary-foreground/80 text-center mb-8">
+                Remplissez ce formulaire pour enregistrer votre école. Notre équipe vérifiera les informations et activera votre compte.
+              </p>
+              <SchoolRegistrationForm />
+            </div>
           </div>
         </div>
       </section>
 
       <Footer />
     </main>
+  );
+};
+
+// School Registration Form Component
+const SchoolRegistrationForm = () => {
+  const [submitting, setSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [form, setForm] = useState({
+    name: "", city: "", address: "", type: "primary" as string,
+    contact_name: "", phone: "", email: "", notes: "",
+  });
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!form.name.trim() || !form.city.trim() || !form.phone.trim()) {
+      toast.error("Veuillez remplir les champs obligatoires");
+      return;
+    }
+    setSubmitting(true);
+    try {
+      const { error } = await supabase.from("schools").insert({
+        name: form.name.trim(),
+        city: form.city.trim(),
+        address: form.address.trim() || null,
+        type: form.type,
+        phone: form.phone.trim(),
+        email: form.email.trim() || null,
+        is_verified: false,
+      });
+      if (error) throw error;
+      setSubmitted(true);
+      toast.success("Demande envoyée ! Nous vérifierons votre établissement.");
+    } catch (err: any) {
+      toast.error(err?.message || "Erreur lors de l'inscription");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  if (submitted) {
+    return (
+      <div className="text-center py-8">
+        <CheckCircle className="w-16 h-16 mx-auto text-secondary mb-4" />
+        <h3 className="text-xl font-bold text-primary-foreground mb-2">Demande envoyée !</h3>
+        <p className="text-primary-foreground/80">Notre équipe vérifiera votre établissement sous 24-48h.</p>
+      </div>
+    );
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <Label className="text-primary-foreground">Nom de l'établissement *</Label>
+          <Input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} className="bg-card text-foreground mt-1" placeholder="Ex: Groupe Scolaire ABC" required />
+        </div>
+        <div>
+          <Label className="text-primary-foreground">Ville *</Label>
+          <Select value={form.city} onValueChange={v => setForm(f => ({ ...f, city: v }))}>
+            <SelectTrigger className="bg-card text-foreground mt-1"><SelectValue placeholder="Choisir une ville" /></SelectTrigger>
+            <SelectContent>
+              {["Abidjan", "Bouaké", "Yamoussoukro", "Daloa", "San-Pédro", "Korhogo", "Man", "Gagnoa", "Divo", "Autre"].map(c => (
+                <SelectItem key={c} value={c}>{c}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <Label className="text-primary-foreground">Type d'établissement</Label>
+          <Select value={form.type} onValueChange={v => setForm(f => ({ ...f, type: v }))}>
+            <SelectTrigger className="bg-card text-foreground mt-1"><SelectValue /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="primary">Primaire</SelectItem>
+              <SelectItem value="secondary">Secondaire</SelectItem>
+              <SelectItem value="both">Primaire & Secondaire</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        <div>
+          <Label className="text-primary-foreground">Adresse</Label>
+          <Input value={form.address} onChange={e => setForm(f => ({ ...f, address: e.target.value }))} className="bg-card text-foreground mt-1" placeholder="Quartier, commune..." />
+        </div>
+      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <Label className="text-primary-foreground">Nom du responsable</Label>
+          <Input value={form.contact_name} onChange={e => setForm(f => ({ ...f, contact_name: e.target.value }))} className="bg-card text-foreground mt-1" placeholder="Directeur / Directrice" />
+        </div>
+        <div>
+          <Label className="text-primary-foreground">Téléphone *</Label>
+          <Input value={form.phone} onChange={e => setForm(f => ({ ...f, phone: e.target.value }))} className="bg-card text-foreground mt-1" placeholder="07 XX XX XX XX" required />
+        </div>
+      </div>
+      <div>
+        <Label className="text-primary-foreground">Email</Label>
+        <Input type="email" value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} className="bg-card text-foreground mt-1" placeholder="contact@ecole.ci" />
+      </div>
+      <Button type="submit" variant="secondary" size="lg" className="w-full gap-2" disabled={submitting}>
+        <Send className="w-4 h-4" />
+        {submitting ? "Envoi en cours..." : "Envoyer la demande d'inscription"}
+      </Button>
+    </form>
   );
 };
 

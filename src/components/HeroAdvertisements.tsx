@@ -223,7 +223,7 @@ const HeroAdvertisements = () => {
               {currentItem.title}
             </h3>
             {currentItem.description && (
-              <p className="text-white/80 text-sm line-clamp-2 mb-3">
+              <p className="text-white/80 text-sm line-clamp-2 mb-3 whitespace-pre-line">
                 {currentItem.description}
               </p>
             )}
