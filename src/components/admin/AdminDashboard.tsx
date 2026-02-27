@@ -30,7 +30,10 @@ import {
   CheckCircle,
   XCircle,
   Truck,
-  Activity
+  Activity,
+  Heart,
+  Share2,
+  FileText
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -87,6 +90,14 @@ const AdminDashboard = () => {
   const [topProducts, setTopProducts] = useState<TopProduct[]>([]);
   const [categoryData, setCategoryData] = useState<CategoryData[]>([]);
   const [recentOrders, setRecentOrders] = useState<any[]>([]);
+  const [engagementStats, setEngagementStats] = useState({
+    totalArticleViews: 0,
+    totalArticleLikes: 0,
+    totalReactions: 0,
+    totalShares: 0,
+    totalAdViews: 0,
+    topArticles: [] as { title: string; views: number; likes: number }[],
+  });
   const [loading, setLoading] = useState(true);
   const [period, setPeriod] = useState<'7' | '30' | '90' | '365'>('30');
   const [lastUpdate, setLastUpdate] = useState<Date>(new Date());
@@ -283,8 +294,33 @@ const AdminDashboard = () => {
       fetchTopProducts(),
       fetchCategoryData(),
       fetchRecentOrders(),
+      fetchEngagementStats(),
     ]);
     setLoading(false);
+  };
+
+  const fetchEngagementStats = async () => {
+    const [articlesRes, reactionsRes, sharesRes, likesRes] = await Promise.all([
+      supabase.from("articles").select("id, title_fr, views, likes, status").eq("status", "published").order("views", { ascending: false }).limit(10),
+      supabase.from("article_reactions").select("id", { count: "exact" }),
+      supabase.from("article_share_counts").select("total"),
+      supabase.from("article_likes").select("id", { count: "exact" }),
+    ]);
+
+    const articles = articlesRes.data || [];
+    const totalViews = articles.reduce((sum, a) => sum + (a.views || 0), 0);
+    const totalLikes = likesRes.count || 0;
+    const totalReactions = reactionsRes.count || 0;
+    const totalShares = (sharesRes.data || []).reduce((sum, s) => sum + (s.total || 0), 0);
+
+    setEngagementStats({
+      totalArticleViews: totalViews,
+      totalArticleLikes: totalLikes,
+      totalReactions: totalReactions,
+      totalShares: totalShares,
+      totalAdViews: 0,
+      topArticles: articles.slice(0, 5).map(a => ({ title: a.title_fr, views: a.views || 0, likes: a.likes || 0 })),
+    });
   };
 
   const fetchStats = async () => {
@@ -521,6 +557,38 @@ const AdminDashboard = () => {
           trend={5}
           color="purple"
         />
+      </div>
+
+      {/* Engagement Stats Row */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <Card className="border bg-card shadow-sm">
+          <CardContent className="pt-4 pb-4 text-center">
+            <Eye className="h-5 w-5 mx-auto text-primary mb-1" />
+            <p className="text-2xl font-bold">{engagementStats.totalArticleViews.toLocaleString()}</p>
+            <p className="text-xs text-muted-foreground">Vues articles</p>
+          </CardContent>
+        </Card>
+        <Card className="border bg-card shadow-sm">
+          <CardContent className="pt-4 pb-4 text-center">
+            <Heart className="h-5 w-5 mx-auto text-destructive mb-1" />
+            <p className="text-2xl font-bold">{(engagementStats.totalArticleLikes + engagementStats.totalReactions).toLocaleString()}</p>
+            <p className="text-xs text-muted-foreground">Likes & Réactions</p>
+          </CardContent>
+        </Card>
+        <Card className="border bg-card shadow-sm">
+          <CardContent className="pt-4 pb-4 text-center">
+            <Share2 className="h-5 w-5 mx-auto text-primary mb-1" />
+            <p className="text-2xl font-bold">{engagementStats.totalShares.toLocaleString()}</p>
+            <p className="text-xs text-muted-foreground">Partages</p>
+          </CardContent>
+        </Card>
+        <Card className="border bg-card shadow-sm">
+          <CardContent className="pt-4 pb-4 text-center">
+            <FileText className="h-5 w-5 mx-auto text-primary mb-1" />
+            <p className="text-2xl font-bold">{engagementStats.topArticles.length}</p>
+            <p className="text-xs text-muted-foreground">Articles publiés</p>
+          </CardContent>
+        </Card>
       </div>
 
       {/* Charts Row */}
