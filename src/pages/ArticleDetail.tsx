@@ -615,7 +615,7 @@ const ArticleDetail = () => {
           {/* Content */}
           {canViewContent() ? (
             <div 
-              className="prose prose-lg dark:prose-invert max-w-none mb-12"
+              className="prose prose-lg dark:prose-invert max-w-none mb-12 prose-p:mb-4 prose-p:leading-relaxed prose-headings:mt-8 prose-headings:mb-4 prose-li:mb-1 prose-blockquote:my-6 prose-pre:my-6 prose-hr:my-8"
               dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(getContent() || getExcerpt() || "", { ALLOWED_TAGS: ['h1','h2','h3','h4','h5','h6','p','ul','ol','li','strong','em','a','br','table','tr','td','th','thead','tbody','img','blockquote','pre','code','span','div','figure','figcaption','hr','sub','sup'], ALLOWED_ATTR: ['href','target','rel','class','src','alt','width','height','style'] }) }}
             />
           ) : (

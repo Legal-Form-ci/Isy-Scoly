@@ -4,6 +4,12 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Article content spacing */
+.prose p { margin-bottom: 1rem; }
+.prose h2, .prose h3, .prose h4 { margin-top: 1.5em; margin-bottom: 0.75em; }
+.prose ul, .prose ol { margin-bottom: 1rem; }
+.prose blockquote { margin: 1.5rem 0; }
+
 @layer base {
   :root {
     /* Deep Navy - Primary (Trust, Education) */

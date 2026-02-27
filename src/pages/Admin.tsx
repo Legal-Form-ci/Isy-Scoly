@@ -1300,31 +1300,57 @@ const ArticlesTab = () => {
 const SchoolsAdminTab = () => {
   const [schools, setSchools] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState("");
 
-  useEffect(() => {
-    fetchSchools();
-  }, []);
+  useEffect(() => { fetchSchools(); }, []);
 
   const fetchSchools = async () => {
     setLoading(true);
-    const { data } = await supabase.from("schools").select("*").order("name");
+    const { data } = await supabase.from("schools").select("*").order("created_at", { ascending: false });
     setSchools(data || []);
     setLoading(false);
   };
 
+  const toggleVerify = async (id: string, current: boolean) => {
+    const { error } = await supabase.from("schools").update({ is_verified: !current }).eq("id", id);
+    if (error) toast.error("Erreur"); else { toast.success(current ? "Vérification retirée" : "École vérifiée ✅"); fetchSchools(); }
+  };
+
+  const handleDelete = async (id: string) => {
+    if (!confirm("Supprimer cet établissement ?")) return;
+    const { error } = await supabase.from("schools").delete().eq("id", id);
+    if (error) toast.error("Erreur"); else { toast.success("Supprimé"); fetchSchools(); }
+  };
+
+  const filtered = schools.filter(s => s.name.toLowerCase().includes(search.toLowerCase()) || s.city?.toLowerCase().includes(search.toLowerCase()));
+  const pendingCount = schools.filter(s => !s.is_verified).length;
+
   return (
     <div>
-      <div className="flex items-center justify-between mb-8">
-        <h1 className="text-2xl font-display font-bold text-foreground">Gestion des Écoles</h1>
-        <Badge variant="outline">{schools.length} écoles</Badge>
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
+        <div>
+          <h1 className="text-2xl font-display font-bold text-foreground">Gestion des Écoles</h1>
+          <p className="text-sm text-muted-foreground mt-1">{pendingCount > 0 && <span className="text-destructive font-medium">{pendingCount} en attente de vérification</span>}</p>
+        </div>
+        <div className="flex gap-2">
+          <Badge variant="outline">{schools.length} écoles</Badge>
+          <Badge variant="default">{schools.filter(s => s.is_verified).length} vérifiées</Badge>
+        </div>
       </div>
+
+      <div className="mb-6">
+        <div className="relative max-w-md">
+          <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+          <Input placeholder="Rechercher une école..." value={search} onChange={e => setSearch(e.target.value)} className="pl-10" />
+        </div>
+      </div>
+
       {loading ? (
         <div className="text-center py-12 text-muted-foreground">Chargement...</div>
-      ) : schools.length === 0 ? (
+      ) : filtered.length === 0 ? (
         <div className="text-center py-12 bg-card border border-border rounded-xl">
           <GraduationCap size={48} className="mx-auto text-muted-foreground mb-4" />
-          <p className="text-muted-foreground">Aucune école enregistrée.</p>
-          <p className="text-xs text-muted-foreground mt-1">Les écoles seront ajoutées via la base de données.</p>
+          <p className="text-muted-foreground">Aucune école trouvée.</p>
         </div>
       ) : (
         <div className="bg-card rounded-xl border border-border overflow-hidden">
@@ -1335,19 +1361,41 @@ const SchoolsAdminTab = () => {
                   <th className="text-left p-3">Nom</th>
                   <th className="text-left p-3 hidden sm:table-cell">Ville</th>
                   <th className="text-left p-3 hidden md:table-cell">Type</th>
+                  <th className="text-left p-3 hidden md:table-cell">Contact</th>
                   <th className="text-left p-3">Statut</th>
+                  <th className="text-right p-3">Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {schools.map((school) => (
+                {filtered.map((school) => (
                   <tr key={school.id} className="border-t border-border">
                     <td className="p-3 font-medium">{school.name}</td>
                     <td className="p-3 hidden sm:table-cell text-muted-foreground">{school.city}</td>
-                    <td className="p-3 hidden md:table-cell text-muted-foreground">{school.type}</td>
+                    <td className="p-3 hidden md:table-cell text-muted-foreground">
+                      {school.type === "primary" ? "Primaire" : school.type === "secondary" ? "Secondaire" : "Prim. & Sec."}
+                    </td>
+                    <td className="p-3 hidden md:table-cell text-muted-foreground text-xs">
+                      {school.phone && <div>{school.phone}</div>}
+                      {school.email && <div>{school.email}</div>}
+                    </td>
                     <td className="p-3">
-                      <Badge variant={school.is_verified ? "default" : "secondary"}>
-                        {school.is_verified ? "Vérifiée" : "En attente"}
+                      <Badge 
+                        variant={school.is_verified ? "default" : "secondary"} 
+                        className="cursor-pointer"
+                        onClick={() => toggleVerify(school.id, school.is_verified)}
+                      >
+                        {school.is_verified ? "✅ Vérifiée" : "⏳ En attente"}
                       </Badge>
+                    </td>
+                    <td className="p-3 text-right">
+                      <div className="flex justify-end gap-1">
+                        <Button variant="outline" size="sm" onClick={() => toggleVerify(school.id, school.is_verified)}>
+                          {school.is_verified ? "Retirer" : "Valider"}
+                        </Button>
+                        <Button variant="ghost" size="icon" onClick={() => handleDelete(school.id)}>
+                          <Trash2 size={14} className="text-destructive" />
+                        </Button>
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -1365,15 +1413,20 @@ const ResourcesAdminTab = () => {
   const [resources, setResources] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetchResources();
-  }, []);
+  useEffect(() => { fetchResources(); }, []);
 
   const fetchResources = async () => {
     setLoading(true);
     const { data } = await supabase.from("resources").select("*").order("created_at", { ascending: false });
     setResources(data || []);
     setLoading(false);
+  };
+
+  const handleDelete = async (id: string) => {
+    if (!confirm("Supprimer cette ressource ?")) return;
+    await supabase.from("resources").delete().eq("id", id);
+    toast.success("Supprimée");
+    fetchResources();
   };
 
   return (
@@ -1390,24 +1443,41 @@ const ResourcesAdminTab = () => {
           <p className="text-muted-foreground">Aucune ressource éducative.</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {resources.map((res) => (
-            <div key={res.id} className="bg-card border border-border rounded-xl p-4">
-              <div className="flex justify-between items-start">
-                <div>
-                  <h3 className="font-medium text-foreground">{res.title_fr}</h3>
-                  <p className="text-xs text-muted-foreground mt-1">{res.category} • {res.subject || 'Général'}</p>
-                </div>
-                <Badge variant={res.is_free ? "default" : "secondary"}>
-                  {res.is_free ? "Gratuit" : `${res.price} FCFA`}
-                </Badge>
-              </div>
-              <div className="flex gap-2 mt-3 text-xs text-muted-foreground">
-                <span>📥 {res.downloads || 0} téléchargements</span>
-                <span>📚 {res.grade_level || 'Tous niveaux'}</span>
-              </div>
-            </div>
-          ))}
+        <div className="bg-card rounded-xl border border-border overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead className="bg-muted">
+                <tr>
+                  <th className="text-left p-3">Titre</th>
+                  <th className="text-left p-3 hidden sm:table-cell">Catégorie</th>
+                  <th className="text-left p-3 hidden md:table-cell">Matière</th>
+                  <th className="text-left p-3">Prix</th>
+                  <th className="text-left p-3 hidden md:table-cell">Téléch.</th>
+                  <th className="text-right p-3">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {resources.map((res) => (
+                  <tr key={res.id} className="border-t border-border">
+                    <td className="p-3 font-medium">{res.title_fr}</td>
+                    <td className="p-3 hidden sm:table-cell"><Badge variant="outline">{res.category}</Badge></td>
+                    <td className="p-3 hidden md:table-cell text-muted-foreground">{res.subject || 'Général'}</td>
+                    <td className="p-3">
+                      <Badge variant={res.is_free ? "default" : "secondary"}>
+                        {res.is_free ? "Gratuit" : `${res.price} FCFA`}
+                      </Badge>
+                    </td>
+                    <td className="p-3 hidden md:table-cell text-muted-foreground">{res.downloads || 0}</td>
+                    <td className="p-3 text-right">
+                      <Button variant="ghost" size="icon" onClick={() => handleDelete(res.id)}>
+                        <Trash2 size={14} className="text-destructive" />
+                      </Button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
     </div>
@@ -1417,30 +1487,56 @@ const ResourcesAdminTab = () => {
 // Referrals Admin Tab
 const ReferralsAdminTab = () => {
   const [referrals, setReferrals] = useState<any[]>([]);
+  const [rewards, setRewards] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetchReferrals();
-  }, []);
+  useEffect(() => { fetchData(); }, []);
 
-  const fetchReferrals = async () => {
+  const fetchData = async () => {
     setLoading(true);
-    const { data } = await supabase.from("referrals").select("*").order("created_at", { ascending: false }).limit(50);
-    setReferrals(data || []);
+    const [refResult, rewResult] = await Promise.all([
+      supabase.from("referrals").select("*").order("created_at", { ascending: false }).limit(100),
+      supabase.from("referral_rewards").select("*").order("created_at", { ascending: false }).limit(50),
+    ]);
+    setReferrals(refResult.data || []);
+    setRewards(rewResult.data || []);
     setLoading(false);
   };
 
   const completedCount = referrals.filter(r => r.status === 'completed').length;
+  const totalRewards = rewards.reduce((sum, r) => sum + (r.amount || 0), 0);
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
         <h1 className="text-2xl font-display font-bold text-foreground">Programme de Parrainage</h1>
-        <div className="flex gap-2">
+        <div className="flex gap-2 flex-wrap">
           <Badge variant="outline">{referrals.length} parrainages</Badge>
           <Badge variant="default">{completedCount} complétés</Badge>
+          <Badge variant="secondary">{totalRewards.toLocaleString()} FCFA récompenses</Badge>
         </div>
       </div>
+
+      {/* Stats cards */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <div className="bg-card border border-border rounded-xl p-4 text-center">
+          <p className="text-2xl font-bold text-foreground">{referrals.length}</p>
+          <p className="text-xs text-muted-foreground">Total parrainages</p>
+        </div>
+        <div className="bg-card border border-border rounded-xl p-4 text-center">
+          <p className="text-2xl font-bold text-foreground">{completedCount}</p>
+          <p className="text-xs text-muted-foreground">Complétés</p>
+        </div>
+        <div className="bg-card border border-border rounded-xl p-4 text-center">
+          <p className="text-2xl font-bold text-foreground">{rewards.length}</p>
+          <p className="text-xs text-muted-foreground">Récompenses</p>
+        </div>
+        <div className="bg-card border border-border rounded-xl p-4 text-center">
+          <p className="text-2xl font-bold text-foreground">{totalRewards.toLocaleString()}</p>
+          <p className="text-xs text-muted-foreground">FCFA distribués</p>
+        </div>
+      </div>
+
       {loading ? (
         <div className="text-center py-12 text-muted-foreground">Chargement...</div>
       ) : referrals.length === 0 ? (
