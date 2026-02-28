@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Nouveautés Scoly v3.0 — Document Officiel</title>
+<style>
+  body { font-family: 'Segoe UI', sans-serif; max-width: 900px; margin: 40px auto; padding: 0 20px; color: #1a1a2e; line-height: 1.7; }
+  h1 { color: #16213e; border-bottom: 3px solid #e94560; padding-bottom: 10px; }
+  h2 { color: #e94560; margin-top: 40px; }
+  h3 { color: #16213e; margin-top: 20px; }
+  .card { background: #f8f9fa; border-radius: 8px; padding: 20px; margin: 15px 0; border-left: 4px solid #e94560; }
+  .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px; }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+  th, td { border: 1px solid #ddd; padding: 10px; text-align: left; font-size: 14px; }
+  th { background: #16213e; color: white; }
+  tr:nth-child(even) { background: #f8f9fa; }
+  .footer { text-align: center; margin-top: 60px; padding-top: 20px; border-top: 2px solid #eee; color: #666; font-size: 13px; }
+  @media print { body { margin: 20px; } }
+</style>
+</head>
+<body>
+
+<h1>🚀 NOUVEAUTÉS SCOLY v3.0</h1>
+<p><strong>Document officiel — Version 1.0</strong><br>
+<strong>Date :</strong> Février 2026<br>
+<strong>Auteur :</strong> Inocent KOFFI — Développeur Full-Stack & Fondateur<br>
+<strong>Contact :</strong> inocent.koffi@agricapital.ci | +225 07 58 46 59 33</p>
+
+<h2>1. Contexte</h2>
+<div class="card">
+<p>La rentrée scolaire en Côte d'Ivoire représente un moment de forte pression financière et logistique pour plus de <strong>7 millions d'élèves</strong> et leurs familles. Scoly 3.0 introduit <strong>4 fonctionnalités stratégiques</strong> pour transformer l'expérience d'achat scolaire en une expérience 100% digitale, intelligente et communautaire.</p>
+</div>
+
+<h2>2. Les 4 Nouvelles Fonctionnalités</h2>
+
+<h3>🎓 2.1 — Espace Écoles & Établissements</h3>
+<div class="card">
+<p><strong>URL :</strong> /ecoles</p>
+<ul>
+<li>Répertoire complet d'écoles par ville, type et zone géographique</li>
+<li>Listes de fournitures officielles par classe et par série</li>
+<li>Commande groupée de toute la liste en 1 clic</li>
+<li>Programme de fidélité écoles : Bronze → Argent → Or → Platinum</li>
+<li>Formulaire d'inscription pour les établissements (/ecoles#inscription)</li>
+<li>Validation par l'administrateur (is_verified = false par défaut)</li>
+</ul>
+<p><strong>Tables DB :</strong> schools, school_supply_lists, school_supply_items, school_loyalty</p>
+</div>
+
+<h3>📦 2.2 — Kits Scolaires Intelligents</h3>
+<div class="card">
+<p><strong>URL :</strong> /kits</p>
+<ul>
+<li>Sélection du niveau scolaire (CP1 → Terminale)</li>
+<li>Filtrage par série (A, C, D) pour le secondaire</li>
+<li>Composition automatique du kit avec les fournitures requises</li>
+<li>Ajout complet au panier en 1 clic</li>
+<li>Prix total calculé en temps réel</li>
+<li>Suggestions de produits complémentaires</li>
+</ul>
+</div>
+
+<h3>🤝 2.3 — Programme de Parrainage</h3>
+<div class="card">
+<p><strong>URL :</strong> /parrainage</p>
+<ul>
+<li>Code unique par utilisateur : SCOLY-XXXXXX</li>
+<li>Partage via WhatsApp, SMS, copie directe</li>
+<li>Récompenses : 500 FCFA pour le parrain, 300 FCFA pour le filleul</li>
+<li>Niveaux ambassadeur : Bronze (1-4) → Argent (5-14) → Or (15-29) → Platinum (30+)</li>
+<li>Dashboard ambassadeur avec suivi en temps réel</li>
+</ul>
+<p><strong>Tables DB :</strong> referrals, referral_rewards</p>
+</div>
+
+<h3>📚 2.4 — Marketplace Éducative</h3>
+<div class="card">
+<p><strong>URL :</strong> /ressources</p>
+<ul>
+<li>Catégories : Exercices, Sujets d'examen, Vidéos, Fiches, Programmes officiels</li>
+<li>Filtrage par matière, niveau scolaire, type</li>
+<li>Contenus gratuits et premium</li>
+<li>Compteur de téléchargements</li>
+<li>Système de notation et avis</li>
+</ul>
+<p><strong>Tables DB :</strong> resources, educational_content</p>
+</div>
+
+<h2>3. Objectifs Stratégiques</h2>
+<table>
+<tr><th>Objectif</th><th>Cible</th><th>Horizon</th></tr>
+<tr><td>Inscriptions via parrainage</td><td>+300%</td><td>6 mois</td></tr>
+<tr><td>Temps de commande</td><td>15 min → 2 min</td><td>Immédiat</td></tr>
+<tr><td>Écoles partenaires</td><td>500+ en CI</td><td>Fin 2026</td></tr>
+<tr><td>Taux de rétention</td><td>+50%</td><td>12 mois</td></tr>
+<tr><td>Ressources éducatives</td><td>1ère plateforme en CI</td><td>2026</td></tr>
+</table>
+
+<h2>4. Avantages Concurrentiels</h2>
+<table>
+<tr><th>Critère</th><th>Concurrents</th><th>Scoly 3.0</th></tr>
+<tr><td>Listes de fournitures</td><td>Papier / WhatsApp</td><td>✅ Digitale, 1-clic</td></tr>
+<tr><td>Kits prêts-à-commander</td><td>❌ Inexistant</td><td>✅ Auto-généré par niveau</td></tr>
+<tr><td>Parrainage viral</td><td>❌ Inexistant</td><td>✅ WhatsApp/SMS, crédits instantanés</td></tr>
+<tr><td>Contenus éducatifs</td><td>Dispersés</td><td>✅ Marketplace centralisée</td></tr>
+<tr><td>Fidélité écoles</td><td>❌</td><td>✅ Bronze → Platinum</td></tr>
+<tr><td>Mode hors-ligne</td><td>❌</td><td>✅ PWA avec cache</td></tr>
+<tr><td>IA intégrée</td><td>❌</td><td>✅ Analyse, auto-promotions, chatbot</td></tr>
+</table>
+
+<h2>5. Administration</h2>
+<div class="card">
+<p>Les 4 nouvelles fonctionnalités sont entièrement gérables depuis le panel administrateur (/admin) :</p>
+<ul>
+<li><strong>Onglet Écoles :</strong> Vérification des inscriptions, gestion des contacts, badge "en attente"</li>
+<li><strong>Onglet Ressources :</strong> Modération contenus, catégories, prix, téléchargements</li>
+<li><strong>Onglet Parrainages :</strong> Stats globales, suivi codes, récompenses distribuées</li>
+<li><strong>Onglet Ventes Flash :</strong> Gestion promotions, images, pourcentages</li>
+</ul>
+</div>
+
+<div class="footer">
+<p><strong>Scoly — Document Nouveautés v3.0</strong></p>
+<p>Préparé par Inocent KOFFI • Février 2026</p>
+<p>📧 inocent.koffi@agricapital.ci • 📱 +225 07 58 46 59 33</p>
+<p>© 2026 Scoly. Tous droits réservés.</p>
+</div>
+
+</body>
+</html>

@@ -26,6 +26,7 @@ const DocumentationV25 = ({ language }: { language: string }) => {
     { id: "security", icon: <Lock size={18} />, title: "11. Sécurité" },
     { id: "deployment", icon: <Globe size={18} />, title: "12. Déploiement" },
     { id: "developer", icon: <Code size={18} />, title: "13. Développeur" },
+    { id: "downloads", icon: <Download size={18} />, title: "📥 Documents" },
   ];
 
   const renderSection = () => {
@@ -365,6 +366,37 @@ const DocumentationV25 = ({ language }: { language: string }) => {
             </div>
           </div>
         );
+      case "downloads":
+        return (
+          <div className="space-y-6">
+            <h2 className="text-3xl font-display font-bold text-foreground">📥 Documents Téléchargeables</h2>
+            <p className="text-muted-foreground">Téléchargez les documents officiels de Scoly pour consultation hors-ligne, impression ou archivage.</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {[
+                { title: "Audit Complet & Bilan Technique", desc: "Score 95/100 — Architecture, sécurité, fonctionnalités, recommandations", icon: <Shield size={24} />, url: "/documents/audit-technique-scoly-v25.html", format: "HTML" },
+                { title: "Fiche de Notation & Grille d'Audit", desc: "Grille détaillée avec 14 critères pondérés et légende", icon: <FileText size={24} />, url: "/documents/fiche-notation-audit-scoly.html", format: "HTML" },
+                { title: "Flyer Freelance — Inocent KOFFI", desc: "Flyer de présentation du développeur freelance", icon: <ExternalLink size={24} />, url: "/flyer-freelance-inocent-koffi.jpg", format: "JPG" },
+                { title: "Document Nouveautés v3.0", desc: "Présentation des 4 nouvelles fonctionnalités stratégiques", icon: <Star size={24} />, url: "/documents/nouveautes-scoly-v3.html", format: "HTML" },
+              ].map((doc, i) => (
+                <div key={i} className="bg-card border border-border rounded-xl p-5 flex flex-col gap-3">
+                  <div className="flex items-start gap-3">
+                    <div className="p-2 rounded-lg bg-primary/10 text-primary shrink-0">{doc.icon}</div>
+                    <div className="flex-1">
+                      <h4 className="font-semibold text-foreground text-sm">{doc.title}</h4>
+                      <p className="text-muted-foreground text-xs mt-1">{doc.desc}</p>
+                      <span className="text-xs text-primary font-mono mt-1 inline-block">Format : {doc.format}</span>
+                    </div>
+                  </div>
+                  <a href={doc.url} target="_blank" rel="noopener noreferrer" download>
+                    <Button variant="outline" size="sm" className="w-full gap-2">
+                      <Download size={14} /> Télécharger
+                    </Button>
+                  </a>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
       default:
         return null;
     }
@@ -415,6 +447,7 @@ const Nouveautes10 = () => {
     { id: "guide", icon: <Book size={18} />, title: "5. Guide d'Utilisation" },
     { id: "database", icon: <Database size={18} />, title: "6. Nouvelles Tables DB" },
     { id: "admin", icon: <Settings size={18} />, title: "7. Admin — Nouveaux Onglets" },
+    { id: "downloads", icon: <Download size={18} />, title: "📥 Documents" },
     { id: "author", icon: <Code size={18} />, title: "8. Auteur" },
   ];
 
@@ -581,6 +614,37 @@ const Nouveautes10 = () => {
                 <div key={i} className="bg-primary/10 text-primary rounded-lg px-4 py-4 text-center">
                   <p className="font-medium text-sm">{tab.title}</p>
                   <p className="text-xs mt-1 opacity-80">{tab.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+      case "downloads":
+        return (
+          <div className="space-y-6">
+            <h2 className="text-3xl font-display font-bold text-foreground">📥 Documents Téléchargeables</h2>
+            <p className="text-muted-foreground">Documents officiels des nouveautés Scoly v3.0.</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {[
+                { title: "Document Nouveautés v3.0", desc: "Les 4 fonctionnalités stratégiques : Écoles, Kits, Parrainage, Ressources", icon: <Star size={24} />, url: "/documents/nouveautes-scoly-v3.html", format: "HTML" },
+                { title: "Audit Complet & Bilan Technique", desc: "Score 95/100 — Bilan complet de la plateforme", icon: <Shield size={24} />, url: "/documents/audit-technique-scoly-v25.html", format: "HTML" },
+                { title: "Fiche de Notation", desc: "Grille d'audit détaillée avec 14 critères pondérés", icon: <FileText size={24} />, url: "/documents/fiche-notation-audit-scoly.html", format: "HTML" },
+                { title: "Flyer Freelance", desc: "Présentation Inocent KOFFI — Développeur Full-Stack", icon: <ExternalLink size={24} />, url: "/flyer-freelance-inocent-koffi.jpg", format: "JPG" },
+              ].map((doc, i) => (
+                <div key={i} className="bg-card border border-border rounded-xl p-5 flex flex-col gap-3">
+                  <div className="flex items-start gap-3">
+                    <div className="p-2 rounded-lg bg-primary/10 text-primary shrink-0">{doc.icon}</div>
+                    <div className="flex-1">
+                      <h4 className="font-semibold text-foreground text-sm">{doc.title}</h4>
+                      <p className="text-muted-foreground text-xs mt-1">{doc.desc}</p>
+                      <span className="text-xs text-primary font-mono mt-1 inline-block">Format : {doc.format}</span>
+                    </div>
+                  </div>
+                  <a href={doc.url} target="_blank" rel="noopener noreferrer" download>
+                    <Button variant="outline" size="sm" className="w-full gap-2">
+                      <Download size={14} /> Télécharger
+                    </Button>
+                  </a>
                 </div>
               ))}
             </div>
