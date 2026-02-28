@@ -29,7 +29,8 @@ import {
   Menu,
   GraduationCap,
   BookOpen,
-  UserPlus
+  UserPlus,
+  Zap
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -61,6 +62,7 @@ import PaymentsTab from "@/components/admin/PaymentsTab";
 import ShareStatsTab from "@/components/admin/ShareStatsTab";
 import AIManager from "@/components/admin/AIManager";
 import PromotionsManagement from "@/components/admin/PromotionsManagement";
+import FlashDealsManagement from "@/components/admin/FlashDealsManagement";
 import SocialMediaManager from "@/components/admin/SocialMediaManager";
 import DocumentationManager from "@/components/admin/DocumentationManager";
 
@@ -94,7 +96,8 @@ type TabType =
   | "documentation"
   | "schools"
   | "resources"
-  | "referrals";
+  | "referrals"
+  | "flash_deals";
 
 const Admin = () => {
   const { t, language } = useLanguage();
@@ -150,7 +153,8 @@ const Admin = () => {
     { id: "vendors", label: "Vendeurs", icon: Store },
     { id: "commissions", label: "Commissions", icon: DollarSign },
     { id: "loyalty", label: "Fidélité", icon: Gift },
-    { id: "promotions_mgmt", label: "Ventes Flash", icon: Tag },
+    { id: "promotions_mgmt", label: "Promotions", icon: Tag },
+    { id: "flash_deals", label: "Ventes Flash", icon: Zap },
     { id: "social_media", label: "Réseaux Sociaux", icon: Share2 },
     { id: "schools", label: "Écoles", icon: GraduationCap },
     { id: "resources", label: "Ressources Édu", icon: BookOpen },
@@ -281,6 +285,7 @@ const Admin = () => {
           {activeTab === "commissions" && <CommissionsTab />}
           {activeTab === "loyalty" && <LoyaltyTab />}
           {activeTab === "promotions_mgmt" && <PromotionsManagement />}
+          {activeTab === "flash_deals" && <FlashDealsManagement />}
           {activeTab === "social_media" && <SocialMediaManager />}
           {activeTab === "authors" && <AuthorsManagement />}
           {activeTab === "review" && <PublicationsReview />}
