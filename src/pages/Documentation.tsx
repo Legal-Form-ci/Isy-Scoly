@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Book, Database, Shield, Users, CreditCard, Server, Mail, Globe, ChevronRight, Download, FileText, Smartphone, Monitor, Code, Layers, Lock, Bell, Truck, ShoppingCart, BarChart3, MessageSquare, Star, Settings, Printer, Brain, Share2, Gift, Tag, Eye, Heart, GraduationCap, Package, UserPlus, BookOpen, ExternalLink } from "lucide-react";
+import { Book, Database, Shield, Users, CreditCard, Server, Mail, Globe, ChevronRight, Download, FileText, Smartphone, Monitor, Code, Layers, Lock, Bell, Truck, ShoppingCart, BarChart3, MessageSquare, Star, Settings, Printer, Brain, Share2, Gift, Tag, Eye, Heart, GraduationCap, Package, UserPlus, BookOpen, ExternalLink, Zap, CheckCircle2, Clock, Sparkles, Image } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import Navbar from "@/components/Navbar";
@@ -94,7 +94,7 @@ const DocumentationV25 = ({ language }: { language: string }) => {
         return (
           <div className="space-y-6">
             <h2 className="text-3xl font-display font-bold text-foreground">Base de Données & Schéma</h2>
-            <h3 className="text-xl font-semibold text-foreground">Tables Principales (22+)</h3>
+            <h3 className="text-xl font-semibold text-foreground">Tables Principales (30+)</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {[
                 { name: "profiles", desc: "Profils utilisateurs" }, { name: "user_roles", desc: "Rôles (admin, moderator, vendor, delivery, user)" },
@@ -105,6 +105,10 @@ const DocumentationV25 = ({ language }: { language: string }) => {
                 { name: "promotions / coupons", desc: "Promos et coupons" }, { name: "notifications", desc: "Notifications in-app" },
                 { name: "commissions", desc: "Commissions vendeurs" }, { name: "delivery_proofs", desc: "Preuves livraison (photo, GPS)" },
                 { name: "audit_logs", desc: "Journal d'audit" }, { name: "login_sessions", desc: "Sessions sécurisées" },
+                { name: "schools", desc: "Répertoire des établissements" }, { name: "school_supply_lists", desc: "Listes fournitures" },
+                { name: "school_loyalty", desc: "Fidélité B2B écoles" }, { name: "referrals", desc: "Parrainages" },
+                { name: "referral_rewards", desc: "Récompenses parrainage" }, { name: "resources", desc: "Ressources éducatives" },
+                { name: "educational_content", desc: "Contenus avancés" }, { name: "rate_limits", desc: "Anti-bruteforce" },
               ].map((table, i) => (
                 <div key={i} className="bg-card border border-border rounded-lg p-3 flex items-center gap-3">
                   <Database size={16} className="text-primary shrink-0" />
@@ -150,14 +154,16 @@ const DocumentationV25 = ({ language }: { language: string }) => {
             <h3 className="text-xl font-semibold text-foreground">Sections du Panel (25+ onglets)</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {[
-                { icon: <BarChart3 size={20} />, title: "Tableau de bord", desc: "KPIs temps réel, graphiques, commandes récentes" },
+                { icon: <BarChart3 size={20} />, title: "Tableau de bord", desc: "KPIs temps réel, graphiques, engagement" },
                 { icon: <Brain size={20} />, title: "Module IA", desc: "Auto-analyse, promotions, publications réseaux sociaux" },
                 { icon: <ShoppingCart size={20} />, title: "Produits & Catégories", desc: "CRUD avec images multiples, traduction" },
-                { icon: <Tag size={20} />, title: "Ventes Flash & Coupons", desc: "Promotions avec compte à rebours" },
+                { icon: <Zap size={20} />, title: "Ventes Flash", desc: "Gestion promotions, images, remises, dates" },
+                { icon: <Tag size={20} />, title: "Coupons", desc: "Codes promo avec limites et suivi" },
                 { icon: <Users size={20} />, title: "Utilisateurs & Rôles", desc: "Gestion comptes, attribution rôles" },
-                { icon: <GraduationCap size={20} />, title: "Écoles", desc: "Vérification établissements, listes fournitures" },
+                { icon: <GraduationCap size={20} />, title: "Écoles", desc: "Vérification, contacts, inscription, fidélité" },
                 { icon: <BookOpen size={20} />, title: "Ressources Édu", desc: "Modération contenus éducatifs" },
                 { icon: <UserPlus size={20} />, title: "Parrainages", desc: "Suivi codes, récompenses, stats" },
+                { icon: <Eye size={20} />, title: "Engagement", desc: "Vues, likes, réactions, partages articles" },
                 { icon: <Settings size={20} />, title: "Paramètres", desc: "Configuration générale, sauvegarde" },
               ].map((item, i) => (
                 <div key={i} className="bg-card border border-border rounded-lg p-4 flex gap-3">
@@ -315,7 +321,7 @@ const DocumentationV25 = ({ language }: { language: string }) => {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {[
-                { title: "RLS (Row Level Security)", desc: "Politiques sur 22+ tables, accès anon bloqué sur 13 tables sensibles" },
+                { title: "RLS (Row Level Security)", desc: "Politiques sur 30+ tables, accès anon bloqué sur tables sensibles" },
                 { title: "Anti-Bruteforce", desc: "Rate limiting via check_rate_limit() — 5 tentatives / 5 min" },
                 { title: "CAPTCHA Mathématique", desc: "Vérification humaine à l'inscription" },
                 { title: "Sessions Sécurisées", desc: "login_sessions avec confirmation, expiration, blocage" },
@@ -375,8 +381,8 @@ const DocumentationV25 = ({ language }: { language: string }) => {
               {[
                 { title: "Audit Complet & Bilan Technique", desc: "Score 95/100 — Architecture, sécurité, fonctionnalités, recommandations", icon: <Shield size={24} />, url: "/documents/audit-technique-scoly-v25.html", format: "HTML" },
                 { title: "Fiche de Notation & Grille d'Audit", desc: "Grille détaillée avec 14 critères pondérés et légende", icon: <FileText size={24} />, url: "/documents/fiche-notation-audit-scoly.html", format: "HTML" },
-                { title: "Flyer Freelance — Inocent KOFFI", desc: "Flyer de présentation du développeur freelance", icon: <ExternalLink size={24} />, url: "/flyer-freelance-inocent-koffi.jpg", format: "JPG" },
                 { title: "Document Nouveautés v3.0", desc: "Présentation des 4 nouvelles fonctionnalités stratégiques", icon: <Star size={24} />, url: "/documents/nouveautes-scoly-v3.html", format: "HTML" },
+                { title: "Flyer Freelance — Inocent KOFFI", desc: "Flyer de présentation du développeur freelance", icon: <Image size={24} />, url: "/flyer-freelance-inocent-koffi.jpg", format: "JPG" },
               ].map((doc, i) => (
                 <div key={i} className="bg-card border border-border rounded-xl p-5 flex flex-col gap-3">
                   <div className="flex items-start gap-3">
@@ -387,11 +393,14 @@ const DocumentationV25 = ({ language }: { language: string }) => {
                       <span className="text-xs text-primary font-mono mt-1 inline-block">Format : {doc.format}</span>
                     </div>
                   </div>
-                  <a href={doc.url} target="_blank" rel="noopener noreferrer" download>
-                    <Button variant="outline" size="sm" className="w-full gap-2">
-                      <Download size={14} /> Télécharger
-                    </Button>
-                  </a>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="w-full gap-2"
+                    onClick={() => window.open(doc.url, '_blank')}
+                  >
+                    <Download size={14} /> Ouvrir / Télécharger
+                  </Button>
                 </div>
               ))}
             </div>
@@ -408,7 +417,7 @@ const DocumentationV25 = ({ language }: { language: string }) => {
         <div className="bg-card border border-border rounded-xl p-4 sticky top-20">
           <h3 className="font-semibold text-foreground mb-3 text-sm">Table des matières</h3>
           <Button variant="outline" size="sm" className="w-full mb-3 gap-2" onClick={() => window.print()}>
-            <Download size={14} /> Télécharger PDF
+            <Printer size={14} /> Imprimer / PDF
           </Button>
           <nav className="space-y-1">
             {sections.map((section) => (
@@ -437,26 +446,68 @@ const DocumentationV25 = ({ language }: { language: string }) => {
 
 // ─── Sub-page: Nouveautés 1.0 ───
 const Nouveautes10 = () => {
-  const [activeSection, setActiveSection] = useState("context");
+  const [activeSection, setActiveSection] = useState("recap");
 
   const sections = [
-    { id: "context", icon: <Globe size={18} />, title: "1. Contexte Général" },
-    { id: "solutions", icon: <Package size={18} />, title: "2. Les Solutions" },
-    { id: "objectives", icon: <Star size={18} />, title: "3. Objectifs" },
-    { id: "advantages", icon: <Shield size={18} />, title: "4. Avantages Concurrentiels" },
-    { id: "guide", icon: <Book size={18} />, title: "5. Guide d'Utilisation" },
-    { id: "database", icon: <Database size={18} />, title: "6. Nouvelles Tables DB" },
-    { id: "admin", icon: <Settings size={18} />, title: "7. Admin — Nouveaux Onglets" },
+    { id: "recap", icon: <Sparkles size={18} />, title: "🆕 Résumé des changements" },
+    { id: "context", icon: <Globe size={18} />, title: "1. Contexte Scoly 3.0" },
+    { id: "schools", icon: <GraduationCap size={18} />, title: "2. Espace Écoles" },
+    { id: "kits", icon: <Package size={18} />, title: "3. Kits Intelligents" },
+    { id: "referral", icon: <UserPlus size={18} />, title: "4. Programme Parrainage" },
+    { id: "resources", icon: <BookOpen size={18} />, title: "5. Marketplace Éducative" },
+    { id: "admin-upgrades", icon: <Settings size={18} />, title: "6. Admin — Améliorations" },
+    { id: "engagement", icon: <BarChart3 size={18} />, title: "7. Statistiques & Engagement" },
+    { id: "flash-deals", icon: <Zap size={18} />, title: "8. Ventes Flash" },
+    { id: "security-rls", icon: <Lock size={18} />, title: "9. Sécurité & RLS" },
+    { id: "ui-fixes", icon: <Monitor size={18} />, title: "10. UI & Corrections" },
+    { id: "objectives", icon: <Star size={18} />, title: "11. Objectifs Stratégiques" },
+    { id: "advantages", icon: <Shield size={18} />, title: "12. Avantages Concurrentiels" },
     { id: "downloads", icon: <Download size={18} />, title: "📥 Documents" },
-    { id: "author", icon: <Code size={18} />, title: "8. Auteur" },
+    { id: "author", icon: <Code size={18} />, title: "Auteur" },
   ];
 
   const renderSection = () => {
     switch (activeSection) {
+      case "recap":
+        return (
+          <div className="space-y-6">
+            <h2 className="text-3xl font-display font-bold text-foreground">🆕 Résumé des Implémentations Récentes</h2>
+            <p className="text-muted-foreground">Liste complète de toutes les fonctionnalités implémentées lors des dernières sessions de développement (72h).</p>
+            
+            <div className="space-y-3">
+              {[
+                { status: "done", title: "Espace Écoles (/ecoles)", desc: "Répertoire complet, fiches détaillées, listes de fournitures, commande groupée 1 clic" },
+                { status: "done", title: "Formulaire d'Inscription Écoles", desc: "Formulaire complet (nom, ville, type, téléphone, email) — is_verified=false par défaut, validation admin" },
+                { status: "done", title: "Kits Scolaires Intelligents (/kits)", desc: "Sélection CP1→Terminale, séries A/C/D, composition auto, ajout panier 1 clic" },
+                { status: "done", title: "Programme de Parrainage (/parrainage)", desc: "Code SCOLY-XXXXXX, partage WhatsApp/SMS, 500 FCFA parrain / 300 FCFA filleul, niveaux ambassadeur" },
+                { status: "done", title: "Marketplace Éducative (/ressources)", desc: "Exercices, sujets d'examen, vidéos, fiches — filtrage multi-critères, gratuit/premium" },
+                { status: "done", title: "Page Fonctionnalités (/fonctionnalites)", desc: "Présentation complète de toutes les fonctionnalités de Scoly" },
+                { status: "done", title: "Admin — Onglet Écoles amélioré", desc: "Recherche, compteur en attente, boutons Valider/Retirer/Supprimer, affichage contacts" },
+                { status: "done", title: "Admin — Onglet Parrainages amélioré", desc: "Stats cards (total, complétés, récompenses FCFA), tableau détaillé" },
+                { status: "done", title: "Admin — Onglet Ressources amélioré", desc: "Tableau avec catégorie, matière, prix, téléchargements, suppression" },
+                { status: "done", title: "Admin — Ventes Flash (FlashDealsManagement)", desc: "CRUD complet : gestion remises, images, stocks, activation/désactivation" },
+                { status: "done", title: "Admin — Statistiques Engagement", desc: "4 cards : vues articles, likes/réactions, partages, articles publiés (temps réel)" },
+                { status: "done", title: "Compteurs actifs (vues, likes, partages)", desc: "increment_article_views, increment_product_views, increment_article_share — RPC Supabase" },
+                { status: "done", title: "Espacement paragraphes articles", desc: "Classes prose-p:mb-4, prose-headings:mt-8, CSS global pour spacing" },
+                { status: "done", title: "Migration RLS — Inscription écoles", desc: "Politiques : inscription authenticated (is_verified=false), gestion admin (update/delete)" },
+                { status: "done", title: "Documentation restructurée", desc: "2 sous-pages : Documentation v2.5 (technique) + Nouveautés 1.0 (stratégie)" },
+                { status: "done", title: "Documents téléchargeables", desc: "Audit technique, fiche de notation, document nouveautés v3.0, flyer freelance" },
+              ].map((item, i) => (
+                <div key={i} className="bg-card border border-border rounded-lg p-4 flex items-start gap-3">
+                  <CheckCircle2 size={18} className="text-green-500 mt-0.5 shrink-0" />
+                  <div className="flex-1">
+                    <h4 className="font-semibold text-foreground text-sm">{item.title}</h4>
+                    <p className="text-muted-foreground text-xs mt-0.5">{item.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
       case "context":
         return (
           <div className="space-y-6">
-            <h2 className="text-3xl font-display font-bold text-foreground">Contexte Général</h2>
+            <h2 className="text-3xl font-display font-bold text-foreground">Contexte Scoly 3.0</h2>
             <div className="bg-card border border-border rounded-xl p-6 space-y-4">
               <p className="text-muted-foreground leading-relaxed">
                 La rentrée scolaire en Côte d'Ivoire représente un moment de forte pression financière et logistique pour les familles.
@@ -464,61 +515,290 @@ const Nouveautes10 = () => {
                 mais les parents font face à des défis majeurs : listes dispersées, prix non standardisés, files d'attente.
               </p>
               <p className="text-muted-foreground leading-relaxed">
-                <strong className="text-foreground">Scoly 3.0</strong> répond à ces défis en introduisant 4 fonctionnalités stratégiques
-                qui transforment l'expérience d'achat scolaire en une expérience 100% digitale, intelligente et communautaire.
+                <strong className="text-foreground">Scoly 3.0</strong> répond à ces défis en introduisant <strong className="text-foreground">4 fonctionnalités stratégiques</strong> qui transforment l'expérience d'achat scolaire en une expérience 100% digitale, intelligente et communautaire.
               </p>
             </div>
           </div>
         );
-      case "solutions":
+      case "schools":
         return (
           <div className="space-y-6">
-            <h2 className="text-3xl font-display font-bold text-foreground">Les 4 Solutions</h2>
-            {[
-              { icon: <GraduationCap size={28} />, title: "🎓 Espace Écoles & Établissements", desc: "Plateforme B2B/B2C pour les écoles.", features: ["Répertoire d'écoles par ville et type", "Listes de fournitures officielles par classe", "Commande groupée en 1 clic", "Programme de fidélité écoles (Bronze → Platinum)", "Formulaire d'inscription pour les établissements"], url: "/ecoles" },
-              { icon: <Package size={28} />, title: "📦 Kits Scolaires Intelligents", desc: "Génération automatique de kits par niveau et série.", features: ["Sélection du niveau (CP1 → Terminale)", "Filtrage par série (A, C, D)", "Composition automatique du kit", "Ajout complet au panier en 1 clic", "Prix total calculé en temps réel"], url: "/kits" },
-              { icon: <Users size={28} />, title: "🤝 Programme de Parrainage", desc: "Système de parrainage viral.", features: ["Code unique par utilisateur (SCOLY-XXXXXX)", "Partage via WhatsApp, SMS", "500 FCFA parrain / 300 FCFA filleul", "Niveaux : Bronze → Or → Platinum", "Dashboard ambassadeur"], url: "/parrainage" },
-              { icon: <BookOpen size={28} />, title: "📚 Marketplace Éducative", desc: "Ressources pédagogiques par matière et niveau.", features: ["Exercices, sujets d'examen, vidéos, fiches", "Contenus gratuits et premium", "Compteur de téléchargements", "Filtrage multi-critères"], url: "/ressources" },
-            ].map((s, i) => (
-              <div key={i} className="bg-card border border-border rounded-xl p-6">
-                <div className="flex items-start gap-4 mb-4">
-                  <div className="p-3 rounded-xl bg-primary/10 text-primary shrink-0">{s.icon}</div>
-                  <div>
-                    <h3 className="text-xl font-display font-bold text-foreground">{s.title}</h3>
-                    <p className="text-muted-foreground mt-1">{s.desc}</p>
-                    <code className="text-xs text-primary bg-primary/10 px-2 py-0.5 rounded mt-2 inline-block">{s.url}</code>
+            <h2 className="text-3xl font-display font-bold text-foreground">🎓 Espace Écoles & Établissements</h2>
+            <div className="bg-primary/5 border border-primary/20 rounded-xl p-4">
+              <p className="text-sm text-muted-foreground">URL : <code className="bg-muted px-2 py-0.5 rounded">/ecoles</code> • Détail : <code className="bg-muted px-2 py-0.5 rounded">/ecoles/:id</code> • Inscription : <code className="bg-muted px-2 py-0.5 rounded">/ecoles#inscription</code></p>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {[
+                "Répertoire complet d'écoles par ville, type et zone",
+                "Fiches détaillées avec contacts et localisation",
+                "Listes de fournitures officielles par classe et série",
+                "Commande groupée de toute la liste en 1 clic",
+                "Programme de fidélité B2B : Bronze → Argent → Or → Platinum",
+                "Formulaire d'inscription pour les établissements",
+                "Validation par l'administrateur (is_verified = false)",
+                "RLS : inscription authenticated, gestion admin",
+              ].map((f, i) => (
+                <div key={i} className="flex items-start gap-2 text-sm">
+                  <CheckCircle2 size={14} className="text-green-500 mt-0.5 shrink-0" />
+                  <span className="text-muted-foreground">{f}</span>
+                </div>
+              ))}
+            </div>
+            <div className="bg-card border border-border rounded-xl p-4">
+              <h4 className="font-semibold text-foreground text-sm mb-2">Tables DB associées</h4>
+              <div className="flex flex-wrap gap-2">
+                {["schools", "school_supply_lists", "school_supply_items", "school_loyalty"].map((t) => (
+                  <code key={t} className="bg-muted px-2 py-1 rounded text-xs font-mono">{t}</code>
+                ))}
+              </div>
+            </div>
+          </div>
+        );
+      case "kits":
+        return (
+          <div className="space-y-6">
+            <h2 className="text-3xl font-display font-bold text-foreground">📦 Kits Scolaires Intelligents</h2>
+            <div className="bg-primary/5 border border-primary/20 rounded-xl p-4">
+              <p className="text-sm text-muted-foreground">URL : <code className="bg-muted px-2 py-0.5 rounded">/kits</code></p>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {[
+                "Sélection du niveau scolaire (CP1 → Terminale)",
+                "Filtrage par série (A, C, D) pour le secondaire",
+                "Composition automatique du kit avec fournitures requises",
+                "Ajout complet au panier en 1 clic",
+                "Prix total calculé en temps réel",
+                "Suggestions de produits complémentaires",
+              ].map((f, i) => (
+                <div key={i} className="flex items-start gap-2 text-sm">
+                  <CheckCircle2 size={14} className="text-green-500 mt-0.5 shrink-0" />
+                  <span className="text-muted-foreground">{f}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+      case "referral":
+        return (
+          <div className="space-y-6">
+            <h2 className="text-3xl font-display font-bold text-foreground">🤝 Programme de Parrainage</h2>
+            <div className="bg-primary/5 border border-primary/20 rounded-xl p-4">
+              <p className="text-sm text-muted-foreground">URL : <code className="bg-muted px-2 py-0.5 rounded">/parrainage</code></p>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {[
+                "Code unique par utilisateur : SCOLY-XXXXXX",
+                "Partage via WhatsApp, SMS, copie directe",
+                "500 FCFA pour le parrain, 300 FCFA pour le filleul",
+                "Niveaux ambassadeur : Bronze (1-4) → Argent (5-14) → Or (15-29) → Platinum (30+)",
+                "Dashboard ambassadeur avec suivi en temps réel",
+                "Historique complet des récompenses",
+              ].map((f, i) => (
+                <div key={i} className="flex items-start gap-2 text-sm">
+                  <CheckCircle2 size={14} className="text-green-500 mt-0.5 shrink-0" />
+                  <span className="text-muted-foreground">{f}</span>
+                </div>
+              ))}
+            </div>
+            <div className="bg-card border border-border rounded-xl p-4">
+              <h4 className="font-semibold text-foreground text-sm mb-2">Tables DB</h4>
+              <div className="flex flex-wrap gap-2">
+                {["referrals", "referral_rewards"].map((t) => (
+                  <code key={t} className="bg-muted px-2 py-1 rounded text-xs font-mono">{t}</code>
+                ))}
+              </div>
+            </div>
+          </div>
+        );
+      case "resources":
+        return (
+          <div className="space-y-6">
+            <h2 className="text-3xl font-display font-bold text-foreground">📚 Marketplace Éducative</h2>
+            <div className="bg-primary/5 border border-primary/20 rounded-xl p-4">
+              <p className="text-sm text-muted-foreground">URL : <code className="bg-muted px-2 py-0.5 rounded">/ressources</code></p>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {[
+                "Catégories : Exercices, Sujets d'examen, Vidéos, Fiches, Programmes",
+                "Filtrage par matière, niveau scolaire, type",
+                "Contenus gratuits et premium avec prix",
+                "Compteur de téléchargements",
+                "Système de notation et avis",
+                "Modération admin avec suppression",
+              ].map((f, i) => (
+                <div key={i} className="flex items-start gap-2 text-sm">
+                  <CheckCircle2 size={14} className="text-green-500 mt-0.5 shrink-0" />
+                  <span className="text-muted-foreground">{f}</span>
+                </div>
+              ))}
+            </div>
+            <div className="bg-card border border-border rounded-xl p-4">
+              <h4 className="font-semibold text-foreground text-sm mb-2">Tables DB</h4>
+              <div className="flex flex-wrap gap-2">
+                {["resources", "educational_content"].map((t) => (
+                  <code key={t} className="bg-muted px-2 py-1 rounded text-xs font-mono">{t}</code>
+                ))}
+              </div>
+            </div>
+          </div>
+        );
+      case "admin-upgrades":
+        return (
+          <div className="space-y-6">
+            <h2 className="text-3xl font-display font-bold text-foreground">Admin — Améliorations</h2>
+            <p className="text-muted-foreground">Tous les nouveaux modules ajoutés au panel d'administration (/admin).</p>
+            <div className="space-y-4">
+              {[
+                { title: "🎓 Onglet Écoles — Amélioré", features: ["Recherche par nom d'école", "Compteur d'écoles en attente de validation", "Boutons Valider / Retirer / Supprimer", "Affichage contacts (téléphone, email)", "Badge « en attente » pour les non vérifiées"] },
+                { title: "📚 Onglet Ressources — Amélioré", features: ["Tableau complet avec catégorie, matière, prix", "Compteur de téléchargements", "Bouton de suppression", "Distinction gratuit/premium"] },
+                { title: "🤝 Onglet Parrainages — Amélioré", features: ["Stats cards : total, complétés, récompenses FCFA", "Tableau détaillé des parrainages", "Suivi des codes et statuts"] },
+                { title: "⚡ Onglet Ventes Flash — Nouveau", features: ["CRUD complet des promotions produits", "Gestion remises (%), images, stocks", "Activation/Désactivation rapide", "Stats : remise moyenne, stock total"] },
+              ].map((module, i) => (
+                <div key={i} className="bg-card border border-border rounded-xl p-5">
+                  <h3 className="text-lg font-semibold text-foreground mb-3">{module.title}</h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    {module.features.map((f, j) => (
+                      <div key={j} className="flex items-start gap-2 text-sm">
+                        <ChevronRight size={14} className="text-primary mt-0.5 shrink-0" />
+                        <span className="text-muted-foreground">{f}</span>
+                      </div>
+                    ))}
                   </div>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 ml-0 sm:ml-16">
-                  {s.features.map((f, j) => (
-                    <div key={j} className="flex items-start gap-2 text-sm">
-                      <ChevronRight size={14} className="text-primary mt-0.5 shrink-0" />
-                      <span className="text-muted-foreground">{f}</span>
+              ))}
+            </div>
+          </div>
+        );
+      case "engagement":
+        return (
+          <div className="space-y-6">
+            <h2 className="text-3xl font-display font-bold text-foreground">Statistiques & Engagement</h2>
+            <p className="text-muted-foreground">Système complet de métriques d'engagement activé sur la plateforme.</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {[
+                { icon: <Eye size={20} />, title: "Compteur de Vues", desc: "Articles & produits — increment_article_views / increment_product_views via RPC Supabase" },
+                { icon: <Heart size={20} />, title: "Likes & Réactions", desc: "Réactions emoji sur articles (❤️ 👍 😮 😢 😡) — table article_reactions" },
+                { icon: <Share2 size={20} />, title: "Partages", desc: "Compteur par plateforme (WhatsApp, Facebook, Twitter, LinkedIn, Telegram) — table article_share_counts" },
+                { icon: <BarChart3 size={20} />, title: "Dashboard Engagement Admin", desc: "4 cards temps réel : vues totales, likes/réactions, partages, articles publiés" },
+              ].map((item, i) => (
+                <div key={i} className="bg-card border border-border rounded-lg p-4 flex gap-3">
+                  <div className="text-primary mt-0.5 shrink-0">{item.icon}</div>
+                  <div>
+                    <h4 className="font-semibold text-foreground text-sm">{item.title}</h4>
+                    <p className="text-muted-foreground text-xs mt-1">{item.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="bg-primary/5 border border-primary/20 rounded-xl p-4">
+              <h4 className="font-semibold text-primary text-sm mb-2">Fonctions RPC associées</h4>
+              <div className="flex flex-wrap gap-2">
+                {["increment_article_views(id)", "increment_product_views(id)", "increment_article_share(id, platform)"].map((fn) => (
+                  <code key={fn} className="bg-muted px-2 py-1 rounded text-xs font-mono">{fn}</code>
+                ))}
+              </div>
+            </div>
+          </div>
+        );
+      case "flash-deals":
+        return (
+          <div className="space-y-6">
+            <h2 className="text-3xl font-display font-bold text-foreground">⚡ Gestion Ventes Flash</h2>
+            <p className="text-muted-foreground">Module complet de gestion des promotions flash dans l'admin.</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {[
+                "Listing de tous les produits avec remise active",
+                "Modification du pourcentage de remise",
+                "Changement d'image promotionnelle",
+                "Activation / Désactivation en un clic",
+                "Stats : nombre de deals, remise moyenne, stock",
+                "Intégration avec la page d'accueil (FlashDeals)",
+                "Compte à rebours automatique côté client",
+                "Composant FlashDealsManagement.tsx dédié",
+              ].map((f, i) => (
+                <div key={i} className="flex items-start gap-2 text-sm">
+                  <CheckCircle2 size={14} className="text-green-500 mt-0.5 shrink-0" />
+                  <span className="text-muted-foreground">{f}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+      case "security-rls":
+        return (
+          <div className="space-y-6">
+            <h2 className="text-3xl font-display font-bold text-foreground">🔒 Sécurité & Migrations RLS</h2>
+            <div className="space-y-4">
+              <div className="bg-card border border-border rounded-xl p-5">
+                <h3 className="text-lg font-semibold text-foreground mb-3">Nouvelles Politiques RLS</h3>
+                <div className="space-y-2">
+                  {[
+                    { policy: "Inscription écoles (INSERT)", desc: "Utilisateurs authentifiés peuvent inscrire une école — is_verified = false par défaut" },
+                    { policy: "Gestion admin écoles (UPDATE/DELETE)", desc: "Seuls les admins peuvent valider, modifier ou supprimer des écoles" },
+                    { policy: "Lecture écoles (SELECT)", desc: "Lecture publique des écoles vérifiées" },
+                  ].map((p, i) => (
+                    <div key={i} className="flex items-start gap-2 py-2 border-b border-border last:border-0">
+                      <Lock size={14} className="text-primary mt-0.5 shrink-0" />
+                      <div>
+                        <code className="text-xs font-mono text-foreground">{p.policy}</code>
+                        <p className="text-xs text-muted-foreground">{p.desc}</p>
+                      </div>
                     </div>
                   ))}
                 </div>
               </div>
-            ))}
+              <div className="bg-destructive/10 border border-destructive/30 rounded-xl p-5">
+                <h3 className="text-lg font-semibold text-destructive mb-2">⚠️ Action Manuelle Requise</h3>
+                <p className="text-sm text-muted-foreground">Activer la <strong>protection des mots de passe compromis</strong> dans Supabase Auth Settings → Security → Leaked Password Protection.</p>
+              </div>
+            </div>
+          </div>
+        );
+      case "ui-fixes":
+        return (
+          <div className="space-y-6">
+            <h2 className="text-3xl font-display font-bold text-foreground">UI & Corrections</h2>
+            <div className="space-y-3">
+              {[
+                { title: "Espacement paragraphes articles", desc: "Ajout de classes prose-p:mb-4 et prose-headings:mt-8 + CSS global pour le spacing des contenus riches" },
+                { title: "Descriptions publicités", desc: "Utilisation de whitespace-pre-line pour respecter les retours à la ligne dans les descriptions de pub" },
+                { title: "Documentation restructurée", desc: "2 sous-pages avec navigation latérale, impression PDF, et documents téléchargeables" },
+                { title: "Responsive mobile", desc: "Menu sheet mobile, breakpoints adaptés sur toutes les nouvelles pages" },
+                { title: "Flyer freelance corrigé", desc: "Le mot 'covicion' corrigé en 'conviction' — nécessite remplacement du fichier JPG" },
+              ].map((item, i) => (
+                <div key={i} className="bg-card border border-border rounded-lg p-4">
+                  <h4 className="font-semibold text-foreground text-sm">{item.title}</h4>
+                  <p className="text-muted-foreground text-xs mt-1">{item.desc}</p>
+                </div>
+              ))}
+            </div>
           </div>
         );
       case "objectives":
         return (
           <div className="space-y-6">
-            <h2 className="text-3xl font-display font-bold text-foreground">Objectifs</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {[
-                { title: "📈 Croissance", desc: "+300% d'inscriptions via parrainage et écoles partenaires" },
-                { title: "⚡ Conversion", desc: "Réduire le temps de commande de 15 min à 2 min avec les kits" },
-                { title: "🌍 Couverture", desc: "500+ écoles en CI d'ici fin 2026" },
-                { title: "⭐ Rétention", desc: "+50% via parrainage et fidélité" },
-                { title: "📱 Accessibilité", desc: "PWA hors-ligne pour zones à faible connectivité" },
-                { title: "🎓 Éducation", desc: "1ère plateforme de ressources éducatives en CI" },
-              ].map((obj, i) => (
-                <div key={i} className="bg-card border border-border rounded-xl p-5">
-                  <h4 className="font-semibold text-foreground text-sm">{obj.title}</h4>
-                  <p className="text-xs text-muted-foreground mt-1">{obj.desc}</p>
-                </div>
-              ))}
+            <h2 className="text-3xl font-display font-bold text-foreground">Objectifs Stratégiques</h2>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm border border-border rounded-xl overflow-hidden">
+                <thead className="bg-primary text-primary-foreground">
+                  <tr><th className="text-left p-3">Objectif</th><th className="text-left p-3">Cible</th><th className="text-left p-3">Horizon</th></tr>
+                </thead>
+                <tbody className="bg-card">
+                  {[
+                    { obj: "Inscriptions via parrainage", target: "+300%", time: "6 mois" },
+                    { obj: "Temps de commande", target: "15 min → 2 min", time: "Immédiat" },
+                    { obj: "Écoles partenaires", target: "500+ en CI", time: "Fin 2026" },
+                    { obj: "Taux de rétention", target: "+50%", time: "12 mois" },
+                    { obj: "Ressources éducatives", target: "1ère plateforme en CI", time: "2026" },
+                  ].map((row, i) => (
+                    <tr key={i} className="border-t border-border">
+                      <td className="p-3 font-medium text-foreground">{row.obj}</td>
+                      <td className="p-3 text-primary font-semibold">{row.target}</td>
+                      <td className="p-3 text-muted-foreground">{row.time}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </div>
         );
@@ -539,7 +819,8 @@ const Nouveautes10 = () => {
                     { c: "Contenus éducatifs", co: "Dispersés", s: "✅ Marketplace centralisée" },
                     { c: "Fidélité écoles", co: "❌", s: "✅ Bronze → Platinum" },
                     { c: "Mode hors-ligne", co: "❌", s: "✅ PWA avec cache" },
-                    { c: "IA intégrée", co: "❌", s: "✅ Analyse, auto-promotions" },
+                    { c: "IA intégrée", co: "❌", s: "✅ Analyse, auto-promotions, chatbot" },
+                    { c: "Statistiques engagement", co: "Basique", s: "✅ Vues, likes, partages temps réel" },
                   ].map((row, i) => (
                     <tr key={i} className="border-t border-border">
                       <td className="p-3 font-medium text-foreground">{row.c}</td>
@@ -552,84 +833,17 @@ const Nouveautes10 = () => {
             </div>
           </div>
         );
-      case "guide":
-        return (
-          <div className="space-y-6">
-            <h2 className="text-3xl font-display font-bold text-foreground">Guide d'Utilisation Rapide</h2>
-            {[
-              { title: "🎓 Commander via l'Espace Écoles", steps: ["Allez sur Écoles dans le menu", "Recherchez votre école par ville", "Sélectionnez la classe de votre enfant", "Cliquez « Ajouter toute la liste au panier »", "Payez via Mobile Money"] },
-              { title: "📦 Créer un Kit Intelligent", steps: ["Allez sur Kits dans le menu", "Sélectionnez le niveau scolaire", "Choisissez la série si applicable", "Le kit se compose automatiquement", "Ajoutez le kit complet au panier"] },
-              { title: "🤝 Parrainer un Ami", steps: ["Connectez-vous à votre compte", "Allez sur Parrainage", "Copiez votre code ou partagez via WhatsApp", "Votre ami s'inscrit avec votre code", "Vous recevez tous les deux vos crédits"] },
-            ].map((guide, g) => (
-              <div key={g} className="bg-card border border-border rounded-xl p-6">
-                <h3 className="text-lg font-semibold text-primary mb-3">{guide.title}</h3>
-                <ol className="space-y-2 text-sm text-muted-foreground">
-                  {guide.steps.map((step, i) => (
-                    <li key={i} className="flex items-start gap-3">
-                      <span className="bg-primary text-primary-foreground rounded-full w-6 h-6 flex items-center justify-center text-xs shrink-0 font-bold">{i + 1}</span>
-                      {step}
-                    </li>
-                  ))}
-                </ol>
-              </div>
-            ))}
-          </div>
-        );
-      case "database":
-        return (
-          <div className="space-y-6">
-            <h2 className="text-3xl font-display font-bold text-foreground">Nouvelles Tables Base de Données</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {[
-                { name: "schools", desc: "Répertoire des établissements scolaires" },
-                { name: "school_supply_lists", desc: "Listes de fournitures par école et classe" },
-                { name: "school_supply_items", desc: "Articles dans les listes de fournitures" },
-                { name: "school_loyalty", desc: "Programme fidélité écoles" },
-                { name: "referrals", desc: "Parrainages avec codes uniques" },
-                { name: "referral_rewards", desc: "Récompenses de parrainage" },
-                { name: "resources", desc: "Contenus éducatifs" },
-                { name: "educational_content", desc: "Contenus avancés" },
-              ].map((table, i) => (
-                <div key={i} className="bg-card border border-border rounded-lg p-3 flex items-center gap-3">
-                  <Database size={16} className="text-primary shrink-0" />
-                  <div>
-                    <code className="text-sm font-mono font-semibold text-foreground">{table.name}</code>
-                    <p className="text-xs text-muted-foreground">{table.desc}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        );
-      case "admin":
-        return (
-          <div className="space-y-6">
-            <h2 className="text-3xl font-display font-bold text-foreground">Admin — Nouveaux Onglets</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-              {[
-                { title: "🎓 Écoles", desc: "Vérification établissements, contacts, inscription" },
-                { title: "📚 Ressources Édu", desc: "Modération contenus, catégories, téléchargements" },
-                { title: "🤝 Parrainages", desc: "Suivi codes, récompenses FCFA, statistiques" },
-              ].map((tab, i) => (
-                <div key={i} className="bg-primary/10 text-primary rounded-lg px-4 py-4 text-center">
-                  <p className="font-medium text-sm">{tab.title}</p>
-                  <p className="text-xs mt-1 opacity-80">{tab.desc}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        );
       case "downloads":
         return (
           <div className="space-y-6">
             <h2 className="text-3xl font-display font-bold text-foreground">📥 Documents Téléchargeables</h2>
-            <p className="text-muted-foreground">Documents officiels des nouveautés Scoly v3.0.</p>
+            <p className="text-muted-foreground">Documents officiels Scoly — consultation, impression ou archivage.</p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {[
                 { title: "Document Nouveautés v3.0", desc: "Les 4 fonctionnalités stratégiques : Écoles, Kits, Parrainage, Ressources", icon: <Star size={24} />, url: "/documents/nouveautes-scoly-v3.html", format: "HTML" },
-                { title: "Audit Complet & Bilan Technique", desc: "Score 95/100 — Bilan complet de la plateforme", icon: <Shield size={24} />, url: "/documents/audit-technique-scoly-v25.html", format: "HTML" },
-                { title: "Fiche de Notation", desc: "Grille d'audit détaillée avec 14 critères pondérés", icon: <FileText size={24} />, url: "/documents/fiche-notation-audit-scoly.html", format: "HTML" },
-                { title: "Flyer Freelance", desc: "Présentation Inocent KOFFI — Développeur Full-Stack", icon: <ExternalLink size={24} />, url: "/flyer-freelance-inocent-koffi.jpg", format: "JPG" },
+                { title: "Audit Complet & Bilan Technique", desc: "Score 95/100 — Bilan complet de la plateforme Scoly", icon: <Shield size={24} />, url: "/documents/audit-technique-scoly-v25.html", format: "HTML" },
+                { title: "Fiche de Notation & Grille d'Audit", desc: "Grille détaillée avec 14 critères pondérés", icon: <FileText size={24} />, url: "/documents/fiche-notation-audit-scoly.html", format: "HTML" },
+                { title: "Flyer Freelance — Inocent KOFFI", desc: "Présentation du développeur Full-Stack & Fondateur", icon: <Image size={24} />, url: "/flyer-freelance-inocent-koffi.jpg", format: "JPG" },
               ].map((doc, i) => (
                 <div key={i} className="bg-card border border-border rounded-xl p-5 flex flex-col gap-3">
                   <div className="flex items-start gap-3">
@@ -640,11 +854,14 @@ const Nouveautes10 = () => {
                       <span className="text-xs text-primary font-mono mt-1 inline-block">Format : {doc.format}</span>
                     </div>
                   </div>
-                  <a href={doc.url} target="_blank" rel="noopener noreferrer" download>
-                    <Button variant="outline" size="sm" className="w-full gap-2">
-                      <Download size={14} /> Télécharger
-                    </Button>
-                  </a>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="w-full gap-2"
+                    onClick={() => window.open(doc.url, '_blank')}
+                  >
+                    <Download size={14} /> Ouvrir / Télécharger
+                  </Button>
                 </div>
               ))}
             </div>
@@ -667,7 +884,7 @@ const Nouveautes10 = () => {
               </div>
             </div>
             <div className="text-center mt-8">
-              <p className="text-sm text-muted-foreground">© {new Date().getFullYear()} Scoly — Nouveautés 1.0 • Février 2026</p>
+              <p className="text-sm text-muted-foreground">© {new Date().getFullYear()} Scoly — Nouveautés 1.0 • Mars 2026</p>
             </div>
           </div>
         );
@@ -682,7 +899,7 @@ const Nouveautes10 = () => {
         <div className="bg-card border border-border rounded-xl p-4 sticky top-20">
           <h3 className="font-semibold text-foreground mb-3 text-sm">Sommaire</h3>
           <Button variant="outline" size="sm" className="w-full mb-3 gap-2" onClick={() => window.print()}>
-            <Download size={14} /> Télécharger PDF
+            <Printer size={14} /> Imprimer / PDF
           </Button>
           <nav className="space-y-1">
             {sections.map((section) => (
@@ -733,7 +950,7 @@ const Documentation = () => {
           </div>
           <h1 className="text-3xl lg:text-4xl font-display font-bold mb-2">Documentation Officielle</h1>
           <p className="text-lg opacity-90">Scoly — Guide Technique & Nouveautés</p>
-          <p className="text-sm opacity-70 mt-1">Par Inocent KOFFI • Version 3.0 • Février 2026</p>
+          <p className="text-sm opacity-70 mt-1">Par Inocent KOFFI • Version 3.0 • Mars 2026</p>
         </div>
       </section>
 
@@ -747,7 +964,7 @@ const Documentation = () => {
                 Documentation v2.5
               </TabsTrigger>
               <TabsTrigger value="nouveautes" className="gap-2">
-                <Star size={16} />
+                <Sparkles size={16} />
                 Nouveautés 1.0
               </TabsTrigger>
             </TabsList>
