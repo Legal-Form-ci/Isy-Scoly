@@ -2124,6 +2124,7 @@ export type Database = {
       }
     }
     Functions: {
+      check_password_strength: { Args: { _password: string }; Returns: boolean }
       check_rate_limit: {
         Args: {
           _action_type: string
@@ -2138,6 +2139,7 @@ export type Database = {
           remaining_attempts: number
         }[]
       }
+      cleanup_expired_data: { Args: never; Returns: undefined }
       cleanup_old_login_sessions: { Args: never; Returns: undefined }
       cleanup_old_view_tracking: { Args: never; Returns: undefined }
       generate_referral_code: { Args: never; Returns: string }
