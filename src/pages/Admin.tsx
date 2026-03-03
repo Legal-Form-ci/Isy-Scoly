@@ -65,6 +65,7 @@ import PromotionsManagement from "@/components/admin/PromotionsManagement";
 import FlashDealsManagement from "@/components/admin/FlashDealsManagement";
 import SocialMediaManager from "@/components/admin/SocialMediaManager";
 import DocumentationManager from "@/components/admin/DocumentationManager";
+import EducationAIManager from "@/components/admin/EducationAIManager";
 
 import { Share2 } from "lucide-react";
 
@@ -97,7 +98,8 @@ type TabType =
   | "schools"
   | "resources"
   | "referrals"
-  | "flash_deals";
+  | "flash_deals"
+  | "education_ai";
 
 const Admin = () => {
   const { t, language } = useLanguage();
@@ -158,6 +160,7 @@ const Admin = () => {
     { id: "social_media", label: "Réseaux Sociaux", icon: Share2 },
     { id: "schools", label: "Écoles", icon: GraduationCap },
     { id: "resources", label: "Ressources Édu", icon: BookOpen },
+    { id: "education_ai", label: "🧠 IA Éducation", icon: Brain },
     { id: "referrals", label: "Parrainages", icon: UserPlus },
     { id: "authors", label: "Auteurs", icon: Users },
     { id: "review", label: "Validation", icon: Eye },
@@ -296,6 +299,7 @@ const Admin = () => {
           {activeTab === "documentation" && <DocumentationManager />}
           {activeTab === "schools" && <SchoolsAdminTab />}
           {activeTab === "resources" && <ResourcesAdminTab />}
+          {activeTab === "education_ai" && <EducationAIManager />}
           {activeTab === "referrals" && <ReferralsAdminTab />}
           {activeTab === "settings" && <PlatformSettings />}
         </div>
