@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Book, Database, Shield, Users, CreditCard, Server, Mail, Globe, ChevronRight, Download, FileText, Smartphone, Monitor, Code, Layers, Lock, Bell, Truck, ShoppingCart, BarChart3, MessageSquare, Star, Settings, Printer, Brain, Share2, Gift, Tag, Eye, Heart, GraduationCap, Package, UserPlus, BookOpen, ExternalLink, Zap, CheckCircle2, Clock, Sparkles, Image } from "lucide-react";
+import { generateAuditPDF, generateScoringPDF, generateNouveautesPDF, generateRoadmapPDF } from "@/utils/pdfGenerators";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import Navbar from "@/components/Navbar";
@@ -379,10 +380,11 @@ const DocumentationV25 = ({ language }: { language: string }) => {
             <p className="text-muted-foreground">Téléchargez les documents officiels de Scoly pour consultation hors-ligne, impression ou archivage.</p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {[
-                { title: "Audit Complet & Bilan Technique", desc: "Score 95/100 — Architecture, sécurité, fonctionnalités, recommandations", icon: <Shield size={24} />, url: "/documents/audit-technique-scoly-v25.html", format: "HTML" },
-                { title: "Fiche de Notation & Grille d'Audit", desc: "Grille détaillée avec 14 critères pondérés et légende", icon: <FileText size={24} />, url: "/documents/fiche-notation-audit-scoly.html", format: "HTML" },
-                { title: "Document Nouveautés v3.0", desc: "Présentation des 4 nouvelles fonctionnalités stratégiques", icon: <Star size={24} />, url: "/documents/nouveautes-scoly-v3.html", format: "HTML" },
-                { title: "Flyer Freelance — Inocent KOFFI", desc: "Flyer de présentation du développeur freelance", icon: <Image size={24} />, url: "/flyer-freelance-inocent-koffi.jpg", format: "JPG" },
+                { title: "Audit Complet & Bilan Technique", desc: "Score 95/100 — Architecture, sécurité, fonctionnalités, recommandations", icon: <Shield size={24} />, action: generateAuditPDF, format: "PDF" },
+                { title: "Fiche de Notation & Grille d'Audit", desc: "Grille détaillée avec 14 critères pondérés et légende", icon: <FileText size={24} />, action: generateScoringPDF, format: "PDF" },
+                { title: "Document Nouveautés v3.0", desc: "Présentation des 4 nouvelles fonctionnalités stratégiques", icon: <Star size={24} />, action: generateNouveautesPDF, format: "PDF" },
+                { title: "Roadmap Stratégique 2026", desc: "Vision, plan de développement et objectifs par trimestre", icon: <Sparkles size={24} />, action: generateRoadmapPDF, format: "PDF" },
+                { title: "Flyer Freelance — Inocent KOFFI", desc: "Flyer de présentation du développeur freelance", icon: <Image size={24} />, action: () => window.open("/flyer-freelance-inocent-koffi.jpg", "_blank"), format: "JPG" },
               ].map((doc, i) => (
                 <div key={i} className="bg-card border border-border rounded-xl p-5 flex flex-col gap-3">
                   <div className="flex items-start gap-3">
@@ -397,9 +399,9 @@ const DocumentationV25 = ({ language }: { language: string }) => {
                     variant="outline"
                     size="sm"
                     className="w-full gap-2"
-                    onClick={() => window.open(doc.url, '_blank')}
+                    onClick={doc.action}
                   >
-                    <Download size={14} /> Ouvrir / Télécharger
+                    <Download size={14} /> Télécharger {doc.format}
                   </Button>
                 </div>
               ))}
@@ -840,10 +842,11 @@ const Nouveautes10 = () => {
             <p className="text-muted-foreground">Documents officiels Scoly — consultation, impression ou archivage.</p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {[
-                { title: "Document Nouveautés v3.0", desc: "Les 4 fonctionnalités stratégiques : Écoles, Kits, Parrainage, Ressources", icon: <Star size={24} />, url: "/documents/nouveautes-scoly-v3.html", format: "HTML" },
-                { title: "Audit Complet & Bilan Technique", desc: "Score 95/100 — Bilan complet de la plateforme Scoly", icon: <Shield size={24} />, url: "/documents/audit-technique-scoly-v25.html", format: "HTML" },
-                { title: "Fiche de Notation & Grille d'Audit", desc: "Grille détaillée avec 14 critères pondérés", icon: <FileText size={24} />, url: "/documents/fiche-notation-audit-scoly.html", format: "HTML" },
-                { title: "Flyer Freelance — Inocent KOFFI", desc: "Présentation du développeur Full-Stack & Fondateur", icon: <Image size={24} />, url: "/flyer-freelance-inocent-koffi.jpg", format: "JPG" },
+                { title: "Document Nouveautés v3.0", desc: "Les 4 fonctionnalités stratégiques : Écoles, Kits, Parrainage, Ressources", icon: <Star size={24} />, action: generateNouveautesPDF, format: "PDF" },
+                { title: "Audit Complet & Bilan Technique", desc: "Score 95/100 — Bilan complet de la plateforme Scoly", icon: <Shield size={24} />, action: generateAuditPDF, format: "PDF" },
+                { title: "Fiche de Notation & Grille d'Audit", desc: "Grille détaillée avec 14 critères pondérés", icon: <FileText size={24} />, action: generateScoringPDF, format: "PDF" },
+                { title: "Roadmap Stratégique 2026", desc: "Vision et plan de développement par trimestre", icon: <Sparkles size={24} />, action: generateRoadmapPDF, format: "PDF" },
+                { title: "Flyer Freelance — Inocent KOFFI", desc: "Présentation du développeur Full-Stack & Fondateur", icon: <Image size={24} />, action: () => window.open("/flyer-freelance-inocent-koffi.jpg", "_blank"), format: "JPG" },
               ].map((doc, i) => (
                 <div key={i} className="bg-card border border-border rounded-xl p-5 flex flex-col gap-3">
                   <div className="flex items-start gap-3">
@@ -858,9 +861,9 @@ const Nouveautes10 = () => {
                     variant="outline"
                     size="sm"
                     className="w-full gap-2"
-                    onClick={() => window.open(doc.url, '_blank')}
+                    onClick={doc.action}
                   >
-                    <Download size={14} /> Ouvrir / Télécharger
+                    <Download size={14} /> Télécharger {doc.format}
                   </Button>
                 </div>
               ))}
