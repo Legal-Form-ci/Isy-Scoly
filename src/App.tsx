@@ -12,6 +12,7 @@ import ScrollToTop from "@/components/ScrollToTop";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import PageLoader from "@/components/PageLoader";
 import WhatsAppButton from "@/components/WhatsAppButton";
+import { SessionSecurityProvider } from "@/components/SessionSecurityProvider";
 
 // Critical path - eager load
 import Index from "./pages/Index";
@@ -73,6 +74,7 @@ const App = () => (
       <QueryClientProvider client={queryClient}>
         <LanguageProvider>
           <AuthProvider>
+            <SessionSecurityProvider />
             <CartProvider>
               <TooltipProvider>
                 <Toaster />
