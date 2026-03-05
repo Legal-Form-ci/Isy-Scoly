@@ -35,6 +35,7 @@ const Auth = () => {
   // Rate limiting for login/signup
   const loginRateLimit = useRateLimit('auth_login', { maxAttempts: 5, windowSeconds: 300, blockSeconds: 900 });
   const signupRateLimit = useRateLimit('auth_signup', { maxAttempts: 3, windowSeconds: 600, blockSeconds: 1800 });
+  const resetRateLimit = useRateLimit('auth_reset', { maxAttempts: 3, windowSeconds: 600, blockSeconds: 1800 });
 
   const redirectToDashboard = async () => {
     const { data: { user: u } } = await supabase.auth.getUser();
@@ -513,6 +514,12 @@ const Auth = () => {
                     const resetEmail = identifier.includes('@') ? identifier : '';
                     if (!resetEmail) {
                       toast.error(language === 'fr' ? "Veuillez entrer votre adresse email." : "Please enter your email address.");
+                      return;
+                    }
+                    // Rate limit password reset requests
+                    const rlResult = await resetRateLimit.checkRateLimit();
+                    if (!rlResult.allowed) {
+                      toast.error(`Trop de demandes. Réessayez dans ${resetRateLimit.formatBlockedTime(rlResult.blockedUntil!)}.`);
                       return;
                     }
                     try {

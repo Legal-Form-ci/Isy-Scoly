@@ -32,6 +32,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Label } from '@/components/ui/label';
 import { useState, useCallback } from 'react';
 import { cn } from '@/lib/utils';
+import { isSafeUrl } from '@/utils/security';
+import { toast } from 'sonner';
 
 interface RichTextEditorProps {
   content: string;
@@ -125,6 +127,10 @@ const RichTextEditor = ({ content, onChange, placeholder = "Rédigez votre conte
 
   const addImage = useCallback(() => {
     if (imageUrl && editor) {
+      if (!isSafeUrl(imageUrl)) {
+        toast.error('URL non sécurisée. Utilisez une URL HTTPS.');
+        return;
+      }
       editor.chain().focus().setImage({ src: imageUrl }).run();
       setImageUrl('');
       setIsImageDialogOpen(false);
@@ -141,7 +147,11 @@ const RichTextEditor = ({ content, onChange, placeholder = "Rédigez votre conte
 
   const setLink = useCallback(() => {
     if (linkUrl && editor) {
-      editor.chain().focus().extendMarkRange('link').setLink({ href: linkUrl }).run();
+      if (!isSafeUrl(linkUrl)) {
+        toast.error('URL non sécurisée. Utilisez une URL HTTPS ou un lien relatif.');
+        return;
+      }
+      editor.chain().focus().extendMarkRange('link').setLink({ href: linkUrl, target: '_blank', rel: 'noopener noreferrer' }).run();
       setLinkUrl('');
       setIsLinkDialogOpen(false);
     }
