@@ -12,6 +12,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useRateLimit } from "@/hooks/useRateLimit";
 import { supabase } from "@/integrations/supabase/client";
 import { z } from "zod";
+import { sanitizeFormInput, containsXSS, containsSQLInjection } from "@/utils/security";
 
 const Contact = () => {
   const { t } = useLanguage();
@@ -69,14 +70,29 @@ const Contact = () => {
     setLoading(true);
 
     try {
+      // Sanitize all inputs before sending
+      const sanitizedData = {
+        name: sanitizeFormInput(formData.name, 100),
+        email: sanitizeFormInput(formData.email, 255),
+        subject: sanitizeFormInput(formData.subject, 200),
+        message: sanitizeFormInput(formData.message, 2000),
+      };
+
+      // Check for injection attempts
+      const allValues = Object.values(sanitizedData).join(' ');
+      if (containsXSS(allValues) || containsSQLInjection(allValues)) {
+        toast({
+          title: "Contenu non autorisé",
+          description: "Votre message contient des caractères non autorisés.",
+          variant: "destructive",
+        });
+        setLoading(false);
+        return;
+      }
+
       // Call edge function to send email
       const { data, error } = await supabase.functions.invoke('send-contact-email', {
-        body: {
-          name: formData.name.trim(),
-          email: formData.email.trim(),
-          subject: formData.subject.trim(),
-          message: formData.message.trim(),
-        },
+        body: sanitizedData,
       });
 
       if (error) {
