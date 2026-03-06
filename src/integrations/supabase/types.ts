@@ -1673,6 +1673,13 @@ export type Database = {
             referencedRelation: "schools"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "school_loyalty_school_id_fkey"
+            columns: ["school_id"]
+            isOneToOne: true
+            referencedRelation: "schools_public"
+            referencedColumns: ["id"]
+          },
         ]
       }
       school_supply_items: {
@@ -1766,6 +1773,13 @@ export type Database = {
             columns: ["school_id"]
             isOneToOne: false
             referencedRelation: "schools"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "school_supply_lists_school_id_fkey"
+            columns: ["school_id"]
+            isOneToOne: false
+            referencedRelation: "schools_public"
             referencedColumns: ["id"]
           },
         ]
@@ -2089,6 +2103,90 @@ export type Database = {
       }
     }
     Views: {
+      promotions_public: {
+        Row: {
+          applies_to: string | null
+          description: string | null
+          discount_type: string | null
+          discount_value: number | null
+          end_date: string | null
+          id: string | null
+          is_active: boolean | null
+          min_amount: number | null
+          name: string | null
+          start_date: string | null
+        }
+        Insert: {
+          applies_to?: string | null
+          description?: string | null
+          discount_type?: string | null
+          discount_value?: number | null
+          end_date?: string | null
+          id?: string | null
+          is_active?: boolean | null
+          min_amount?: number | null
+          name?: string | null
+          start_date?: string | null
+        }
+        Update: {
+          applies_to?: string | null
+          description?: string | null
+          discount_type?: string | null
+          discount_value?: number | null
+          end_date?: string | null
+          id?: string | null
+          is_active?: boolean | null
+          min_amount?: number | null
+          name?: string | null
+          start_date?: string | null
+        }
+        Relationships: []
+      }
+      schools_public: {
+        Row: {
+          address: string | null
+          city: string | null
+          code: string | null
+          created_at: string | null
+          id: string | null
+          is_active: boolean | null
+          is_verified: boolean | null
+          logo_url: string | null
+          name: string | null
+          region: string | null
+          student_count: number | null
+          type: string | null
+        }
+        Insert: {
+          address?: string | null
+          city?: string | null
+          code?: string | null
+          created_at?: string | null
+          id?: string | null
+          is_active?: boolean | null
+          is_verified?: boolean | null
+          logo_url?: string | null
+          name?: string | null
+          region?: string | null
+          student_count?: number | null
+          type?: string | null
+        }
+        Update: {
+          address?: string | null
+          city?: string | null
+          code?: string | null
+          created_at?: string | null
+          id?: string | null
+          is_active?: boolean | null
+          is_verified?: boolean | null
+          logo_url?: string | null
+          name?: string | null
+          region?: string | null
+          student_count?: number | null
+          type?: string | null
+        }
+        Relationships: []
+      }
       vendor_public_info: {
         Row: {
           banner_url: string | null
