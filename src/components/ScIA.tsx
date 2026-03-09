@@ -1,18 +1,9 @@
 import { useState, useRef, useEffect } from "react";
 import DOMPurify from "dompurify";
 import { 
-  Bot, 
-  X, 
-  Send, 
-  Sparkles, 
-  User,
-  Loader2,
-  Minimize2,
-  Maximize2,
-  Star,
-  ThumbsUp,
-  ThumbsDown,
-  RotateCcw
+  Bot, X, Send, Sparkles, User, Loader2, Minimize2, Maximize2,
+  Star, ThumbsUp, ThumbsDown, RotateCcw, Phone, ShoppingCart,
+  BookOpen, CreditCard, Truck, HelpCircle, School, Gift, FileText
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -20,6 +11,8 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/i18n/LanguageContext";
+
+const WHATSAPP_NUMBER = "2250758465933";
 
 interface Message {
   id: string;
@@ -41,20 +34,23 @@ const ScIA = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const texts = {
+  const texts: Record<string, Record<string, string>> = {
     fr: {
-      welcome: "Bonjour ! Je suis **ScIA**, votre assistant virtuel Scoly. 🎓\n\nJe suis là pour vous aider avec :\n- 📚 Vos questions sur les produits\n- 🛒 Le suivi de vos commandes\n- 💳 Les méthodes de paiement\n- ✍️ La publication d'actualités\n- ❓ Toute autre question\n\nComment puis-je vous aider aujourd'hui ?",
-      delivery: "📦 **Livraison gratuite partout en Côte d'Ivoire !**\n\n- Abidjan : 24-48h\n- Autres villes : 3-5 jours ouvrés\n\nVous recevrez un SMS de confirmation dès l'expédition de votre commande.",
-      payment: "💳 **Modes de paiement acceptés :**\n\n- 🟠 Orange Money\n- 🟡 MTN Mobile Money\n- 🔵 Moov Money\n- 🟢 Wave\n\nToutes les transactions sont 100% sécurisées via KkiaPay.",
-      order: "🛒 **Pour passer une commande :**\n\n1. Parcourez notre boutique\n2. Ajoutez des produits au panier\n3. Validez votre commande\n4. Payez via Mobile Money\n5. Recevez votre confirmation par SMS\n\nVous pouvez suivre votre commande dans 'Mon compte'.",
-      article: "✍️ **Pour publier une actualité :**\n\n1. Connectez-vous à votre compte\n2. Accédez à l'Espace Auteur\n3. Créez votre article avec l'éditeur\n4. Soumettez pour révision\n\nNotre équipe examinera votre article sous 48h.",
-      contact: "📞 **Nous contacter :**\n\n- WhatsApp : +225 07 58 46 59 33\n- Email : contact@scoly.ci\n- Horaires : Lun-Ven 8h-18h\n\nJe reste également disponible 24/7 ici !",
-      premium: "⭐ **Articles Premium :**\n\nCertains articles de qualité sont payants. Une fois achetés, ils restent accessibles indéfiniment dans votre compte.\n\nLe paiement se fait via Mobile Money de manière sécurisée.",
-      return: "↩️ **Politique de retour :**\n\nVous disposez de 7 jours après réception pour retourner un produit :\n- Non utilisé\n- Dans son emballage d'origine\n\nContactez le service client pour organiser le retour.",
-      greeting: "Bonjour ! 👋 Comment puis-je vous aider aujourd'hui ?",
-      thanks: "Avec plaisir ! 😊 N'hésitez pas si vous avez d'autres questions.",
-      goodbye: "Au revoir ! 👋 À bientôt sur Scoly !",
-      default: "Je n'ai pas trouvé de réponse précise à votre question. Voici ce que je peux vous proposer :\n\n- 📞 Contacter le support : +225 07 58 46 59 33\n- 📧 Email : contact@scoly.ci\n- ❓ Consulter notre FAQ\n\nPouvez-vous reformuler votre question ?",
+      welcome: "Bonjour ! Je suis **ScIA**, votre assistant virtuel Scoly. 🎓\n\nJe peux vous aider avec :\n- 📚 Nos produits et kits scolaires\n- 🛒 Commandes et suivi\n- 💳 Paiement Mobile Money\n- 🚚 Livraison en Côte d'Ivoire\n- 🏫 Espace Écoles\n- ✍️ Publication d'articles\n- 🎁 Programme de fidélité\n- 📞 Contact WhatsApp direct\n\nQue puis-je faire pour vous ?",
+      delivery: "📦 **Livraison gratuite partout en Côte d'Ivoire !**\n\n**Délais estimés :**\n- 🏙️ Abidjan : 24-48h\n- 🏘️ Yamoussoukro, Bouaké : 2-3 jours\n- 🌍 Autres villes : 3-5 jours ouvrés\n\n**Suivi :**\n- SMS de confirmation à l'expédition\n- Suivi en temps réel dans \"Mon compte\"\n- Notification à la livraison\n- Preuve de livraison avec photo\n\n🔒 Politique de retour : 7 jours après réception.",
+      payment: "💳 **Modes de paiement sécurisés :**\n\n- 🟠 **Orange Money** — Le plus utilisé\n- 🟡 **MTN Mobile Money** — Rapide et fiable\n- 🔵 **Moov Money** — Simple et sécurisé\n- 🟢 **Wave** — Sans frais\n\n**Comment payer :**\n1. Validez votre panier\n2. Choisissez votre opérateur\n3. Entrez votre numéro\n4. Confirmez sur votre téléphone\n\n🔐 Transactions 100% sécurisées via KkiaPay.\n💡 Vos paiements sont suivis en temps réel.",
+      order: "🛒 **Passer commande en 5 étapes :**\n\n1. **Parcourez** la boutique ou les kits scolaires\n2. **Ajoutez** au panier (vérifiez les quantités)\n3. **Appliquez** un code promo si disponible\n4. **Renseignez** votre adresse de livraison\n5. **Payez** via Mobile Money\n\n✅ Confirmation par SMS et email\n📍 Suivi de livraison en temps réel\n🔄 Modification possible avant expédition\n\n**Astuce :** Utilisez les kits scolaires pour gagner du temps !",
+      article: "✍️ **Publier sur Scoly :**\n\n**Processus :**\n1. Connectez-vous → Espace Auteur\n2. Cliquez \"Nouvel article\"\n3. Utilisez l'**IA éditoriale** pour générer du contenu\n4. Personnalisez avec l'éditeur visuel\n5. Soumettez pour validation\n\n**Fonctionnalités IA :**\n- Génération complète à partir d'un mot\n- Images IA réalistes (contexte africain)\n- Traduction automatique (FR, EN, DE, ES)\n- SEO optimisé\n\n⏱️ Validation sous 48h par notre équipe.",
+      contact: "📞 **Nous contacter :**\n\n- 💬 **WhatsApp** : +225 07 58 46 59 33 (réponse rapide)\n- 📧 **Email** : contact@scoly.ci\n- 🕐 **Horaires** : Lun-Ven 8h-18h, Sam 9h-13h\n\n👇 Cliquez le bouton WhatsApp ci-dessous pour un contact direct !",
+      premium: "⭐ **Articles Premium :**\n\nDu contenu exclusif rédigé par des experts :\n- Guides pédagogiques approfondis\n- Analyses du système éducatif\n- Ressources téléchargeables\n\n**Avantages :**\n- Accès permanent après achat\n- Paiement sécurisé Mobile Money\n- Prix accessibles dès 500 FCFA",
+      returnPolicy: "↩️ **Politique de retour :**\n\n**Conditions :**\n- 7 jours après réception\n- Produit non utilisé, emballage d'origine\n- Contactez le SAV via WhatsApp\n\n**Processus :**\n1. Photographiez le produit\n2. Envoyez via WhatsApp\n3. Nous organisons le retrait\n4. Remboursement sous 48h\n\n🛡️ Garantie satisfaction Scoly.",
+      loyalty: "🎁 **Programme de fidélité :**\n\n**Gagnez des points :**\n- 1 point par tranche de 1000 FCFA\n- Points doublés pendant les promotions\n\n**Échangez vos récompenses :**\n- 🏷️ Bons de réduction\n- 🎁 Produits gratuits\n- 🚚 Livraison prioritaire\n\n**Parrainage :**\n- Gagnez 500 FCFA par filleul\n- Votre filleul reçoit aussi 500 FCFA",
+      schools: "🏫 **Espace Écoles :**\n\n**Services dédiés :**\n- Inscription de votre établissement\n- Listes de fournitures personnalisées\n- Commandes groupées avec remises\n- Suivi dédié par établissement\n\n**Kits scolaires intelligents :**\n- Du CP1 à la Terminale\n- Adaptés par série (A, C, D)\n- Générés par l'IA selon les programmes",
+      resources: "📚 **Ressources pédagogiques :**\n\n- 📝 Exercices par niveau et matière\n- 📋 Sujets d'examen corrigés\n- 📖 Fiches de cours\n- 🎓 Guides d'orientation\n\nDisponibles en téléchargement gratuit ou premium.",
+      greeting: "Bonjour ! 👋 Ravi de vous retrouver ! Comment puis-je vous aider ?",
+      thanks: "Avec plaisir ! 😊 N'hésitez surtout pas si vous avez d'autres questions. Je suis là 24/7 !",
+      goodbye: "Au revoir ! 👋 Merci pour votre visite. À très bientôt sur Scoly !",
+      default: "Je comprends votre question mais n'ai pas de réponse exacte. Voici mes suggestions :\n\n1. 📞 **WhatsApp** : +225 07 58 46 59 33 (réponse humaine)\n2. 📧 **Email** : contact@scoly.ci\n3. ❓ Consultez notre **FAQ** (/faq)\n4. 🔄 Essayez de reformuler votre question\n\n💡 Utilisez les boutons rapides ci-dessous !",
       placeholder: "Écrivez votre message...",
       thinking: "ScIA réfléchit...",
       poweredBy: "Propulsé par Scoly • Réponses instantanées 24/7",
@@ -64,24 +60,25 @@ const ScIA = () => {
       newConversation: "Nouvelle conversation",
       rateTitle: "Comment évaluez-vous cette conversation ?",
       rateThank: "Merci pour votre évaluation !",
-      quickDelivery: "Livraison",
-      quickPayment: "Paiement",
-      quickOrder: "Commander",
-      quickContact: "Contact",
+      whatsappCta: "WhatsApp",
+      whatsappMsg: "Bonjour Scoly ! J'aimerais avoir des informations. Merci !",
     },
     en: {
-      welcome: "Hello! I'm **ScIA**, your Scoly virtual assistant. 🎓\n\nI'm here to help you with:\n- 📚 Your questions about products\n- 🛒 Order tracking\n- 💳 Payment methods\n- ✍️ Publishing news\n- ❓ Any other questions\n\nHow can I help you today?",
-      delivery: "📦 **Free delivery throughout Ivory Coast!**\n\n- Abidjan: 24-48h\n- Other cities: 3-5 business days\n\nYou'll receive an SMS confirmation once your order is shipped.",
-      payment: "💳 **Accepted payment methods:**\n\n- 🟠 Orange Money\n- 🟡 MTN Mobile Money\n- 🔵 Moov Money\n- 🟢 Wave\n\nAll transactions are 100% secure via KkiaPay.",
-      order: "🛒 **To place an order:**\n\n1. Browse our shop\n2. Add products to cart\n3. Validate your order\n4. Pay via Mobile Money\n5. Receive your SMS confirmation\n\nYou can track your order in 'My Account'.",
-      article: "✍️ **To publish news:**\n\n1. Log into your account\n2. Go to Author Space\n3. Create your article with the editor\n4. Submit for review\n\nOur team will review your article within 48h.",
-      contact: "📞 **Contact us:**\n\n- WhatsApp: +225 07 58 46 59 33\n- Email: contact@scoly.ci\n- Hours: Mon-Fri 8am-6pm\n\nI'm also available 24/7 here!",
-      premium: "⭐ **Premium Articles:**\n\nSome quality articles are paid. Once purchased, they remain accessible forever in your account.\n\nPayment is made securely via Mobile Money.",
-      return: "↩️ **Return Policy:**\n\nYou have 7 days after receipt to return a product:\n- Unused\n- In original packaging\n\nContact customer service to arrange the return.",
+      welcome: "Hello! I'm **ScIA**, your Scoly virtual assistant. 🎓\n\nI can help you with:\n- 📚 Products & school kits\n- 🛒 Orders & tracking\n- 💳 Mobile Money payment\n- 🚚 Delivery in Ivory Coast\n- 🏫 Schools Space\n- ✍️ Article publishing\n- 🎁 Loyalty program\n- 📞 Direct WhatsApp contact\n\nHow can I help you today?",
+      delivery: "📦 **Free delivery throughout Ivory Coast!**\n\n**Estimated times:**\n- 🏙️ Abidjan: 24-48h\n- 🏘️ Yamoussoukro, Bouaké: 2-3 days\n- 🌍 Other cities: 3-5 business days\n\nSMS confirmation upon shipping. Real-time tracking in \"My Account\".",
+      payment: "💳 **Secure payment methods:**\n\n- 🟠 **Orange Money**\n- 🟡 **MTN Mobile Money**\n- 🔵 **Moov Money**\n- 🟢 **Wave**\n\n🔐 100% secure via KkiaPay.",
+      order: "🛒 **Order in 5 steps:**\n\n1. Browse our shop or school kits\n2. Add to cart\n3. Apply promo code if available\n4. Enter delivery address\n5. Pay via Mobile Money\n\n✅ SMS and email confirmation",
+      article: "✍️ **Publish on Scoly:**\n\n1. Log in → Author Space\n2. Use the **AI editor** for content generation\n3. Submit for review (validated within 48h)",
+      contact: "📞 **Contact us:**\n\n- 💬 **WhatsApp**: +225 07 58 46 59 33\n- 📧 **Email**: contact@scoly.ci\n- 🕐 Mon-Fri 8am-6pm\n\n👇 Click the WhatsApp button below!",
+      premium: "⭐ **Premium Articles:** Exclusive expert content, permanently accessible after purchase.",
+      returnPolicy: "↩️ **Return Policy:** 7 days after receipt, unused product in original packaging.",
+      loyalty: "🎁 **Loyalty Program:** Earn 1 point per 1000 FCFA. Redeem for discounts and free products!",
+      schools: "🏫 **Schools Space:** Register your school, create supply lists, group orders with discounts.",
+      resources: "📚 **Educational Resources:** Exercises, exams, course notes by level and subject.",
       greeting: "Hello! 👋 How can I help you today?",
       thanks: "My pleasure! 😊 Don't hesitate if you have more questions.",
       goodbye: "Goodbye! 👋 See you soon on Scoly!",
-      default: "I couldn't find a precise answer to your question. Here's what I can offer:\n\n- 📞 Contact support: +225 07 58 46 59 33\n- 📧 Email: contact@scoly.ci\n- ❓ Check our FAQ\n\nCould you rephrase your question?",
+      default: "I couldn't find an exact answer. Try:\n\n1. 📞 WhatsApp: +225 07 58 46 59 33\n2. 📧 Email: contact@scoly.ci\n3. ❓ Check our FAQ\n\nUse the quick buttons below!",
       placeholder: "Type your message...",
       thinking: "ScIA is thinking...",
       poweredBy: "Powered by Scoly • Instant responses 24/7",
@@ -91,64 +88,64 @@ const ScIA = () => {
       newConversation: "New conversation",
       rateTitle: "How do you rate this conversation?",
       rateThank: "Thank you for your feedback!",
-      quickDelivery: "Delivery",
-      quickPayment: "Payment",
-      quickOrder: "Order",
-      quickContact: "Contact",
+      whatsappCta: "WhatsApp",
+      whatsappMsg: "Hello Scoly! I'd like to get information. Thank you!",
     },
     de: {
-      welcome: "Hallo! Ich bin **ScIA**, Ihr virtueller Scoly-Assistent. 🎓\n\nIch bin hier, um Ihnen zu helfen mit:\n- 📚 Ihren Fragen zu Produkten\n- 🛒 Bestellverfolgung\n- 💳 Zahlungsmethoden\n- ✍️ Nachrichten veröffentlichen\n- ❓ Allen anderen Fragen\n\nWie kann ich Ihnen heute helfen?",
-      delivery: "📦 **Kostenlose Lieferung in der gesamten Elfenbeinküste!**\n\n- Abidjan: 24-48 Std.\n- Andere Städte: 3-5 Werktage\n\nSie erhalten eine SMS-Bestätigung, sobald Ihre Bestellung versandt wird.",
-      payment: "💳 **Akzeptierte Zahlungsmethoden:**\n\n- 🟠 Orange Money\n- 🟡 MTN Mobile Money\n- 🔵 Moov Money\n- 🟢 Wave\n\nAlle Transaktionen sind 100% sicher über KkiaPay.",
-      order: "🛒 **Um eine Bestellung aufzugeben:**\n\n1. Durchsuchen Sie unseren Shop\n2. Fügen Sie Produkte zum Warenkorb hinzu\n3. Bestätigen Sie Ihre Bestellung\n4. Zahlen Sie per Mobile Money\n5. Erhalten Sie Ihre SMS-Bestätigung\n\nSie können Ihre Bestellung in 'Mein Konto' verfolgen.",
-      article: "✍️ **Um Nachrichten zu veröffentlichen:**\n\n1. Melden Sie sich in Ihrem Konto an\n2. Gehen Sie zum Autorenbereich\n3. Erstellen Sie Ihren Artikel mit dem Editor\n4. Senden Sie zur Überprüfung\n\nUnser Team wird Ihren Artikel innerhalb von 48 Stunden prüfen.",
-      contact: "📞 **Kontaktieren Sie uns:**\n\n- WhatsApp: +225 07 58 46 59 33\n- E-Mail: contact@scoly.ci\n- Öffnungszeiten: Mo-Fr 8-18 Uhr\n\nIch bin auch hier rund um die Uhr verfügbar!",
-      premium: "⭐ **Premium-Artikel:**\n\nEinige Qualitätsartikel sind kostenpflichtig. Einmal gekauft, bleiben sie für immer in Ihrem Konto zugänglich.\n\nDie Zahlung erfolgt sicher per Mobile Money.",
-      return: "↩️ **Rückgaberichtlinie:**\n\nSie haben 7 Tage nach Erhalt, um ein Produkt zurückzugeben:\n- Unbenutzt\n- In Originalverpackung\n\nKontaktieren Sie den Kundendienst, um die Rücksendung zu arrangieren.",
-      greeting: "Hallo! 👋 Wie kann ich Ihnen heute helfen?",
-      thanks: "Gern geschehen! 😊 Zögern Sie nicht, wenn Sie weitere Fragen haben.",
-      goodbye: "Auf Wiedersehen! 👋 Bis bald bei Scoly!",
-      default: "Ich konnte keine genaue Antwort auf Ihre Frage finden. Hier ist, was ich anbieten kann:\n\n- 📞 Support kontaktieren: +225 07 58 46 59 33\n- 📧 E-Mail: contact@scoly.ci\n- ❓ Unsere FAQ prüfen\n\nKönnten Sie Ihre Frage umformulieren?",
+      welcome: "Hallo! Ich bin **ScIA**, Ihr virtueller Scoly-Assistent. 🎓\n\nIch helfe Ihnen mit:\n- 📚 Produkte & Schulsets\n- 🛒 Bestellungen & Tracking\n- 💳 Mobile Money Zahlung\n- 🚚 Lieferung\n- 📞 WhatsApp-Kontakt\n\nWie kann ich helfen?",
+      delivery: "📦 **Kostenlose Lieferung!**\n\nAbidjan: 24-48h\nAndere Städte: 3-5 Werktage",
+      payment: "💳 **Zahlungsmethoden:** Orange Money, MTN, Moov, Wave\n🔐 100% sicher via KkiaPay.",
+      order: "🛒 **Bestellen:** Shop durchsuchen → Warenkorb → Zahlen → Bestätigung",
+      article: "✍️ **Veröffentlichen:** Autorenbereich → KI-Editor → Einreichen",
+      contact: "📞 **Kontakt:** WhatsApp: +225 07 58 46 59 33 | Email: contact@scoly.ci",
+      premium: "⭐ **Premium-Artikel:** Exklusive Inhalte, dauerhaft zugänglich.",
+      returnPolicy: "↩️ **Rückgabe:** 7 Tage, unbenutzt, Originalverpackung.",
+      loyalty: "🎁 **Treueprogramm:** Punkte sammeln und einlösen!",
+      schools: "🏫 **Schulbereich:** Registrierung, Bedarfslisten, Gruppenbestellungen.",
+      resources: "📚 **Lernressourcen:** Übungen, Prüfungen, Kursmaterialien.",
+      greeting: "Hallo! 👋 Wie kann ich helfen?",
+      thanks: "Gern geschehen! 😊",
+      goodbye: "Auf Wiedersehen! 👋",
+      default: "Leider keine genaue Antwort. Kontaktieren Sie uns:\n📞 WhatsApp: +225 07 58 46 59 33",
       placeholder: "Nachricht eingeben...",
       thinking: "ScIA denkt nach...",
-      poweredBy: "Betrieben von Scoly • Sofortige Antworten 24/7",
-      needHelp: "Brauchen Sie Hilfe?",
+      poweredBy: "Betrieben von Scoly • 24/7",
+      needHelp: "Hilfe?",
       online: "Scoly Assistent • Online",
       endConversation: "Beenden",
       newConversation: "Neues Gespräch",
-      rateTitle: "Wie bewerten Sie dieses Gespräch?",
-      rateThank: "Danke für Ihr Feedback!",
-      quickDelivery: "Lieferung",
-      quickPayment: "Zahlung",
-      quickOrder: "Bestellen",
-      quickContact: "Kontakt",
+      rateTitle: "Bewertung?",
+      rateThank: "Danke!",
+      whatsappCta: "WhatsApp",
+      whatsappMsg: "Hallo Scoly! Ich möchte Informationen. Danke!",
     },
     es: {
-      welcome: "¡Hola! Soy **ScIA**, tu asistente virtual de Scoly. 🎓\n\nEstoy aquí para ayudarte con:\n- 📚 Tus preguntas sobre productos\n- 🛒 Seguimiento de pedidos\n- 💳 Métodos de pago\n- ✍️ Publicar noticias\n- ❓ Cualquier otra pregunta\n\n¿Cómo puedo ayudarte hoy?",
-      delivery: "📦 **¡Entrega gratuita en toda Costa de Marfil!**\n\n- Abidjan: 24-48h\n- Otras ciudades: 3-5 días hábiles\n\nRecibirás una confirmación por SMS cuando se envíe tu pedido.",
-      payment: "💳 **Métodos de pago aceptados:**\n\n- 🟠 Orange Money\n- 🟡 MTN Mobile Money\n- 🔵 Moov Money\n- 🟢 Wave\n\nTodas las transacciones son 100% seguras a través de KkiaPay.",
-      order: "🛒 **Para hacer un pedido:**\n\n1. Explora nuestra tienda\n2. Añade productos al carrito\n3. Valida tu pedido\n4. Paga con Mobile Money\n5. Recibe tu confirmación por SMS\n\nPuedes seguir tu pedido en 'Mi Cuenta'.",
-      article: "✍️ **Para publicar noticias:**\n\n1. Inicia sesión en tu cuenta\n2. Ve al Espacio de Autor\n3. Crea tu artículo con el editor\n4. Envía para revisión\n\nNuestro equipo revisará tu artículo en 48h.",
-      contact: "📞 **Contáctanos:**\n\n- WhatsApp: +225 07 58 46 59 33\n- Email: contact@scoly.ci\n- Horario: Lun-Vie 8am-6pm\n\n¡También estoy disponible 24/7 aquí!",
-      premium: "⭐ **Artículos Premium:**\n\nAlgunos artículos de calidad son de pago. Una vez comprados, permanecen accesibles para siempre en tu cuenta.\n\nEl pago se realiza de forma segura a través de Mobile Money.",
-      return: "↩️ **Política de devolución:**\n\nTienes 7 días después de la recepción para devolver un producto:\n- Sin usar\n- En embalaje original\n\nContacta al servicio al cliente para organizar la devolución.",
-      greeting: "¡Hola! 👋 ¿Cómo puedo ayudarte hoy?",
-      thanks: "¡Con mucho gusto! 😊 No dudes si tienes más preguntas.",
-      goodbye: "¡Adiós! 👋 ¡Hasta pronto en Scoly!",
-      default: "No pude encontrar una respuesta precisa a tu pregunta. Esto es lo que puedo ofrecerte:\n\n- 📞 Contactar soporte: +225 07 58 46 59 33\n- 📧 Email: contact@scoly.ci\n- ❓ Consultar nuestras FAQ\n\n¿Podrías reformular tu pregunta?",
+      welcome: "¡Hola! Soy **ScIA**, tu asistente virtual Scoly. 🎓\n\nPuedo ayudarte con:\n- 📚 Productos y kits escolares\n- 🛒 Pedidos y seguimiento\n- 💳 Pago Mobile Money\n- 🚚 Entrega\n- 📞 Contacto WhatsApp\n\n¿Cómo puedo ayudarte?",
+      delivery: "📦 **¡Entrega gratuita!**\n\nAbidjan: 24-48h\nOtras ciudades: 3-5 días hábiles",
+      payment: "💳 **Métodos de pago:** Orange Money, MTN, Moov, Wave\n🔐 100% seguro via KkiaPay.",
+      order: "🛒 **Pedir:** Explora → Añade al carrito → Paga → Confirmación",
+      article: "✍️ **Publicar:** Espacio autor → Editor IA → Enviar",
+      contact: "📞 **Contacto:** WhatsApp: +225 07 58 46 59 33 | Email: contact@scoly.ci",
+      premium: "⭐ **Artículos Premium:** Contenido exclusivo, acceso permanente.",
+      returnPolicy: "↩️ **Devoluciones:** 7 días, sin usar, embalaje original.",
+      loyalty: "🎁 **Programa de fidelidad:** ¡Gana y canjea puntos!",
+      schools: "🏫 **Espacio Escuelas:** Registro, listas, pedidos grupales.",
+      resources: "📚 **Recursos educativos:** Ejercicios, exámenes, fichas.",
+      greeting: "¡Hola! 👋 ¿Cómo puedo ayudarte?",
+      thanks: "¡Con gusto! 😊",
+      goodbye: "¡Adiós! 👋",
+      default: "No encontré respuesta exacta.\n📞 WhatsApp: +225 07 58 46 59 33",
       placeholder: "Escribe tu mensaje...",
       thinking: "ScIA está pensando...",
-      poweredBy: "Impulsado por Scoly • Respuestas instantáneas 24/7",
-      needHelp: "¿Necesitas ayuda?",
+      poweredBy: "Impulsado por Scoly • 24/7",
+      needHelp: "¿Ayuda?",
       online: "Asistente Scoly • En línea",
       endConversation: "Terminar",
       newConversation: "Nueva conversación",
-      rateTitle: "¿Cómo calificas esta conversación?",
-      rateThank: "¡Gracias por tu opinión!",
-      quickDelivery: "Entrega",
-      quickPayment: "Pago",
-      quickOrder: "Pedir",
-      quickContact: "Contacto",
+      rateTitle: "¿Calificación?",
+      rateThank: "¡Gracias!",
+      whatsappCta: "WhatsApp",
+      whatsappMsg: "¡Hola Scoly! Me gustaría información. ¡Gracias!",
     },
   };
 
@@ -180,30 +177,27 @@ const ScIA = () => {
   }, [isOpen]);
 
   const findResponse = (query: string): string => {
-    const lowerQuery = query.toLowerCase();
+    const q = query.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
     
-    // Keywords for each topic
-    const deliveryKeywords = ['livraison', 'delivery', 'lieferung', 'entrega', 'expedier', 'ship', 'versand', 'envío'];
-    const paymentKeywords = ['paiement', 'payment', 'zahlung', 'pago', 'argent', 'money', 'geld', 'dinero', 'mobile money', 'wave', 'orange', 'mtn', 'moov'];
-    const orderKeywords = ['commande', 'order', 'bestellung', 'pedido', 'commander', 'acheter', 'buy', 'kaufen', 'comprar'];
-    const articleKeywords = ['article', 'publier', 'publish', 'veröffentlichen', 'publicar', 'auteur', 'author', 'autor'];
-    const contactKeywords = ['contact', 'kontakt', 'contacto', 'téléphone', 'phone', 'telefon', 'teléfono', 'email', 'whatsapp'];
-    const premiumKeywords = ['premium', 'payant', 'paid', 'bezahlt', 'pago'];
-    const returnKeywords = ['retour', 'return', 'rückgabe', 'devolución', 'rembourser', 'refund'];
-    const greetingKeywords = ['bonjour', 'salut', 'hello', 'hi', 'hey', 'hallo', 'hola', 'coucou', 'bonsoir'];
-    const thanksKeywords = ['merci', 'thanks', 'thank', 'danke', 'gracias', 'super', 'génial', 'parfait', 'great', 'awesome'];
-    const goodbyeKeywords = ['au revoir', 'bye', 'goodbye', 'tschüss', 'adiós', 'à bientôt', 'adieu'];
+    const matchers: [string[], string][] = [
+      [['livraison','delivery','lieferung','entrega','expedition','expedier','ship','versand','envio','delai','colis','recevoir','quand'], currentTexts.delivery],
+      [['paiement','payment','zahlung','pago','argent','money','geld','dinero','mobile money','wave','orange money','mtn','moov','kkiapay','payer','prix','cout','tarif'], currentTexts.payment],
+      [['commande','order','bestellung','pedido','commander','acheter','buy','kaufen','comprar','panier','cart','ajouter','checkout'], currentTexts.order],
+      [['article','publier','publish','veroffentlichen','publicar','auteur','author','autor','ecrire','rediger','blog','actualite'], currentTexts.article],
+      [['contact','kontakt','contacto','telephone','phone','telefon','telefono','email','whatsapp','appeler','joindre','numero'], currentTexts.contact],
+      [['premium','payant','paid','bezahlt','exclusif','vip'], currentTexts.premium],
+      [['retour','return','ruckgabe','devolucion','rembourser','refund','echanger','garantie','defectueux'], currentTexts.returnPolicy],
+      [['fidelite','loyalty','treue','fidelidad','point','recompense','reward','parrainage','referral','filleul'], currentTexts.loyalty],
+      [['ecole','school','schule','escuela','etablissement','inscription','kit','fourniture','liste','classe','niveau','cp','ce','cm','seconde','premiere','terminale'], currentTexts.schools],
+      [['ressource','resource','exercice','examen','cours','lecon','fiche','telecharg','pdf','document','sujet'], currentTexts.resources],
+      [['bonjour','salut','hello','hi','hey','hallo','hola','coucou','bonsoir','yo','wesh'], currentTexts.greeting],
+      [['merci','thanks','thank','danke','gracias','super','genial','parfait','great','awesome','cool','top','excellent','bravo'], currentTexts.thanks],
+      [['au revoir','bye','goodbye','tschuss','adios','a bientot','adieu','ciao','see you'], currentTexts.goodbye],
+    ];
 
-    if (deliveryKeywords.some(k => lowerQuery.includes(k))) return currentTexts.delivery;
-    if (paymentKeywords.some(k => lowerQuery.includes(k))) return currentTexts.payment;
-    if (orderKeywords.some(k => lowerQuery.includes(k))) return currentTexts.order;
-    if (articleKeywords.some(k => lowerQuery.includes(k))) return currentTexts.article;
-    if (contactKeywords.some(k => lowerQuery.includes(k))) return currentTexts.contact;
-    if (premiumKeywords.some(k => lowerQuery.includes(k))) return currentTexts.premium;
-    if (returnKeywords.some(k => lowerQuery.includes(k))) return currentTexts.return;
-    if (greetingKeywords.some(k => lowerQuery.includes(k))) return currentTexts.greeting;
-    if (thanksKeywords.some(k => lowerQuery.includes(k))) return currentTexts.thanks;
-    if (goodbyeKeywords.some(k => lowerQuery.includes(k))) return currentTexts.goodbye;
+    for (const [keywords, response] of matchers) {
+      if (keywords.some(k => q.includes(k))) return response;
+    }
 
     return currentTexts.default;
   };
@@ -222,7 +216,7 @@ const ScIA = () => {
     setInput("");
     setIsLoading(true);
 
-    await new Promise(resolve => setTimeout(resolve, 600 + Math.random() * 600));
+    await new Promise(resolve => setTimeout(resolve, 500 + Math.random() * 500));
 
     const response = findResponse(userMessage.content);
     
@@ -244,9 +238,7 @@ const ScIA = () => {
     }
   };
 
-  const handleEndConversation = () => {
-    setShowRating(true);
-  };
+  const handleEndConversation = () => setShowRating(true);
 
   const handleRating = (stars: number) => {
     setRating(stars);
@@ -279,11 +271,17 @@ const ScIA = () => {
     });
   };
 
+  const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(currentTexts.whatsappMsg)}`;
+
   const quickActions = [
-    { label: currentTexts.quickDelivery, query: "livraison" },
-    { label: currentTexts.quickPayment, query: "paiement" },
-    { label: currentTexts.quickOrder, query: "commande" },
-    { label: currentTexts.quickContact, query: "contact" },
+    { label: "🛒 " + (language === 'fr' ? 'Commander' : language === 'en' ? 'Order' : language === 'de' ? 'Bestellen' : 'Pedir'), query: "commande", icon: ShoppingCart },
+    { label: "🚚 " + (language === 'fr' ? 'Livraison' : language === 'en' ? 'Delivery' : language === 'de' ? 'Lieferung' : 'Entrega'), query: "livraison", icon: Truck },
+    { label: "💳 " + (language === 'fr' ? 'Paiement' : language === 'en' ? 'Payment' : language === 'de' ? 'Zahlung' : 'Pago'), query: "paiement", icon: CreditCard },
+    { label: "🏫 " + (language === 'fr' ? 'Écoles' : language === 'en' ? 'Schools' : language === 'de' ? 'Schulen' : 'Escuelas'), query: "ecole", icon: School },
+    { label: "🎁 " + (language === 'fr' ? 'Fidélité' : language === 'en' ? 'Loyalty' : language === 'de' ? 'Treue' : 'Fidelidad'), query: "fidelite", icon: Gift },
+    { label: "📚 " + (language === 'fr' ? 'Ressources' : language === 'en' ? 'Resources' : language === 'de' ? 'Ressourcen' : 'Recursos'), query: "ressource", icon: FileText },
+    { label: "📞 Contact", query: "contact", icon: Phone },
+    { label: "❓ FAQ", query: "retour", icon: HelpCircle },
   ];
 
   return (
@@ -294,25 +292,25 @@ const ScIA = () => {
             initial={{ scale: 0, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0, opacity: 0 }}
-            className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50"
+            className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 flex flex-col items-end gap-2"
           >
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+              className="bg-card border border-border rounded-lg px-3 py-2 shadow-lg hidden sm:block"
+            >
+              <p className="text-sm font-medium">{currentTexts.needHelp} 💬</p>
+            </motion.div>
             <Button
               onClick={() => setIsOpen(true)}
               className="h-14 w-14 rounded-full shadow-lg bg-primary hover:bg-primary/90 group"
             >
               <div className="relative">
                 <Bot className="h-6 w-6 transition-transform group-hover:scale-110" />
-                <span className="absolute -top-1 -right-1 h-3 w-3 bg-emerald-500 rounded-full border-2 border-background animate-pulse" />
+                <span className="absolute -top-1 -right-1 h-3 w-3 bg-emerald-500 rounded-full border-2 border-primary animate-pulse" />
               </div>
             </Button>
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.5 }}
-              className="absolute bottom-full right-0 mb-2 bg-card border border-border rounded-lg px-3 py-2 shadow-lg whitespace-nowrap hidden sm:block"
-            >
-              <p className="text-sm font-medium">{currentTexts.needHelp} 💬</p>
-            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
@@ -327,7 +325,7 @@ const ScIA = () => {
               "fixed z-50 bg-background border border-border rounded-2xl shadow-2xl overflow-hidden flex flex-col",
               isExpanded 
                 ? "inset-2 sm:inset-4 md:inset-8" 
-                : "bottom-4 right-4 left-4 sm:left-auto sm:w-[380px] h-[500px] sm:h-[550px] md:h-[600px] max-h-[85vh] sm:max-h-[80vh]"
+                : "bottom-4 right-4 left-4 sm:left-auto sm:w-[400px] h-[520px] sm:h-[580px] md:h-[640px] max-h-[85vh] sm:max-h-[80vh]"
             )}
           >
             {/* Header */}
@@ -342,37 +340,31 @@ const ScIA = () => {
                   </div>
                   <div>
                     <h3 className="font-bold flex items-center gap-2">
-                      ScIA
-                      <Sparkles className="h-4 w-4" />
+                      ScIA <Sparkles className="h-4 w-4" />
                     </h3>
                     <p className="text-xs text-primary-foreground/80">{currentTexts.online}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-1">
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={handleNewConversation}
-                    className="h-8 w-8 text-primary-foreground hover:bg-white/20"
-                    title={currentTexts.newConversation}
+                  {/* WhatsApp button in header */}
+                  <a
+                    href={whatsappUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="h-8 w-8 rounded-md flex items-center justify-center hover:bg-white/20 transition-colors"
+                    title={currentTexts.whatsappCta}
                   >
+                    <svg viewBox="0 0 32 32" className="w-5 h-5 fill-current">
+                      <path d="M16.004 0h-.008C7.174 0 0 7.176 0 16c0 3.5 1.128 6.744 3.046 9.378L1.054 31.29l6.118-1.962A15.91 15.91 0 0016.004 32C24.826 32 32 24.822 32 16S24.826 0 16.004 0zm9.338 22.614c-.394 1.108-1.946 2.028-3.2 2.296-.86.182-1.982.326-5.76-1.238-4.836-2.002-7.944-6.912-8.186-7.232-.232-.32-1.952-2.6-1.952-4.96s1.234-3.52 1.672-4.002c.438-.482.958-.602 1.276-.602.316 0 .636.002.912.016.294.016.686-.112 1.074.818.394.95 1.346 3.278 1.466 3.516.118.238.198.516.038.836-.158.32-.238.518-.478.798-.238.278-.502.622-.716.834-.238.238-.486.498-.208.976.278.478 1.234 2.036 2.65 3.298 1.82 1.622 3.354 2.126 3.832 2.364.478.238.756.198 1.034-.118.278-.32 1.194-1.392 1.512-1.872.316-.478.636-.398 1.074-.238.438.158 2.766 1.304 3.244 1.542.478.238.796.358.914.556.118.198.118 1.148-.276 2.256z" />
+                    </svg>
+                  </a>
+                  <Button variant="ghost" size="icon" onClick={handleNewConversation} className="h-8 w-8 text-primary-foreground hover:bg-white/20" title={currentTexts.newConversation}>
                     <RotateCcw size={16} />
                   </Button>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => setIsExpanded(!isExpanded)}
-                    className="h-8 w-8 text-primary-foreground hover:bg-white/20"
-                  >
+                  <Button variant="ghost" size="icon" onClick={() => setIsExpanded(!isExpanded)} className="h-8 w-8 text-primary-foreground hover:bg-white/20">
                     {isExpanded ? <Minimize2 size={18} /> : <Maximize2 size={18} />}
                   </Button>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={handleEndConversation}
-                    className="h-8 w-8 text-primary-foreground hover:bg-white/20"
-                    title={currentTexts.endConversation}
-                  >
+                  <Button variant="ghost" size="icon" onClick={handleEndConversation} className="h-8 w-8 text-primary-foreground hover:bg-white/20" title={currentTexts.endConversation}>
                     <X size={18} />
                   </Button>
                 </div>
@@ -388,46 +380,21 @@ const ScIA = () => {
                     <h3 className="text-lg font-semibold mb-4 text-center">{currentTexts.rateTitle}</h3>
                     <div className="flex gap-2 mb-6">
                       {[1, 2, 3, 4, 5].map((star) => (
-                        <button
-                          key={star}
-                          onClick={() => handleRating(star)}
-                          className="p-2 hover:scale-110 transition-transform"
-                        >
-                          <Star
-                            className={cn(
-                              "h-8 w-8",
-                              star <= rating ? "fill-yellow-400 text-yellow-400" : "text-muted-foreground"
-                            )}
-                          />
+                        <button key={star} onClick={() => handleRating(star)} className="p-2 hover:scale-110 transition-transform">
+                          <Star className={cn("h-8 w-8", star <= rating ? "fill-yellow-400 text-yellow-400" : "text-muted-foreground")} />
                         </button>
                       ))}
                     </div>
                     <div className="flex gap-4">
-                      <Button variant="outline" size="sm" onClick={() => handleRating(5)}>
-                        <ThumbsUp className="h-4 w-4 mr-2" />
-                        {t.common.yes}
-                      </Button>
-                      <Button variant="outline" size="sm" onClick={() => handleRating(2)}>
-                        <ThumbsDown className="h-4 w-4 mr-2" />
-                        {t.common.no}
-                      </Button>
+                      <Button variant="outline" size="sm" onClick={() => handleRating(5)}><ThumbsUp className="h-4 w-4 mr-2" />{t.common.yes}</Button>
+                      <Button variant="outline" size="sm" onClick={() => handleRating(2)}><ThumbsDown className="h-4 w-4 mr-2" />{t.common.no}</Button>
                     </div>
                   </>
                 ) : (
-                  <motion.div
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    className="text-center"
-                  >
+                  <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="text-center">
                     <div className="flex justify-center mb-4">
                       {[1, 2, 3, 4, 5].map((star) => (
-                        <Star
-                          key={star}
-                          className={cn(
-                            "h-8 w-8",
-                            star <= rating ? "fill-yellow-400 text-yellow-400" : "text-muted-foreground"
-                          )}
-                        />
+                        <Star key={star} className={cn("h-8 w-8", star <= rating ? "fill-yellow-400 text-yellow-400" : "text-muted-foreground")} />
                       ))}
                     </div>
                     <p className="text-lg font-medium text-primary">{currentTexts.rateThank}</p>
@@ -440,34 +407,13 @@ const ScIA = () => {
             <ScrollArea className="flex-1 p-4" ref={scrollRef}>
               <div className="space-y-4">
                 {messages.map((message) => (
-                  <div
-                    key={message.id}
-                    className={cn(
-                      "flex gap-3",
-                      message.role === "user" ? "flex-row-reverse" : "flex-row"
-                    )}
-                  >
-                    <div className={cn(
-                      "w-8 h-8 rounded-full flex items-center justify-center shrink-0",
-                      message.role === "user" 
-                        ? "bg-primary text-primary-foreground" 
-                        : "bg-primary/20"
-                    )}>
+                  <div key={message.id} className={cn("flex gap-3", message.role === "user" ? "flex-row-reverse" : "flex-row")}>
+                    <div className={cn("w-8 h-8 rounded-full flex items-center justify-center shrink-0", message.role === "user" ? "bg-primary text-primary-foreground" : "bg-primary/20")}>
                       {message.role === "user" ? <User size={16} /> : <Bot size={16} />}
                     </div>
-                    <div className={cn(
-                      "max-w-[80%] rounded-2xl px-4 py-3",
-                      message.role === "user"
-                        ? "bg-primary text-primary-foreground rounded-br-sm"
-                        : "bg-muted rounded-bl-sm"
-                    )}>
-                      <div className="text-sm leading-relaxed">
-                        {renderMessage(message.content)}
-                      </div>
-                      <p className={cn(
-                        "text-[10px] mt-1",
-                        message.role === "user" ? "text-primary-foreground/60" : "text-muted-foreground"
-                      )}>
+                    <div className={cn("max-w-[80%] rounded-2xl px-4 py-3", message.role === "user" ? "bg-primary text-primary-foreground rounded-br-sm" : "bg-muted rounded-bl-sm")}>
+                      <div className="text-sm leading-relaxed">{renderMessage(message.content)}</div>
+                      <p className={cn("text-[10px] mt-1", message.role === "user" ? "text-primary-foreground/60" : "text-muted-foreground")}>
                         {message.timestamp.toLocaleTimeString(language === 'en' ? 'en-US' : 'fr-FR', { hour: '2-digit', minute: '2-digit' })}
                       </p>
                     </div>
@@ -476,7 +422,7 @@ const ScIA = () => {
 
                 {isLoading && (
                   <div className="flex gap-3">
-                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center">
+                    <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center">
                       <Bot size={16} />
                     </div>
                     <div className="bg-muted rounded-2xl rounded-bl-sm px-4 py-3">
@@ -490,16 +436,16 @@ const ScIA = () => {
               </div>
             </ScrollArea>
 
-            {/* Quick actions */}
+            {/* Quick actions - shown when few messages */}
             {messages.length <= 2 && !showRating && (
               <div className="px-4 pb-2">
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-1.5">
                   {quickActions.map((action) => (
                     <Button
                       key={action.query}
                       variant="outline"
                       size="sm"
-                      className="rounded-full text-xs"
+                      className="rounded-full text-xs h-7 px-2.5"
                       onClick={() => {
                         setInput(action.query);
                         setTimeout(handleSend, 100);
@@ -509,6 +455,31 @@ const ScIA = () => {
                     </Button>
                   ))}
                 </div>
+              </div>
+            )}
+
+            {/* WhatsApp CTA banner */}
+            {!showRating && (
+              <div className="px-4 pb-2">
+                <a
+                  href={whatsappUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 p-2 rounded-lg bg-[#25D366]/10 border border-[#25D366]/20 hover:bg-[#25D366]/20 transition-colors"
+                >
+                  <div className="w-8 h-8 rounded-full bg-[#25D366] flex items-center justify-center shrink-0">
+                    <svg viewBox="0 0 32 32" className="w-4 h-4 fill-white">
+                      <path d="M16.004 0h-.008C7.174 0 0 7.176 0 16c0 3.5 1.128 6.744 3.046 9.378L1.054 31.29l6.118-1.962A15.91 15.91 0 0016.004 32C24.826 32 32 24.822 32 16S24.826 0 16.004 0zm9.338 22.614c-.394 1.108-1.946 2.028-3.2 2.296-.86.182-1.982.326-5.76-1.238-4.836-2.002-7.944-6.912-8.186-7.232-.232-.32-1.952-2.6-1.952-4.96s1.234-3.52 1.672-4.002c.438-.482.958-.602 1.276-.602.316 0 .636.002.912.016.294.016.686-.112 1.074.818.394.95 1.346 3.278 1.466 3.516.118.238.198.516.038.836-.158.32-.238.518-.478.798-.238.278-.502.622-.716.834-.238.238-.486.498-.208.976.278.478 1.234 2.036 2.65 3.298 1.82 1.622 3.354 2.126 3.832 2.364.478.238.756.198 1.034-.118.278-.32 1.194-1.392 1.512-1.872.316-.478.636-.398 1.074-.238.438.158 2.766 1.304 3.244 1.542.478.238.796.358.914.556.118.198.118 1.148-.276 2.256z" />
+                    </svg>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs font-medium text-foreground">
+                      {language === 'fr' ? 'Parler à un humain' : language === 'en' ? 'Talk to a human' : language === 'de' ? 'Mit einem Menschen sprechen' : 'Hablar con una persona'}
+                    </p>
+                    <p className="text-[10px] text-muted-foreground">WhatsApp • +225 07 58 46 59 33</p>
+                  </div>
+                  <span className="text-xs font-medium text-[#25D366]">→</span>
+                </a>
               </div>
             )}
 
@@ -525,17 +496,11 @@ const ScIA = () => {
                     className="rounded-full bg-background"
                     disabled={isLoading}
                   />
-                  <Button
-                    onClick={handleSend}
-                    disabled={!input.trim() || isLoading}
-                    className="rounded-full h-10 w-10 p-0"
-                  >
+                  <Button onClick={handleSend} disabled={!input.trim() || isLoading} className="rounded-full h-10 w-10 p-0">
                     <Send size={18} />
                   </Button>
                 </div>
-                <p className="text-[10px] text-center text-muted-foreground mt-2">
-                  {currentTexts.poweredBy}
-                </p>
+                <p className="text-[10px] text-center text-muted-foreground mt-2">{currentTexts.poweredBy}</p>
               </div>
             )}
           </motion.div>
