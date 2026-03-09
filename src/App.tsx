@@ -11,7 +11,7 @@ import { CartProvider } from "@/contexts/CartContext";
 import ScrollToTop from "@/components/ScrollToTop";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import PageLoader from "@/components/PageLoader";
-import WhatsAppButton from "@/components/WhatsAppButton";
+// WhatsApp is now integrated into ScIA assistant
 import { SessionSecurityProvider } from "@/components/SessionSecurityProvider";
 
 // Critical path - eager load
@@ -136,7 +136,7 @@ const App = () => (
                       <Route path="*" element={<NotFound />} />
                     </Routes>
                     <ScIA />
-                    <WhatsAppButton />
+                    {/* WhatsApp integrated into ScIA */}
                   </Suspense>
                 </BrowserRouter>
               </TooltipProvider>
