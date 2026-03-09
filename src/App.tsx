@@ -136,7 +136,7 @@ const App = () => (
                       <Route path="*" element={<NotFound />} />
                     </Routes>
                     <ScIA />
-                    <WhatsAppButton />
+                    {/* WhatsApp integrated into ScIA */}
                   </Suspense>
                 </BrowserRouter>
               </TooltipProvider>

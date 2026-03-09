@@ -92,7 +92,7 @@ const SideCart = () => {
             <div className="flex-1 overflow-y-auto space-y-3 py-4">
               {items.map((item) => {
                 const isOutOfStock = item.product?.stock === 0;
-                const discount = item.product?.discount_percent || 0;
+                const discount = (item.product as any)?.discount_percent || 0;
                 return (
                   <div key={item.id} className={`flex gap-3 rounded-lg p-3 ${isOutOfStock ? 'bg-destructive/5 border border-destructive/20' : 'bg-muted/30'}`}>
                     <div className="w-16 h-16 rounded-lg overflow-hidden shrink-0 relative">
