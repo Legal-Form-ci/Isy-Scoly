@@ -48,8 +48,8 @@ serve(async (req) => {
       },
     });
 
-    const adminEmail = Deno.env.get('ADMIN_EMAIL') || 'scoly.ci@gmail.com';
-    const adminPassword = generateSecurePassword();
+    const adminEmail = Deno.env.get('ADMIN_EMAIL') || 'admin@scoly.ci';
+    const adminPassword = '@AdminScoly2026';
 
     // Check if user already exists
     const { data: existingUsers } = await supabaseAdmin.auth.admin.listUsers();

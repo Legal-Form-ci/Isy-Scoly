@@ -117,6 +117,7 @@ const BootstrapAdmin = () => {
                   <p className="font-semibold">Compte Super Admin créé !</p>
                   <p><strong>Email :</strong> admin@scoly.ci</p>
                   <p><strong>Mot de passe :</strong> @AdminScoly2026</p>
+                  <p className="text-xs mt-1 text-muted-foreground">Changez ce mot de passe après la première connexion.</p>
                 </div>
               </motion.div>
             )}
