@@ -1,17 +1,13 @@
 import { useState, useEffect } from "react";
-import { Search, Filter, ShoppingCart, Heart, Star, Truck, BadgeCheck } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Search, ShoppingCart, Truck, SlidersHorizontal } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import SmartImage from "@/components/SmartImage";
+import ProductCard from "@/components/ProductCard";
 import SEOHead from "@/components/SEOHead";
 import { useLanguage } from "@/i18n/LanguageContext";
-import { useCart } from "@/contexts/CartContext";
-import { useWishlist } from "@/hooks/useWishlist";
 import { supabase } from "@/integrations/supabase/client";
-import { Link, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 
 interface Product {
   id: string;
@@ -44,8 +40,6 @@ interface Category {
 
 const Shop = () => {
   const { language, t } = useLanguage();
-  const { addToCart } = useCart();
-  const { toggleWishlist, isInWishlist } = useWishlist();
   const [searchParams, setSearchParams] = useSearchParams();
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -102,7 +96,7 @@ const Shop = () => {
     }
   };
 
-  const getLocalizedName = (item: Product | Category) => {
+  const getLocalizedName = (item: Category) => {
     switch (language) {
       case 'en': return item.name_en;
       case 'de': return item.name_de;
@@ -120,9 +114,18 @@ const Shop = () => {
     }
   };
 
+  const productName = (product: Product) => {
+    switch (language) {
+      case 'en': return product.name_en;
+      case 'de': return product.name_de;
+      case 'es': return product.name_es;
+      default: return product.name_fr;
+    }
+  };
+
   const filteredProducts = products
     .filter(product => {
-      const name = getLocalizedName(product).toLowerCase();
+      const name = (productName(product) || '').toLowerCase();
       const matchesSearch = name.includes(searchQuery.toLowerCase());
       const matchesCategory = !selectedCategory || product.category_id === selectedCategory;
       return matchesSearch && matchesCategory;
@@ -134,10 +137,6 @@ const Shop = () => {
         default: return 0;
       }
     });
-
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat('fr-FR').format(price) + ' ' + t.common.currency;
-  };
 
   return (
     <main className="min-h-screen bg-background">
@@ -298,93 +297,7 @@ const Shop = () => {
               ) : (
                 <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
                   {filteredProducts.map((product) => (
-                    <div
-                      key={product.id}
-                      className="group bg-card rounded-xl border border-border overflow-hidden hover:shadow-lg transition-all flex flex-col"
-                    >
-                      {/* Image avec SmartImage */}
-                      <Link to={`/shop/product/${product.id}`} className="relative aspect-square block overflow-hidden">
-                        <SmartImage
-                          src={product.image_url}
-                          alt={getLocalizedName(product)}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                          fallbackSrc="/placeholder.svg"
-                          priority={false}
-                        />
-                        
-                        {/* Badges */}
-                        <div className="absolute top-2 left-2 flex flex-col gap-1">
-                          {product.discount_percent > 0 && (
-                            <Badge variant="destructive" className="text-[10px] sm:text-xs px-1.5 py-0.5">
-                              -{product.discount_percent}%
-                            </Badge>
-                          )}
-                          {product.is_featured && (
-                            <Badge variant="secondary" className="text-[10px] sm:text-xs px-1.5 py-0.5">
-                              ⭐
-                            </Badge>
-                          )}
-                        </div>
-
-                        {/* Free Shipping Badge */}
-                        <div className="absolute bottom-2 left-2">
-                          <Badge className="bg-secondary text-secondary-foreground text-[9px] sm:text-[10px] px-1 py-0.5">
-                            <Truck size={10} className="mr-0.5" />
-                            <span className="hidden sm:inline">Livraison gratuite</span>
-                            <span className="sm:hidden">Gratuit</span>
-                          </Badge>
-                        </div>
-
-                        {/* Wishlist Button */}
-                        <button 
-                          className="absolute top-2 right-2 p-1.5 sm:p-2 bg-card/80 backdrop-blur-sm rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
-                          onClick={(e) => { e.preventDefault(); toggleWishlist(product.id); }}
-                        >
-                          <Heart size={14} className={`sm:w-[18px] sm:h-[18px] ${isInWishlist(product.id) ? 'fill-destructive text-destructive' : 'text-foreground'}`} />
-                        </button>
-                      </Link>
-
-                      {/* Content */}
-                      <div className="p-2 sm:p-3 md:p-4 flex flex-col flex-1">
-                        <Link to={`/shop/product/${product.id}`}>
-                          <h3 className="font-medium text-foreground hover:text-primary transition-colors line-clamp-2 text-xs sm:text-sm">
-                            {getLocalizedName(product)}
-                          </h3>
-                        </Link>
-
-                        <div className="flex items-center gap-0.5 mt-1 sm:mt-2">
-                          {[...Array(5)].map((_, i) => (
-                            <Star key={i} size={10} className={`sm:w-3.5 sm:h-3.5 ${i < 4 ? 'fill-accent text-accent' : 'fill-muted text-muted-foreground'}`} />
-                          ))}
-                          <span className="text-[10px] sm:text-xs text-muted-foreground ml-1">(4.0)</span>
-                        </div>
-
-                        <div className="flex flex-col sm:flex-row sm:items-center gap-0.5 sm:gap-2 mt-2 sm:mt-3">
-                          <span className="text-sm sm:text-base md:text-lg font-bold text-primary">
-                            {formatPrice(product.price)}
-                          </span>
-                          {product.original_price && product.original_price > product.price && (
-                            <span className="text-[10px] sm:text-xs text-muted-foreground line-through">
-                              {formatPrice(product.original_price)}
-                            </span>
-                          )}
-                        </div>
-
-                        <div className="mt-auto pt-2 sm:pt-3">
-                          <Button
-                            variant="hero"
-                            size="sm"
-                            className="w-full text-xs sm:text-sm h-8 sm:h-9"
-                            onClick={() => addToCart(product.id)}
-                            disabled={product.stock === 0}
-                          >
-                            <ShoppingCart size={14} className="sm:w-4 sm:h-4" />
-                            <span className="hidden sm:inline">{product.stock === 0 ? t.shop.outOfStock : t.shop.addToCart}</span>
-                            <span className="sm:hidden">{product.stock === 0 ? 'Épuisé' : '+'}</span>
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
+                    <ProductCard key={product.id} product={product} />
                   ))}
                 </div>
               )}
