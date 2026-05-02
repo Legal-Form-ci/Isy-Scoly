@@ -45,8 +45,6 @@ const MentionsLegales = lazy(() => import("./pages/MentionsLegales"));
 const TermsOfUse = lazy(() => import("./pages/TermsOfUse"));
 const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
 const CookiesPolicy = lazy(() => import("./pages/CookiesPolicy"));
-const SystemDatabase = lazy(() => import("./pages/SystemDatabase"));
-const SystemRepository = lazy(() => import("./pages/SystemRepository"));
 const AuthConfirm = lazy(() => import("./pages/AuthConfirm"));
 const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 const Schools = lazy(() => import("./pages/Schools"));
@@ -54,8 +52,6 @@ const SchoolDetail = lazy(() => import("./pages/SchoolDetail"));
 const SmartKits = lazy(() => import("./pages/SmartKits"));
 const Referral = lazy(() => import("./pages/Referral"));
 const Resources = lazy(() => import("./pages/Resources"));
-const FeaturesPresentation = lazy(() => import("./pages/FeaturesPresentation"));
-const Documentation = lazy(() => import("./pages/Documentation"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -122,8 +118,6 @@ const App = () => (
                       <Route path="/terms" element={<TermsOfUse />} />
                       <Route path="/privacy" element={<PrivacyPolicy />} />
                       <Route path="/cookies" element={<CookiesPolicy />} />
-                      <Route path="/db" element={<SystemDatabase />} />
-                      <Route path="/system/repo" element={<SystemRepository />} />
                       <Route path="/auth/confirm" element={<AuthConfirm />} />
                       <Route path="/auth/reset-password" element={<ResetPassword />} />
                       <Route path="/ecoles" element={<Schools />} />
@@ -131,8 +125,6 @@ const App = () => (
                       <Route path="/kits" element={<SmartKits />} />
                       <Route path="/parrainage" element={<Referral />} />
                       <Route path="/ressources" element={<Resources />} />
-                      <Route path="/fonctionnalites" element={<FeaturesPresentation />} />
-                      <Route path="/documentation" element={<Documentation />} />
                       <Route path="*" element={<NotFound />} />
                     </Routes>
                     <ScIA />
