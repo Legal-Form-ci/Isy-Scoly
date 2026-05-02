@@ -1,17 +1,13 @@
 import { useState, useEffect } from "react";
-import { Search, Filter, ShoppingCart, Heart, Star, Truck, BadgeCheck } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Search, ShoppingCart, Truck, SlidersHorizontal } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import SmartImage from "@/components/SmartImage";
+import ProductCard from "@/components/ProductCard";
 import SEOHead from "@/components/SEOHead";
 import { useLanguage } from "@/i18n/LanguageContext";
-import { useCart } from "@/contexts/CartContext";
-import { useWishlist } from "@/hooks/useWishlist";
 import { supabase } from "@/integrations/supabase/client";
-import { Link, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 
 interface Product {
   id: string;
@@ -44,8 +40,6 @@ interface Category {
 
 const Shop = () => {
   const { language, t } = useLanguage();
-  const { addToCart } = useCart();
-  const { toggleWishlist, isInWishlist } = useWishlist();
   const [searchParams, setSearchParams] = useSearchParams();
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -102,7 +96,7 @@ const Shop = () => {
     }
   };
 
-  const getLocalizedName = (item: Product | Category) => {
+  const getLocalizedName = (item: Category) => {
     switch (language) {
       case 'en': return item.name_en;
       case 'de': return item.name_de;
