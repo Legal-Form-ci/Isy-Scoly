@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
-import { Search, ShoppingCart, Truck, SlidersHorizontal } from "lucide-react";
+import { Search, ShoppingCart, Truck, SlidersHorizontal, X, ChevronRight } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ProductCard from "@/components/ProductCard";
@@ -147,155 +149,120 @@ const Shop = () => {
         keywords={["boutique", "fournitures scolaires", "bureautique", "Scoly", "Côte d'Ivoire"]}
       />
       <Navbar />
-      
-      {/* Hero Section - Fond solide sans dégradé */}
-      <section className="pt-24 pb-12 bg-primary">
-        <div className="container mx-auto px-4">
-          <div className="text-center text-primary-foreground">
-            <h1 className="text-4xl lg:text-5xl font-display font-bold mb-4">
-              Boutique Scoly
-            </h1>
-            <p className="text-lg opacity-90 max-w-2xl mx-auto mb-4">
-              Toutes vos fournitures scolaires et bureautiques en un seul endroit
-            </p>
-            <div className="flex items-center justify-center gap-2 text-sm">
-              <Truck size={18} />
-              <span>Livraison gratuite sur toutes les commandes</span>
-            </div>
-          </div>
+
+      {/* Page header — compact under sticky navbar */}
+      <section className="pt-[100px] md:pt-[140px] lg:pt-[170px] pb-3 sm:pb-4 bg-muted/40 border-b border-border">
+        <div className="container mx-auto px-3 sm:px-4">
+          <nav className="text-xs text-muted-foreground flex items-center gap-1 mb-2">
+            <Link to="/" className="hover:text-primary">Accueil</Link>
+            <ChevronRight size={12} />
+            <span className="text-foreground font-medium">Boutique</span>
+          </nav>
+          <h1 className="font-display text-xl sm:text-2xl lg:text-3xl font-bold text-foreground">
+            Boutique Scoly
+          </h1>
+          <p className="text-xs sm:text-sm text-muted-foreground mt-1">
+            {filteredProducts.length} produit{filteredProducts.length > 1 ? "s" : ""}
+            {selectedCategory && categories.find(c => c.id === selectedCategory) && (
+              <> dans <span className="text-foreground font-medium">{getLocalizedName(categories.find(c => c.id === selectedCategory)!)}</span></>
+            )}
+          </p>
         </div>
       </section>
 
-      {/* Categories Banner */}
-      <section className="py-6 bg-muted/50 border-b border-border">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-wrap items-center justify-center gap-3">
-            <button
-              onClick={() => handleCategoryClick(null)}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
-                !selectedCategory 
-                  ? 'bg-primary text-primary-foreground' 
-                  : 'bg-card border border-border hover:bg-muted'
-              }`}
-            >
-              Tous les produits
-            </button>
-            {categories.map((category) => (
-              <button
-                key={category.id}
-                onClick={() => handleCategoryClick(category.id, category.slug)}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
-                  selectedCategory === category.id 
-                    ? 'bg-primary text-primary-foreground' 
-                    : 'bg-card border border-border hover:bg-muted'
-                }`}
-              >
-                {getLocalizedName(category)}
-              </button>
-            ))}
+      {/* Filters bar — sticky toolbar */}
+      <div className="sticky top-[56px] md:top-[96px] lg:top-[124px] z-30 bg-background border-b border-border shadow-sm">
+        <div className="container mx-auto px-3 sm:px-4 py-2 sm:py-3 flex items-center gap-2 sm:gap-3">
+          <div className="relative flex-1 min-w-0">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={16} />
+            <Input
+              type="text"
+              placeholder={t.shop.searchPlaceholder}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-9 h-9 sm:h-10 text-sm"
+            />
           </div>
+          <select
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value)}
+            className="hidden sm:block h-10 px-3 rounded-md border border-border bg-card text-sm text-foreground min-w-[160px]"
+          >
+            <option value="newest">{t.shop.sortNewest}</option>
+            <option value="price-asc">{t.shop.sortPriceAsc}</option>
+            <option value="price-desc">{t.shop.sortPriceDesc}</option>
+            <option value="popular">{t.shop.sortPopular}</option>
+          </select>
+          {/* Mobile filters drawer */}
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button variant="outline" size="sm" className="lg:hidden gap-1.5 h-9 sm:h-10 shrink-0">
+                <SlidersHorizontal size={14} />
+                <span className="hidden sm:inline">Filtres</span>
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="left" className="w-[85%] sm:w-[360px] overflow-y-auto">
+              <SheetHeader>
+                <SheetTitle>Filtres</SheetTitle>
+              </SheetHeader>
+              <FiltersPanel
+                categories={categories}
+                selectedCategory={selectedCategory}
+                onSelectCategory={handleCategoryClick}
+                getLocalizedName={getLocalizedName}
+                sortBy={sortBy}
+                setSortBy={setSortBy}
+                t={t}
+              />
+            </SheetContent>
+          </Sheet>
         </div>
-      </section>
+      </div>
 
-      {/* Filters & Products */}
-      <section className="py-12">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col lg:flex-row gap-8">
-            {/* Sidebar Filters */}
-            <aside className="lg:w-64 space-y-6">
-              {/* Search */}
-              <div>
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={18} />
-                  <Input
-                    type="text"
-                    placeholder={t.shop.searchPlaceholder}
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-10"
-                  />
+      {/* Layout: sidebar + grid */}
+      <section className="py-4 sm:py-6">
+        <div className="container mx-auto px-3 sm:px-4">
+          <div className="grid grid-cols-1 lg:grid-cols-[260px_1fr] gap-4 sm:gap-6">
+            {/* Sidebar - desktop only */}
+            <aside className="hidden lg:block">
+              <div className="sticky top-[180px] space-y-4">
+                <FiltersPanel
+                  categories={categories}
+                  selectedCategory={selectedCategory}
+                  onSelectCategory={handleCategoryClick}
+                  getLocalizedName={getLocalizedName}
+                  sortBy={sortBy}
+                  setSortBy={setSortBy}
+                  t={t}
+                  hideSort
+                />
+                <div className="bg-gradient-to-br from-primary to-primary-light rounded-xl p-4 text-primary-foreground">
+                  <Truck size={22} className="mb-2 text-accent" />
+                  <p className="font-bold text-sm">Livraison gratuite</p>
+                  <p className="text-xs opacity-90 mt-1">Sur toutes vos commandes en Côte d'Ivoire</p>
                 </div>
-              </div>
-
-              {/* Categories */}
-              <div>
-                <h3 className="font-semibold text-foreground mb-3">{t.shop.categories}</h3>
-                <div className="space-y-2">
-                  <button
-                    onClick={() => handleCategoryClick(null)}
-                    className={`w-full text-left px-3 py-2 rounded-lg transition-colors ${
-                      !selectedCategory ? 'bg-primary text-primary-foreground' : 'hover:bg-muted'
-                    }`}
-                  >
-                    {t.shop.allCategories}
-                  </button>
-                  {categories.map((category) => (
-                    <button
-                      key={category.id}
-                      onClick={() => handleCategoryClick(category.id, category.slug)}
-                      className={`w-full text-left px-3 py-2 rounded-lg transition-colors ${
-                        selectedCategory === category.id ? 'bg-primary text-primary-foreground' : 'hover:bg-muted'
-                      }`}
-                    >
-                      {getLocalizedName(category)}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Sort */}
-              <div>
-                <h3 className="font-semibold text-foreground mb-3">{t.shop.sortBy}</h3>
-                <select
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg border border-border bg-card text-foreground"
-                >
-                  <option value="newest">{t.shop.sortNewest}</option>
-                  <option value="price-asc">{t.shop.sortPriceAsc}</option>
-                  <option value="price-desc">{t.shop.sortPriceDesc}</option>
-                  <option value="popular">{t.shop.sortPopular}</option>
-                </select>
-              </div>
-
-              {/* Free Shipping Banner */}
-              <div className="bg-muted border border-border rounded-xl p-4">
-                <div className="flex items-center gap-2 text-foreground mb-2">
-                  <Truck size={20} className="text-secondary" />
-                  <span className="font-semibold">Livraison gratuite</span>
-                </div>
-                <p className="text-sm text-muted-foreground">
-                  Sur toutes vos commandes, partout en Côte d'Ivoire
-                </p>
               </div>
             </aside>
 
-            {/* Products Grid */}
-            <div className="flex-1">
-              {/* Results count */}
-              <div className="mb-6 flex items-center justify-between">
-                <p className="text-muted-foreground">
-                  {filteredProducts.length} produit{filteredProducts.length > 1 ? 's' : ''} trouvé{filteredProducts.length > 1 ? 's' : ''}
-                </p>
-              </div>
-
+            <div>
               {loading ? (
-                <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
-                  {[...Array(8)].map((_, i) => (
-                    <div key={i} className="bg-card rounded-xl p-2 sm:p-4 animate-pulse">
-                      <div className="aspect-square bg-muted rounded-lg mb-2 sm:mb-4" />
-                      <div className="h-3 sm:h-4 bg-muted rounded w-3/4 mb-2" />
-                      <div className="h-3 sm:h-4 bg-muted rounded w-1/2" />
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 sm:gap-3 lg:gap-4">
+                  {[...Array(10)].map((_, i) => (
+                    <div key={i} className="bg-card rounded-lg border border-border p-2 animate-pulse">
+                      <div className="aspect-square bg-muted rounded mb-2" />
+                      <div className="h-3 bg-muted rounded w-3/4 mb-1" />
+                      <div className="h-3 bg-muted rounded w-1/2" />
                     </div>
                   ))}
                 </div>
               ) : filteredProducts.length === 0 ? (
-                <div className="text-center py-12">
+                <div className="text-center py-16 bg-card rounded-xl border border-border">
                   <ShoppingCart size={48} className="mx-auto text-muted-foreground mb-4" />
-                  <p className="text-muted-foreground">{t.common.noResults}</p>
+                  <p className="text-foreground font-semibold">Aucun produit trouvé</p>
+                  <p className="text-sm text-muted-foreground mt-1">{t.common.noResults}</p>
                 </div>
               ) : (
-                <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 sm:gap-3 lg:gap-4">
                   {filteredProducts.map((product) => (
                     <ProductCard key={product.id} product={product} />
                   ))}
@@ -310,5 +277,69 @@ const Shop = () => {
     </main>
   );
 };
+
+interface FiltersPanelProps {
+  categories: Category[];
+  selectedCategory: string | null;
+  onSelectCategory: (id: string | null, slug?: string) => void;
+  getLocalizedName: (c: Category) => string;
+  sortBy: string;
+  setSortBy: (s: string) => void;
+  t: any;
+  hideSort?: boolean;
+}
+
+const FiltersPanel = ({
+  categories,
+  selectedCategory,
+  onSelectCategory,
+  getLocalizedName,
+  sortBy,
+  setSortBy,
+  t,
+  hideSort,
+}: FiltersPanelProps) => (
+  <div className="space-y-4 mt-4 lg:mt-0">
+    <div className="bg-card rounded-xl border border-border p-3 sm:p-4">
+      <h3 className="font-bold text-sm text-foreground mb-3 uppercase tracking-wide">Catégories</h3>
+      <div className="space-y-1">
+        <button
+          onClick={() => onSelectCategory(null)}
+          className={`w-full text-left px-3 py-2 rounded-md text-sm transition-colors ${
+            !selectedCategory ? "bg-primary text-primary-foreground font-semibold" : "hover:bg-muted text-foreground/80"
+          }`}
+        >
+          {t.shop.allCategories}
+        </button>
+        {categories.map((c) => (
+          <button
+            key={c.id}
+            onClick={() => onSelectCategory(c.id, c.slug)}
+            className={`w-full text-left px-3 py-2 rounded-md text-sm transition-colors ${
+              selectedCategory === c.id ? "bg-primary text-primary-foreground font-semibold" : "hover:bg-muted text-foreground/80"
+            }`}
+          >
+            {getLocalizedName(c)}
+          </button>
+        ))}
+      </div>
+    </div>
+    {!hideSort && (
+      <div className="bg-card rounded-xl border border-border p-3 sm:p-4">
+        <h3 className="font-bold text-sm text-foreground mb-3 uppercase tracking-wide">Trier par</h3>
+        <select
+          value={sortBy}
+          onChange={(e) => setSortBy(e.target.value)}
+          className="w-full px-3 py-2 rounded-md border border-border bg-background text-sm"
+        >
+          <option value="newest">{t.shop.sortNewest}</option>
+          <option value="price-asc">{t.shop.sortPriceAsc}</option>
+          <option value="price-desc">{t.shop.sortPriceDesc}</option>
+          <option value="popular">{t.shop.sortPopular}</option>
+        </select>
+      </div>
+    )}
+  </div>
+);
 
 export default Shop;
