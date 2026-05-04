@@ -1,4 +1,4 @@
-import { Facebook, Instagram, Linkedin, Mail, MapPin, Phone, Share2, Twitter } from "lucide-react";
+import { Facebook, Instagram, Linkedin, Mail, MapPin, Phone, Twitter, Truck, ShieldCheck, CreditCard, RotateCcw, Headphones } from "lucide-react";
 import { Link } from "react-router-dom";
 import Logo from "./Logo";
 import { useLanguage } from "@/i18n/LanguageContext";
@@ -6,178 +6,174 @@ import { useLanguage } from "@/i18n/LanguageContext";
 const Footer = () => {
   const { t } = useLanguage();
 
-  const links = {
-    categories: [
-      { label: "Scoly Primaire", href: "/shop?category=scoly-primaire" },
-      { label: "Scoly Secondaire", href: "/shop?category=scoly-secondaire" },
-      { label: "Scoly Universitaire", href: "/shop?category=scoly-universite" },
-      { label: "Scoly Bureautique", href: "/shop?category=scoly-bureautique" },
-      { label: "Scoly Librairie", href: "/shop?category=scoly-librairie" },
-    ],
-    resources: [
-      { label: "Écoles", href: "/ecoles" },
-      { label: "Kits scolaires", href: "/kits" },
-      { label: "Ressources éducatives", href: "/ressources" },
-      { label: "Parrainage", href: "/parrainage" },
-      { label: "Actualités", href: "/actualites" },
-      { label: t.footer.faq, href: "/faq" },
-      { label: t.nav.about, href: "/about" },
-      { label: t.nav.contact, href: "/contact" },
-    ],
-    legal: [
-      { label: "Mentions légales", href: "/mentions-legales" },
-      { label: t.footer.terms, href: "/terms" },
-      { label: t.footer.privacy, href: "/privacy" },
-      { label: t.footer.cookies, href: "/cookies" },
-    ],
-  };
+  const columns = [
+    {
+      title: "Catégories",
+      links: [
+        { label: "Primaire", href: "/shop?category=scoly-primaire" },
+        { label: "Secondaire", href: "/shop?category=scoly-secondaire" },
+        { label: "Universitaire", href: "/shop?category=scoly-universite" },
+        { label: "Bureautique", href: "/shop?category=scoly-bureautique" },
+        { label: "Librairie", href: "/shop?category=scoly-librairie" },
+      ],
+    },
+    {
+      title: "Aidez-moi",
+      links: [
+        { label: "FAQ", href: "/faq" },
+        { label: "Livraison & retours", href: "/livraison-retours" },
+        { label: "Nous contacter", href: "/contact" },
+        { label: "Suivre ma commande", href: "/account" },
+        { label: "Modes de paiement", href: "/livraison-retours#paiement" },
+      ],
+    },
+    {
+      title: "À propos de Scoly",
+      links: [
+        { label: "Qui sommes-nous", href: "/about" },
+        { label: "Écoles partenaires", href: "/ecoles" },
+        { label: "Kits intelligents", href: "/kits" },
+        { label: "Ressources éducatives", href: "/ressources" },
+        { label: "Programme parrainage", href: "/parrainage" },
+        { label: "Actualités", href: "/actualites" },
+      ],
+    },
+    {
+      title: "Informations légales",
+      links: [
+        { label: "Mentions légales", href: "/mentions-legales" },
+        { label: "Conditions d'utilisation", href: "/terms" },
+        { label: "Politique de confidentialité", href: "/privacy" },
+        { label: "Politique des cookies", href: "/cookies" },
+      ],
+    },
+  ];
 
   const socials = [
-    { icon: <Facebook size={20} />, href: "https://facebook.com/scoly.ci", label: "Facebook" },
-    { icon: <Twitter size={20} />, href: "https://twitter.com/scoly_ci", label: "Twitter" },
-    { icon: <Instagram size={20} />, href: "https://instagram.com/scoly.ci", label: "Instagram" },
-    { icon: <Linkedin size={20} />, href: "https://linkedin.com/company/scoly", label: "LinkedIn" },
+    { icon: Facebook, href: "https://facebook.com/scoly.ci", label: "Facebook" },
+    { icon: Twitter, href: "https://twitter.com/scoly_ci", label: "Twitter" },
+    { icon: Instagram, href: "https://instagram.com/scoly.ci", label: "Instagram" },
+    { icon: Linkedin, href: "https://linkedin.com/company/scoly", label: "LinkedIn" },
+  ];
+
+  const trustItems = [
+    { icon: Truck, title: "Livraison gratuite", desc: "Partout en Côte d'Ivoire" },
+    { icon: ShieldCheck, title: "Paiement sécurisé", desc: "Mobile Money & Carte" },
+    { icon: RotateCcw, title: "Retours faciles", desc: "Sous 7 jours ouvrés" },
+    { icon: Headphones, title: "Support 7j/7", desc: "Une équipe à l'écoute" },
   ];
 
   return (
-    <footer className="bg-foreground text-primary-foreground pt-16 pb-8" id="contact" role="contentinfo" aria-label="Pied de page">
-      <div className="container mx-auto px-4">
-        {/* Social Share Bar */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12 pb-8 border-b border-primary-foreground/20">
-          <div className="flex items-center gap-2 text-primary-foreground/80">
-            <Share2 size={20} />
-            <span className="font-medium">Suivez-nous sur les réseaux :</span>
-          </div>
-          <div className="flex items-center gap-3">
-            {socials.map((social, index) => (
-              <a
-                key={index}
-                href={social.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={social.label}
-                className="w-12 h-12 rounded-full bg-primary/30 flex items-center justify-center text-primary-foreground hover:bg-accent hover:text-accent-foreground transition-all duration-300 hover:scale-110"
-              >
-                {social.icon}
-              </a>
-            ))}
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 mb-12">
-          {/* Brand Column - Logo à gauche */}
-          <div className="lg:col-span-2">
-            <div className="bg-white/95 rounded-xl px-4 py-2 inline-block">
-              <Logo size="lg" showSlogan={false} />
-            </div>
-            <p className="mt-1 text-primary-foreground/60 text-xs font-medium tracking-tight">
-              Scolaire & Bureautique — Livraison gratuite
-            </p>
-            <p className="mt-4 text-primary-foreground/80 max-w-sm leading-relaxed">
-              La plateforme de référence en Côte d'Ivoire pour les fournitures scolaires et bureautiques de qualité.
-            </p>
-
-            {/* Contact Info */}
-            <div className="mt-6 space-y-3">
-              <a
-                href="mailto:contact@scoly.ci"
-                className="flex items-center gap-3 text-primary-foreground/80 hover:text-accent transition-colors"
-              >
-                <Mail size={18} />
-                contact@scoly.ci
-              </a>
-              <a
-                href="tel:+2250758465933"
-                className="flex items-center gap-3 text-primary-foreground/80 hover:text-accent transition-colors"
-              >
-                <Phone size={18} />
-                +225 07 58 46 59 33
-              </a>
-              <div className="flex items-center gap-3 text-primary-foreground/80">
-                <MapPin size={18} />
-                Abidjan, Côte d'Ivoire
+    <footer className="bg-foreground text-primary-foreground" id="contact" role="contentinfo">
+      {/* Trust bar */}
+      <div className="border-b border-primary-foreground/10">
+        <div className="container mx-auto px-4 py-6 grid grid-cols-2 md:grid-cols-4 gap-4">
+          {trustItems.map(({ icon: Icon, title, desc }) => (
+            <div key={title} className="flex items-center gap-3">
+              <div className="w-10 h-10 shrink-0 rounded-full bg-secondary/20 text-secondary flex items-center justify-center">
+                <Icon size={20} />
+              </div>
+              <div className="min-w-0">
+                <p className="font-semibold text-sm leading-tight">{title}</p>
+                <p className="text-xs text-primary-foreground/60 leading-tight truncate">{desc}</p>
               </div>
             </div>
-          </div>
-
-          {/* Links Columns */}
-          <div>
-            <h4 className="font-display font-semibold text-lg mb-4 text-primary-foreground">Nos catégories</h4>
-            <ul className="space-y-3">
-              {links.categories.map((link, index) => (
-                <li key={index}>
-                  <Link to={link.href} className="text-primary-foreground/70 hover:text-accent transition-colors">
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div>
-            <h4 className="font-display font-semibold text-lg mb-4 text-primary-foreground">{t.footer.resources}</h4>
-            <ul className="space-y-3">
-              {links.resources.map((link, index) => (
-                <li key={index}>
-                  <Link to={link.href} className="text-primary-foreground/70 hover:text-accent transition-colors">
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div>
-            <h4 className="font-display font-semibold text-lg mb-4 text-primary-foreground">{t.footer.legal}</h4>
-            <ul className="space-y-3">
-              {links.legal.map((link, index) => (
-                <li key={index}>
-                  <Link to={link.href} className="text-primary-foreground/70 hover:text-accent transition-colors">
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+          ))}
         </div>
+      </div>
 
-        {/* Bottom Bar */}
-        <div className="pt-8 border-t border-primary-foreground/20">
-          <div className="text-center space-y-2">
-            <p className="text-primary-foreground/80 text-sm">
-              © {new Date().getFullYear()} Scoly. Tous droits réservés.
+      {/* Main columns */}
+      <div className="container mx-auto px-4 py-10 lg:py-12">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 lg:gap-10">
+          {/* Brand */}
+          <div className="col-span-2 lg:col-span-2">
+            <div className="bg-white rounded-lg px-3 py-2 inline-block">
+              <Logo size="md" />
+            </div>
+            <p className="mt-4 text-sm text-primary-foreground/70 leading-relaxed max-w-xs">
+              La référence en Côte d'Ivoire pour les fournitures scolaires & bureautiques.
             </p>
-            <a
-              href="https://ikoffi.agricapital.ci"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 text-primary-foreground/60 text-xs hover:text-accent transition-colors"
-            >
-              <img
-                src="/founder-inocent-koffi.jpg"
-                alt="Inocent KOFFI"
-                className="w-6 h-6 rounded-full object-cover object-top border border-primary-foreground/30"
-                loading="lazy"
-              />
-              <span>Développée par Inocent KOFFI</span>
-            </a>
+            <div className="mt-5 space-y-2 text-sm">
+              <a href="mailto:contact@scoly.ci" className="flex items-center gap-2 text-primary-foreground/80 hover:text-secondary transition-colors">
+                <Mail size={15} /> contact@scoly.ci
+              </a>
+              <a href="tel:+2250758465933" className="flex items-center gap-2 text-primary-foreground/80 hover:text-secondary transition-colors">
+                <Phone size={15} /> +225 07 58 46 59 33
+              </a>
+              <p className="flex items-center gap-2 text-primary-foreground/80">
+                <MapPin size={15} /> Abidjan, Côte d'Ivoire
+              </p>
+            </div>
+            {/* Socials */}
+            <div className="flex items-center gap-2 mt-5">
+              {socials.map(({ icon: Icon, href, label }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={label}
+                  className="w-9 h-9 rounded-full bg-primary-foreground/10 hover:bg-secondary hover:text-secondary-foreground flex items-center justify-center transition-colors"
+                >
+                  <Icon size={16} />
+                </a>
+              ))}
+            </div>
           </div>
 
-          {/* Copyright mobile social links */}
-          <div className="flex items-center justify-center gap-4 mt-6 md:hidden">
-            {socials.map((social, index) => (
-              <a
-                key={index}
-                href={social.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={social.label}
-                className="w-10 h-10 rounded-full bg-primary-foreground/10 flex items-center justify-center text-primary-foreground/70 hover:bg-accent hover:text-accent-foreground transition-colors"
-              >
-                {social.icon}
-              </a>
+          {/* Link columns */}
+          {columns.map((col) => (
+            <div key={col.title}>
+              <h4 className="font-display font-bold text-sm uppercase tracking-wider text-primary-foreground mb-4">
+                {col.title}
+              </h4>
+              <ul className="space-y-2.5">
+                {col.links.map((link) => (
+                  <li key={link.href}>
+                    <Link
+                      to={link.href}
+                      className="text-sm text-primary-foreground/70 hover:text-secondary transition-colors"
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Payment & shipping methods */}
+      <div className="border-t border-primary-foreground/10">
+        <div className="container mx-auto px-4 py-5 flex flex-col md:flex-row items-center justify-between gap-4">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-xs text-primary-foreground/60 mr-2">Paiements :</span>
+            {["Orange Money", "MTN MoMo", "Moov Money", "Wave", "Visa", "Mastercard"].map((m) => (
+              <span key={m} className="text-[11px] font-semibold px-2.5 py-1 rounded bg-primary-foreground/10 text-primary-foreground/80">
+                {m}
+              </span>
             ))}
           </div>
+          <div className="flex items-center gap-2">
+            <CreditCard size={14} className="text-primary-foreground/60" />
+            <span className="text-xs text-primary-foreground/60">Transactions chiffrées SSL</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Bottom */}
+      <div className="border-t border-primary-foreground/10 bg-background/5">
+        <div className="container mx-auto px-4 py-4 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-primary-foreground/60">
+          <p>© {new Date().getFullYear()} Scoly. Tous droits réservés.</p>
+          <a
+            href="https://ikoffi.agricapital.ci"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-secondary transition-colors"
+          >
+            Conçu par Inocent KOFFI
+          </a>
         </div>
       </div>
     </footer>
