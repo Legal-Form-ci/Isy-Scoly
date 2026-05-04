@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Minus, Plus, Trash2, ShoppingBag, ArrowRight } from "lucide-react";
+import { Minus, Plus, Trash2, ShoppingBag, ArrowRight, Truck, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -14,36 +14,42 @@ const Cart = () => {
   const { user } = useAuth();
 
   const getLocalizedName = (product: any) => {
-    if (!product) return '';
+    if (!product) return "";
     switch (language) {
-      case 'en': return product.name_en;
-      case 'de': return product.name_de;
-      case 'es': return product.name_es;
+      case "en": return product.name_en;
+      case "de": return product.name_de;
+      case "es": return product.name_es;
       default: return product.name_fr;
     }
   };
 
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat('fr-FR').format(price) + ' ' + t.common.currency;
-  };
+  const formatPrice = (price: number) =>
+    new Intl.NumberFormat("fr-FR").format(price) + " " + t.common.currency;
 
-  // Guest users can now view their cart - login only required at checkout
+  const checkoutHref = user ? "/checkout" : "/auth?redirect=/checkout";
+  const checkoutLabel = user ? t.shop.proceedCheckout : `${t.nav.login} pour commander`;
 
   return (
-    <main className="min-h-screen bg-background">
+    <main className="min-h-screen bg-background pb-24 lg:pb-0">
       <Navbar />
-      
-      <div className="pt-24 pb-12">
-        <div className="container mx-auto px-4">
-          <h1 className="text-3xl font-display font-bold text-foreground mb-8">
+
+      <div className="pt-[100px] md:pt-[140px] lg:pt-[170px] pb-8">
+        <div className="container mx-auto px-3 sm:px-4">
+          <nav className="text-xs text-muted-foreground mb-2">
+            <Link to="/" className="hover:text-primary">Accueil</Link> / <span className="text-foreground font-medium">Panier</span>
+          </nav>
+          <h1 className="font-display text-2xl sm:text-3xl font-bold text-foreground">
             {t.nav.cart}
+            {items.length > 0 && (
+              <span className="ml-2 text-sm font-medium text-muted-foreground">({items.length} article{items.length > 1 ? "s" : ""})</span>
+            )}
           </h1>
 
           {loading ? (
-            <div className="animate-pulse space-y-4">
+            <div className="animate-pulse space-y-3 mt-6">
               {[...Array(3)].map((_, i) => (
                 <div key={i} className="bg-card rounded-xl p-4 flex gap-4">
-                  <div className="w-24 h-24 bg-muted rounded-lg" />
+                  <div className="w-20 h-20 bg-muted rounded-lg" />
                   <div className="flex-1 space-y-2">
                     <div className="h-4 bg-muted rounded w-3/4" />
                     <div className="h-4 bg-muted rounded w-1/2" />
@@ -52,127 +58,160 @@ const Cart = () => {
               ))}
             </div>
           ) : items.length === 0 ? (
-            <div className="text-center py-20">
-              <ShoppingBag size={64} className="mx-auto text-muted-foreground mb-4" />
-              <h2 className="text-xl font-semibold text-foreground mb-2">
-                {t.shop.emptyCart}
-              </h2>
-              <p className="text-muted-foreground mb-6">
-                {t.shop.continueShopping}
-              </p>
+            <div className="text-center py-16 sm:py-20 bg-card rounded-xl border border-border mt-6">
+              <ShoppingBag size={56} className="mx-auto text-muted-foreground mb-4" />
+              <h2 className="text-lg sm:text-xl font-semibold text-foreground mb-2">{t.shop.emptyCart}</h2>
+              <p className="text-sm text-muted-foreground mb-6">{t.shop.continueShopping}</p>
               <Link to="/shop">
-                <Button variant="hero">
+                <Button variant="default">
                   <ShoppingBag size={18} />
                   {t.shop.continueShopping}
                 </Button>
               </Link>
             </div>
           ) : (
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-              {/* Cart Items */}
-              <div className="lg:col-span-2 space-y-4">
-                {items.map((item) => (
-                  <div
-                    key={item.id}
-                    className="bg-card rounded-xl border border-border p-4 flex gap-4"
-                  >
-                    {/* Image */}
-                    <div className="w-24 h-24 rounded-lg overflow-hidden bg-muted flex-shrink-0">
-                      <SmartImage
-                        src={item.product?.image_url}
-                        alt={getLocalizedName(item.product)}
-                        className="w-full h-full object-cover"
-                        fallbackSrc="/placeholder.svg"
-                      />
-                    </div>
-
-                    {/* Details */}
-                    <div className="flex-1 min-w-0">
-                      <h3 className="font-medium text-foreground truncate">
-                        {getLocalizedName(item.product)}
-                      </h3>
-                      <p className="text-primary font-semibold mt-1">
-                        {formatPrice(item.product?.price || 0)}
-                      </p>
-
-                      {/* Quantity Controls */}
-                      <div className="flex items-center gap-2 mt-3">
-                        <button
-                          onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                          className="p-1 rounded-lg border border-border hover:bg-muted transition-colors"
-                        >
-                          <Minus size={16} />
-                        </button>
-                        <span className="w-8 text-center font-medium">{item.quantity}</span>
-                        <button
-                          onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                          className="p-1 rounded-lg border border-border hover:bg-muted transition-colors"
-                        >
-                          <Plus size={16} />
-                        </button>
-                      </div>
-                    </div>
-
-                    {/* Remove Button */}
-                    <button
-                      onClick={() => removeFromCart(item.id)}
-                      className="p-2 text-muted-foreground hover:text-destructive transition-colors"
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6 mt-6">
+              {/* Items */}
+              <div className="lg:col-span-2 space-y-3">
+                {items.map((item) => {
+                  const stock = item.product?.stock ?? 0;
+                  const unavailable = stock === 0;
+                  const lineTotal = (item.product?.price || 0) * item.quantity;
+                  return (
+                    <article
+                      key={item.id}
+                      className="bg-card rounded-xl border border-border p-3 sm:p-4 flex gap-3 sm:gap-4"
                     >
-                      <Trash2 size={20} />
-                    </button>
+                      <Link to={`/shop/product/${item.product_id}`} className="w-20 h-20 sm:w-24 sm:h-24 rounded-lg overflow-hidden bg-muted flex-shrink-0">
+                        <SmartImage
+                          src={item.product?.image_url}
+                          alt={getLocalizedName(item.product)}
+                          className="w-full h-full object-cover"
+                          fallbackSrc="/placeholder.svg"
+                        />
+                      </Link>
+
+                      <div className="flex-1 min-w-0 flex flex-col">
+                        <div className="flex items-start justify-between gap-2">
+                          <Link
+                            to={`/shop/product/${item.product_id}`}
+                            className="font-medium text-sm sm:text-base text-foreground line-clamp-2 hover:text-primary transition-colors"
+                          >
+                            {getLocalizedName(item.product)}
+                          </Link>
+                          <button
+                            onClick={() => removeFromCart(item.id)}
+                            className="p-1 -mr-1 text-muted-foreground hover:text-destructive transition-colors shrink-0"
+                            aria-label="Retirer"
+                          >
+                            <Trash2 size={18} />
+                          </button>
+                        </div>
+
+                        {unavailable && (
+                          <span className="inline-flex w-fit mt-1 px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-destructive/10 text-destructive">
+                            Indisponible
+                          </span>
+                        )}
+
+                        <div className="mt-auto pt-2 flex items-center justify-between flex-wrap gap-2">
+                          <div className="flex items-center gap-1 border border-border rounded-lg">
+                            <button
+                              onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                              className="w-8 h-8 flex items-center justify-center hover:bg-muted rounded-l-lg disabled:opacity-40"
+                              disabled={item.quantity <= 1}
+                              aria-label="Diminuer"
+                            >
+                              <Minus size={14} />
+                            </button>
+                            <span className="w-8 text-center text-sm font-semibold">{item.quantity}</span>
+                            <button
+                              onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                              className="w-8 h-8 flex items-center justify-center hover:bg-muted rounded-r-lg disabled:opacity-40"
+                              disabled={item.quantity >= stock}
+                              aria-label="Augmenter"
+                            >
+                              <Plus size={14} />
+                            </button>
+                          </div>
+                          <div className="text-right">
+                            <p className="text-sm sm:text-base font-bold text-primary tabular-nums">{formatPrice(lineTotal)}</p>
+                            {item.quantity > 1 && (
+                              <p className="text-[11px] text-muted-foreground">
+                                {formatPrice(item.product?.price || 0)} × {item.quantity}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </article>
+                  );
+                })}
+
+                {/* Trust strip */}
+                <div className="grid grid-cols-2 gap-2 sm:gap-3 pt-2">
+                  <div className="bg-card border border-border rounded-lg p-3 flex items-center gap-2">
+                    <Truck size={18} className="text-secondary shrink-0" />
+                    <span className="text-xs sm:text-sm text-foreground">Livraison gratuite</span>
                   </div>
-                ))}
+                  <div className="bg-card border border-border rounded-lg p-3 flex items-center gap-2">
+                    <ShieldCheck size={18} className="text-secondary shrink-0" />
+                    <span className="text-xs sm:text-sm text-foreground">Paiement sécurisé</span>
+                  </div>
+                </div>
               </div>
 
-              {/* Order Summary */}
-              <div className="lg:col-span-1">
-                <div className="bg-card rounded-xl border border-border p-6 sticky top-24">
-                  <h2 className="text-xl font-display font-bold text-foreground mb-6">
-                    {t.checkout.orderSummary}
-                  </h2>
-
-                  <div className="space-y-3 mb-6">
+              {/* Summary - desktop */}
+              <aside className="hidden lg:block">
+                <div className="bg-card rounded-xl border border-border p-6 sticky top-[180px]">
+                  <h2 className="text-lg font-display font-bold text-foreground mb-4">{t.checkout.orderSummary}</h2>
+                  <div className="space-y-2.5 text-sm mb-5">
                     <div className="flex justify-between text-muted-foreground">
                       <span>{t.shop.subtotal}</span>
-                      <span>{formatPrice(total)}</span>
+                      <span className="tabular-nums">{formatPrice(total)}</span>
                     </div>
                     <div className="flex justify-between text-muted-foreground">
                       <span>{t.shop.shipping}</span>
-                      <span>{t.shop.freeShipping}</span>
+                      <span className="text-secondary font-semibold">{t.shop.freeShipping}</span>
                     </div>
-                    <div className="border-t border-border pt-3 flex justify-between font-bold text-foreground">
+                    <div className="border-t border-border pt-2.5 flex justify-between font-bold text-base text-foreground">
                       <span>{t.shop.total}</span>
-                      <span className="text-primary">{formatPrice(total)}</span>
+                      <span className="text-primary tabular-nums">{formatPrice(total)}</span>
                     </div>
                   </div>
-
-                  {user ? (
-                    <Link to="/checkout" className="block">
-                      <Button variant="hero" className="w-full">
-                        {t.shop.proceedCheckout}
-                        <ArrowRight size={18} />
-                      </Button>
-                    </Link>
-                  ) : (
-                    <Link to="/auth?redirect=/checkout" className="block">
-                      <Button variant="hero" className="w-full">
-                        {t.nav.login} pour commander
-                        <ArrowRight size={18} />
-                      </Button>
-                    </Link>
-                  )}
-
-                  <Link to="/shop" className="block mt-3">
-                    <Button variant="outline" className="w-full">
-                      {t.shop.continueShopping}
+                  <Link to={checkoutHref} className="block">
+                    <Button variant="default" className="w-full">
+                      {checkoutLabel}
+                      <ArrowRight size={18} />
                     </Button>
                   </Link>
+                  <Link to="/shop" className="block mt-2">
+                    <Button variant="outline" className="w-full">{t.shop.continueShopping}</Button>
+                  </Link>
                 </div>
-              </div>
+              </aside>
             </div>
           )}
         </div>
       </div>
+
+      {/* Mobile sticky checkout bar */}
+      {items.length > 0 && (
+        <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-card/95 backdrop-blur border-t border-border shadow-[0_-4px_16px_rgba(0,0,0,0.08)] px-3 py-2.5">
+          <div className="flex items-center gap-3">
+            <div className="flex-1 min-w-0">
+              <p className="text-[11px] text-muted-foreground">{t.shop.total}</p>
+              <p className="text-base font-bold text-primary tabular-nums truncate">{formatPrice(total)}</p>
+            </div>
+            <Link to={checkoutHref} className="flex-1">
+              <Button variant="default" className="w-full h-11">
+                Commander
+                <ArrowRight size={16} />
+              </Button>
+            </Link>
+          </div>
+        </div>
+      )}
 
       <Footer />
     </main>
