@@ -44,14 +44,14 @@ const HeroSection = () => {
 
             <div className="relative h-full p-6 sm:p-10 lg:p-12 flex flex-col justify-center text-primary-foreground">
               <span className="inline-flex w-fit items-center gap-2 px-3 py-1 rounded-full bg-secondary text-secondary-foreground text-xs font-bold uppercase tracking-wide mb-4">
-                Rentrée scolaire
+                Fournitures scolaires & bureautiques
               </span>
               <h1 className="font-display text-3xl sm:text-5xl lg:text-6xl font-extrabold leading-[1.05] mb-3">
                 Tout pour la rentrée<br />
-                <span className="text-accent">au meilleur prix</span>
+                <span className="text-accent">& votre bureau au meilleur prix</span>
               </h1>
               <p className="text-sm sm:text-base lg:text-lg text-primary-foreground/85 max-w-xl mb-6">
-                {stats.products > 0 ? `${stats.products}+ produits` : "Des milliers de produits"} — livraison gratuite partout en Côte d'Ivoire.
+                Cahiers, manuels, consommables & matériel pro — {stats.products > 0 ? `${stats.products}+ produits` : "des milliers de produits"} en stock, livrés gratuitement partout en Côte d'Ivoire.
               </p>
               <div className="flex flex-wrap gap-2 sm:gap-3">
                 <span className="inline-flex items-center gap-2 bg-secondary text-secondary-foreground px-4 sm:px-5 py-2.5 rounded-md font-semibold text-sm sm:text-base shadow-md group-hover:bg-secondary/90 transition-colors">

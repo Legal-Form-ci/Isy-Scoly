@@ -740,6 +740,98 @@ export type Database = {
         }
         Relationships: []
       }
+      email_campaign_logs: {
+        Row: {
+          campaign_id: string | null
+          error_message: string | null
+          id: string
+          recipient_email: string
+          resend_id: string | null
+          sent_at: string
+          status: string
+        }
+        Insert: {
+          campaign_id?: string | null
+          error_message?: string | null
+          id?: string
+          recipient_email: string
+          resend_id?: string | null
+          sent_at?: string
+          status: string
+        }
+        Update: {
+          campaign_id?: string | null
+          error_message?: string | null
+          id?: string
+          recipient_email?: string
+          resend_id?: string | null
+          sent_at?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "email_campaign_logs_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "email_campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      email_campaigns: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          failed_count: number | null
+          html_content: string
+          id: string
+          name: string
+          preheader: string | null
+          recipients_count: number | null
+          scheduled_at: string | null
+          sent_at: string | null
+          sent_count: number | null
+          status: string
+          subject: string
+          template_type: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          failed_count?: number | null
+          html_content: string
+          id?: string
+          name: string
+          preheader?: string | null
+          recipients_count?: number | null
+          scheduled_at?: string | null
+          sent_at?: string | null
+          sent_count?: number | null
+          status?: string
+          subject: string
+          template_type?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          failed_count?: number | null
+          html_content?: string
+          id?: string
+          name?: string
+          preheader?: string | null
+          recipients_count?: number | null
+          scheduled_at?: string | null
+          sent_at?: string | null
+          sent_count?: number | null
+          status?: string
+          subject?: string
+          template_type?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       email_logs: {
         Row: {
           email_type: string
@@ -960,6 +1052,39 @@ export type Database = {
           moderator_id?: string
           note?: string
           updated_at?: string | null
+        }
+        Relationships: []
+      }
+      newsletter_subscribers: {
+        Row: {
+          email: string
+          first_name: string | null
+          id: string
+          is_active: boolean
+          source: string | null
+          subscribed_at: string
+          unsubscribe_token: string
+          unsubscribed_at: string | null
+        }
+        Insert: {
+          email: string
+          first_name?: string | null
+          id?: string
+          is_active?: boolean
+          source?: string | null
+          subscribed_at?: string
+          unsubscribe_token?: string
+          unsubscribed_at?: string | null
+        }
+        Update: {
+          email?: string
+          first_name?: string | null
+          id?: string
+          is_active?: boolean
+          source?: string | null
+          subscribed_at?: string
+          unsubscribe_token?: string
+          unsubscribed_at?: string | null
         }
         Relationships: []
       }
