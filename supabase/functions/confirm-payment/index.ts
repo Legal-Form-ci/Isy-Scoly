@@ -50,6 +50,21 @@ serve(async (req) => {
       );
     }
 
+    // SECURITY: Payment completion must come exclusively from kkiapay-webhook (HMAC verified).
+    // This endpoint only allows clients to mark a payment as failed/cancelled.
+    if (status === 'completed') {
+      return new Response(
+        JSON.stringify({ error: 'Payment completion is handled by webhook only' }),
+        { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+    if (status !== 'failed' && status !== 'cancelled') {
+      return new Response(
+        JSON.stringify({ error: 'Invalid status' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
     // Get payment and verify it belongs to the authenticated user
     const { data: payment, error: paymentError } = await supabase
       .from('payments')
