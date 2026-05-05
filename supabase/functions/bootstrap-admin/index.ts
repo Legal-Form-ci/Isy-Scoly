@@ -163,6 +163,15 @@ serve(async (req) => {
       console.log('Password recovery link generated for admin');
     }
 
+    // Mark bootstrap token as consumed (one-time use defense-in-depth)
+    await supabaseAdmin
+      .from('platform_settings')
+      .upsert({
+        key: 'bootstrap_admin_used',
+        value: 'true',
+        description: 'Bootstrap admin token has been used. Rotate BOOTSTRAP_ADMIN_TOKEN before reuse.',
+      }, { onConflict: 'key' });
+
     return new Response(JSON.stringify({ 
       success: true, 
       message: existingAdmin 
