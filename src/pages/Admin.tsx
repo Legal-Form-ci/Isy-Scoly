@@ -66,6 +66,7 @@ import FlashDealsManagement from "@/components/admin/FlashDealsManagement";
 import SocialMediaManager from "@/components/admin/SocialMediaManager";
 import DocumentationManager from "@/components/admin/DocumentationManager";
 import EducationAIManager from "@/components/admin/EducationAIManager";
+import EmailMarketing from "@/components/admin/EmailMarketing";
 
 import { Share2 } from "lucide-react";
 
@@ -99,7 +100,8 @@ type TabType =
   | "resources"
   | "referrals"
   | "flash_deals"
-  | "education_ai";
+  | "education_ai"
+  | "email_marketing";
 
 const Admin = () => {
   const { t, language } = useLanguage();
@@ -158,6 +160,7 @@ const Admin = () => {
     { id: "promotions_mgmt", label: "Promotions", icon: Tag },
     { id: "flash_deals", label: "Ventes Flash", icon: Zap },
     { id: "social_media", label: "Réseaux Sociaux", icon: Share2 },
+    { id: "email_marketing", label: "📧 Email Marketing", icon: Bell },
     { id: "schools", label: "Écoles", icon: GraduationCap },
     { id: "resources", label: "Ressources Édu", icon: BookOpen },
     { id: "education_ai", label: "🧠 IA Éducation", icon: Brain },
@@ -276,6 +279,7 @@ const Admin = () => {
         <div className="flex-1 p-4 sm:p-6 lg:p-8 pb-24 lg:pb-8 pt-16 lg:pt-4">
           {activeTab === "dashboard" && <AdminDashboard />}
           {activeTab === "ai_manager" && <AIManager />}
+          {activeTab === "email_marketing" && <EmailMarketing />}
           {activeTab === "stats" && <AdvancedStats />}
           {activeTab === "sharestats" && <ShareStatsTab />}
           {activeTab === "products" && <ProductsTab />}

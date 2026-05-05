@@ -13,6 +13,7 @@ import Footer from "@/components/Footer";
 import FreeShippingPopup from "@/components/FreeShippingPopup";
 import SEOHead from "@/components/SEOHead";
 import RecentlyViewed from "@/components/RecentlyViewed";
+import NewsletterSignup from "@/components/NewsletterSignup";
 
 const Index = () => {
   return (
@@ -34,6 +35,7 @@ const Index = () => {
       <FeaturesSection />
       <StatsSection />
       <PaymentSection />
+      <div className="container mx-auto px-3 sm:px-4 py-8"><NewsletterSignup /></div>
       <CTASection />
       <Footer />
       <FreeShippingPopup />

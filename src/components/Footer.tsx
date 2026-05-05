@@ -1,6 +1,7 @@
 import { Facebook, Instagram, Linkedin, Mail, MapPin, Phone, Twitter, Truck, ShieldCheck, CreditCard, RotateCcw, Headphones } from "lucide-react";
 import { Link } from "react-router-dom";
 import Logo from "./Logo";
+import NewsletterSignup from "./NewsletterSignup";
 import { useLanguage } from "@/i18n/LanguageContext";
 
 const Footer = () => {
@@ -141,6 +142,17 @@ const Footer = () => {
               </ul>
             </div>
           ))}
+        </div>
+
+        {/* Newsletter signup */}
+        <div className="mt-10 pt-8 border-t border-primary-foreground/10">
+          <div className="grid md:grid-cols-2 gap-4 items-center">
+            <div>
+              <h4 className="font-display font-bold text-lg mb-1">📧 Newsletter Scoly</h4>
+              <p className="text-sm text-primary-foreground/70">Promos, nouveautés, conseils rentrée — recevez le meilleur de Scoly.</p>
+            </div>
+            <NewsletterSignup variant="footer" />
+          </div>
         </div>
       </div>
 
