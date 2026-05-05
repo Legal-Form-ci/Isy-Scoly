@@ -59,3 +59,12 @@ verify_jwt = false
 
 [functions.ai-education-manager]
 verify_jwt = false
+
+[functions.send-newsletter-campaign]
+verify_jwt = true
+
+[functions.generate-email-content]
+verify_jwt = true
+
+[functions.subscribe-newsletter]
+verify_jwt = false
