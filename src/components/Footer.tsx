@@ -1,6 +1,7 @@
 import { Facebook, Instagram, Linkedin, Mail, MapPin, Phone, Twitter, Truck, ShieldCheck, CreditCard, RotateCcw, Headphones } from "lucide-react";
 import { Link } from "react-router-dom";
 import Logo from "./Logo";
+import NewsletterSignup from "./NewsletterSignup";
 import { useLanguage } from "@/i18n/LanguageContext";
 
 const Footer = () => {
