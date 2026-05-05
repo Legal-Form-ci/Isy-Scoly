@@ -25,8 +25,32 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
-    const body: NotificationRequest = await req.json();
+    // Require admin/moderator authentication
+    const authHeader = req.headers.get("Authorization");
+    if (!authHeader?.startsWith("Bearer ")) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    const supaAuth = createClient(supabaseUrl, Deno.env.get("SUPABASE_ANON_KEY")!);
+    const token = authHeader.replace("Bearer ", "");
+    const { data: { user }, error: authError } = await supaAuth.auth.getUser(token);
+    if (authError || !user) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
+    const { data: roles } = await supabase
+      .from("user_roles").select("role").eq("user_id", user.id);
+    const isStaff = roles?.some((r: any) => r.role === "admin" || r.role === "moderator");
+    if (!isStaff) {
+      return new Response(JSON.stringify({ error: "Forbidden" }), {
+        status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    const body: NotificationRequest = await req.json();
 
     // ========== GENERIC NOTIFICATION MODE ==========
     if (body.type && body.userId) {

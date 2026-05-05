@@ -17,11 +17,36 @@ serve(async (req) => {
   }
 
   try {
-    const { orderId, emailType }: OrderEmailRequest = await req.json();
-
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+    const supabaseAnonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
+
+    // Require authentication and admin/moderator role
+    const authHeader = req.headers.get("Authorization");
+    if (!authHeader?.startsWith("Bearer ")) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    const token = authHeader.replace("Bearer ", "");
+    const supaAuth = createClient(supabaseUrl, supabaseAnonKey);
+    const { data: { user }, error: authError } = await supaAuth.auth.getUser(token);
+    if (authError || !user) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
     const supabase = createClient(supabaseUrl, supabaseKey);
+    const { data: roles } = await supabase
+      .from("user_roles").select("role").eq("user_id", user.id);
+    const isStaff = roles?.some((r: any) => r.role === "admin" || r.role === "moderator");
+    if (!isStaff) {
+      return new Response(JSON.stringify({ error: "Forbidden" }), {
+        status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    const { orderId, emailType }: OrderEmailRequest = await req.json();
 
     const { data: order, error: orderError } = await supabase
       .from("orders")
