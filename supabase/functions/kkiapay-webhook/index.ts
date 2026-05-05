@@ -87,20 +87,23 @@ serve(async (req) => {
     const rawBody = await req.text();
     const signature = req.headers.get('x-kkiapay-signature');
     
-    // Verify webhook signature (security fix)
-    if (kkiapaySecret) {
-      const isValid = await verifyWebhookSignature(rawBody, signature, kkiapaySecret);
-      if (!isValid) {
-        console.error('[Security] Invalid webhook signature - rejecting request');
-        return new Response(
-          JSON.stringify({ error: 'Invalid signature' }),
-          { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        );
-      }
-      console.log('[Security] Webhook signature verified successfully');
-    } else {
-      console.warn('[Security] KKIAPAY_SECRET not configured - skipping signature verification');
+    // Verify webhook signature (security fix) - REQUIRE secret to be configured
+    if (!kkiapaySecret) {
+      console.error('[Security] KKIAPAY_SECRET not configured — rejecting all webhook calls');
+      return new Response(
+        JSON.stringify({ error: 'Webhook not configured' }),
+        { status: 503, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
     }
+    const isValid = await verifyWebhookSignature(rawBody, signature, kkiapaySecret);
+    if (!isValid) {
+      console.error('[Security] Invalid webhook signature - rejecting request');
+      return new Response(
+        JSON.stringify({ error: 'Invalid signature' }),
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+    console.log('[Security] Webhook signature verified successfully');
 
     // Parse webhook payload
     const payload: KkiaPayWebhookEvent = JSON.parse(rawBody);
