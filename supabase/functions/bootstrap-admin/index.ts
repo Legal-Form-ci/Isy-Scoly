@@ -48,8 +48,23 @@ serve(async (req) => {
       },
     });
 
+    // Defense-in-depth: bootstrap token is one-time-use. Refuse if already used.
+    const { data: bootstrapFlag } = await supabaseAdmin
+      .from('platform_settings')
+      .select('value')
+      .eq('key', 'bootstrap_admin_used')
+      .maybeSingle();
+
+    if (bootstrapFlag?.value === 'true') {
+      console.error('Bootstrap admin already used, refusing');
+      return new Response(JSON.stringify({ error: 'Bootstrap already used' }), {
+        status: 403,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
     const adminEmail = Deno.env.get('ADMIN_EMAIL') || 'admin@scoly.ci';
-    const adminPassword = '@AdminScoly2026';
+    const adminPassword = generateSecurePassword();
 
     // Check if user already exists
     const { data: existingUsers } = await supabaseAdmin.auth.admin.listUsers();
@@ -147,6 +162,15 @@ serve(async (req) => {
       });
       console.log('Password recovery link generated for admin');
     }
+
+    // Mark bootstrap token as consumed (one-time use defense-in-depth)
+    await supabaseAdmin
+      .from('platform_settings')
+      .upsert({
+        key: 'bootstrap_admin_used',
+        value: 'true',
+        description: 'Bootstrap admin token has been used. Rotate BOOTSTRAP_ADMIN_TOKEN before reuse.',
+      }, { onConflict: 'key' });
 
     return new Response(JSON.stringify({ 
       success: true, 
