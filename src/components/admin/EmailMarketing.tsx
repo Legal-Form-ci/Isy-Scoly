@@ -228,7 +228,8 @@ const EmailMarketing = () => {
                     )}
                   </div>
                   <div className="flex gap-2 flex-wrap">
-                    <Button size="sm" variant="outline" onClick={() => { setPreviewHtml(c.html_content); setPreviewOpen(true); }}><Eye size={14} /></Button>
+                    <Button size="sm" variant="outline" onClick={() => { setPreviewHtml(c.html_content); setPreviewOpen(true); }} title="Aperçu"><Eye size={14} /></Button>
+                    <Button size="sm" variant="outline" onClick={() => openLogs(c)} title="Journal d'envoi">📋 Logs</Button>
                     <Button size="sm" variant="outline" onClick={() => setEditing(c)}>Modifier</Button>
                     <Button size="sm" onClick={() => sendCampaign(c.id)} disabled={c.status === "sent"} className="gap-1"><Send size={14} /> Envoyer</Button>
                     <Button size="sm" variant="ghost" onClick={() => deleteCampaign(c.id)}><Trash2 size={14} /></Button>
@@ -250,7 +251,15 @@ const EmailMarketing = () => {
             <CardContent className="p-0 max-h-[500px] overflow-y-auto">
               <table className="w-full text-sm">
                 <thead className="bg-muted sticky top-0">
-                  <tr><th className="text-left p-3">Email</th><th className="text-left p-3">Prénom</th><th className="text-left p-3">Source</th><th className="text-left p-3">Date</th><th className="p-3"></th></tr>
+                  <tr>
+                    <th className="text-left p-3">Email</th>
+                    <th className="text-left p-3">Prénom</th>
+                    <th className="text-left p-3">Source</th>
+                    <th className="text-left p-3">Confirmé</th>
+                    <th className="text-left p-3">Statut</th>
+                    <th className="text-left p-3">Date</th>
+                    <th className="p-3 text-right">Actions</th>
+                  </tr>
                 </thead>
                 <tbody>
                   {subscribers.map(s => (
@@ -258,8 +267,19 @@ const EmailMarketing = () => {
                       <td className="p-3">{s.email}</td>
                       <td className="p-3">{s.first_name || "—"}</td>
                       <td className="p-3"><Badge variant="outline">{s.source || "—"}</Badge></td>
-                      <td className="p-3 text-muted-foreground text-xs">{new Date(s.subscribed_at).toLocaleDateString("fr-FR")}</td>
+                      <td className="p-3">
+                        <Badge variant={s.confirmed ? "default" : "secondary"}>{s.confirmed ? "✓ Oui" : "En attente"}</Badge>
+                      </td>
                       <td className="p-3"><Badge variant={s.is_active ? "default" : "secondary"}>{s.is_active ? "Actif" : "Inactif"}</Badge></td>
+                      <td className="p-3 text-muted-foreground text-xs">{new Date(s.subscribed_at).toLocaleDateString("fr-FR")}</td>
+                      <td className="p-3 text-right">
+                        <div className="flex gap-1 justify-end">
+                          <Button size="sm" variant="outline" onClick={() => toggleSubscriber(s)}>
+                            {s.is_active ? "Désactiver" : "Réactiver"}
+                          </Button>
+                          <Button size="sm" variant="ghost" onClick={() => deleteSubscriber(s.id)}><Trash2 size={14} /></Button>
+                        </div>
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -269,6 +289,24 @@ const EmailMarketing = () => {
           </Card>
         </TabsContent>
       </Tabs>
+
+      {/* Logs Dialog */}
+      <Dialog open={logsOpen} onOpenChange={setLogsOpen}>
+        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader><DialogTitle>📋 Journal d'envoi — {logsCampaign}</DialogTitle></DialogHeader>
+          <div className="space-y-1 text-sm max-h-[60vh] overflow-y-auto">
+            {logs.length === 0 && <p className="text-muted-foreground text-center py-8">Aucun log</p>}
+            {logs.map(l => (
+              <div key={l.id} className="flex items-center gap-3 p-2 border-b border-border">
+                <Badge variant={l.status === "sent" ? "default" : "destructive"} className="shrink-0">{l.status}</Badge>
+                <span className="flex-1 truncate font-mono text-xs">{l.recipient_email}</span>
+                <span className="text-xs text-muted-foreground shrink-0">{new Date(l.sent_at).toLocaleString("fr-FR")}</span>
+                {l.error_message && <span className="text-xs text-destructive truncate max-w-[200px]" title={l.error_message}>{l.error_message}</span>}
+              </div>
+            ))}
+          </div>
+        </DialogContent>
+      </Dialog>
 
       {/* Editor Dialog */}
       <Dialog open={!!editing} onOpenChange={o => !o && setEditing(null)}>
