@@ -160,7 +160,7 @@ const EmailMarketing = () => {
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <StatCard icon={<Users />} label="Abonnés actifs" value={subscribers.filter(s => s.is_active).length} />
+        <StatCard icon={<Users />} label="Abonnés confirmés" value={subscribers.filter(s => s.is_active && s.confirmed).length} />
         <StatCard icon={<Mail />} label="Campagnes" value={campaigns.length} />
         <StatCard icon={<Send />} label="Emails envoyés" value={campaigns.reduce((a, c) => a + (c.sent_count || 0), 0)} />
         <StatCard icon={<Sparkles />} label="Brouillons" value={campaigns.filter(c => c.status === "draft").length} />
