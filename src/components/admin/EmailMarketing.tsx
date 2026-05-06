@@ -12,8 +12,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
-type Subscriber = { id: string; email: string; first_name: string | null; is_active: boolean; subscribed_at: string; source: string | null };
+type Subscriber = { id: string; email: string; first_name: string | null; is_active: boolean; confirmed: boolean; subscribed_at: string; source: string | null };
 type Campaign = { id: string; name: string; subject: string; preheader: string | null; html_content: string; status: string; sent_count: number; failed_count: number; recipients_count: number; created_at: string; sent_at: string | null };
+type CampaignLog = { id: string; recipient_email: string; status: string; error_message: string | null; sent_at: string };
 
 const DEFAULT_HTML = `<!DOCTYPE html><html><body style="margin:0;background:#f9fafb;font-family:Inter,Arial,sans-serif">
 <div style="max-width:600px;margin:0 auto;background:#fff">
@@ -45,6 +46,27 @@ const EmailMarketing = () => {
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewHtml, setPreviewHtml] = useState("");
   const [testEmail, setTestEmail] = useState("");
+  const [logsOpen, setLogsOpen] = useState(false);
+  const [logs, setLogs] = useState<CampaignLog[]>([]);
+  const [logsCampaign, setLogsCampaign] = useState<string>("");
+
+  const toggleSubscriber = async (s: Subscriber) => {
+    await supabase.from("newsletter_subscribers").update({ is_active: !s.is_active }).eq("id", s.id);
+    toast.success(s.is_active ? "Abonné désactivé" : "Abonné réactivé");
+    load();
+  };
+  const deleteSubscriber = async (id: string) => {
+    if (!confirm("Supprimer définitivement cet abonné ?")) return;
+    await supabase.from("newsletter_subscribers").delete().eq("id", id);
+    toast.success("Supprimé");
+    load();
+  };
+  const openLogs = async (c: Campaign) => {
+    setLogsCampaign(c.name);
+    const { data } = await supabase.from("email_campaign_logs").select("*").eq("campaign_id", c.id).order("sent_at", { ascending: false }).limit(500);
+    setLogs(data || []);
+    setLogsOpen(true);
+  };
 
   const load = async () => {
     setLoading(true);
