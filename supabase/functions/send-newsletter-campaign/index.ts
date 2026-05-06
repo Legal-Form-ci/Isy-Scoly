@@ -39,7 +39,9 @@ Deno.serve(async (req) => {
     if (test_email) {
       recipients = [{ email: test_email, first_name: 'Test' }];
     } else {
-      const { data: subs } = await admin.from('newsletter_subscribers').select('email,first_name,unsubscribe_token').eq('is_active', true);
+      const { data: subs } = await admin.from('newsletter_subscribers')
+        .select('email,first_name,unsubscribe_token')
+        .eq('is_active', true).eq('confirmed', true);
       recipients = subs || [];
     }
 

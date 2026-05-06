@@ -8,6 +8,7 @@ import { toast } from "sonner";
 const NewsletterSignup = ({ variant = "default" }: { variant?: "default" | "footer" }) => {
   const [email, setEmail] = useState("");
   const [firstName, setFirstName] = useState("");
+  const [website, setWebsite] = useState(""); // honeypot
   const [loading, setLoading] = useState(false);
   const [done, setDone] = useState(false);
 
@@ -15,15 +16,15 @@ const NewsletterSignup = ({ variant = "default" }: { variant?: "default" | "foot
     e.preventDefault();
     if (!email) return;
     setLoading(true);
-    const { error } = await supabase.functions.invoke("subscribe-newsletter", {
-      body: { email, first_name: firstName, source: variant },
+    const { data, error } = await supabase.functions.invoke("subscribe-newsletter", {
+      body: { email, first_name: firstName, source: variant, website },
     });
     setLoading(false);
-    if (error) return toast.error("Erreur, réessayez");
+    if (error || data?.error) return toast.error(data?.error || "Erreur, réessayez");
     setDone(true);
-    toast.success("✅ Inscription confirmée !");
+    toast.success(data?.already ? "Vous êtes déjà abonné ✓" : "📧 Vérifiez votre email pour confirmer");
     setEmail(""); setFirstName("");
-    setTimeout(() => setDone(false), 4000);
+    setTimeout(() => setDone(false), 5000);
   };
 
   if (variant === "footer") {
