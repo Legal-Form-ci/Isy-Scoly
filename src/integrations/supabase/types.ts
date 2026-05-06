@@ -1057,6 +1057,10 @@ export type Database = {
       }
       newsletter_subscribers: {
         Row: {
+          confirmation_sent_at: string | null
+          confirmation_token: string
+          confirmed: boolean
+          confirmed_at: string | null
           email: string
           first_name: string | null
           id: string
@@ -1067,6 +1071,10 @@ export type Database = {
           unsubscribed_at: string | null
         }
         Insert: {
+          confirmation_sent_at?: string | null
+          confirmation_token?: string
+          confirmed?: boolean
+          confirmed_at?: string | null
           email: string
           first_name?: string | null
           id?: string
@@ -1077,6 +1085,10 @@ export type Database = {
           unsubscribed_at?: string | null
         }
         Update: {
+          confirmation_sent_at?: string | null
+          confirmation_token?: string
+          confirmed?: boolean
+          confirmed_at?: string | null
           email?: string
           first_name?: string | null
           id?: string
@@ -2394,6 +2406,13 @@ export type Database = {
       cleanup_expired_data: { Args: never; Returns: undefined }
       cleanup_old_login_sessions: { Args: never; Returns: undefined }
       cleanup_old_view_tracking: { Args: never; Returns: undefined }
+      confirm_newsletter_subscription: {
+        Args: { _token: string }
+        Returns: {
+          email: string
+          success: boolean
+        }[]
+      }
       generate_referral_code: { Args: never; Returns: string }
       get_admin_stats: {
         Args: never
