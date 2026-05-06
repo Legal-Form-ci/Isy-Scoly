@@ -8,6 +8,7 @@ import { toast } from "sonner";
 const NewsletterSignup = ({ variant = "default" }: { variant?: "default" | "footer" }) => {
   const [email, setEmail] = useState("");
   const [firstName, setFirstName] = useState("");
+  const [website, setWebsite] = useState(""); // honeypot
   const [loading, setLoading] = useState(false);
   const [done, setDone] = useState(false);
 
@@ -15,25 +16,27 @@ const NewsletterSignup = ({ variant = "default" }: { variant?: "default" | "foot
     e.preventDefault();
     if (!email) return;
     setLoading(true);
-    const { error } = await supabase.functions.invoke("subscribe-newsletter", {
-      body: { email, first_name: firstName, source: variant },
+    const { data, error } = await supabase.functions.invoke("subscribe-newsletter", {
+      body: { email, first_name: firstName, source: variant, website },
     });
     setLoading(false);
-    if (error) return toast.error("Erreur, réessayez");
+    if (error || data?.error) return toast.error(data?.error || "Erreur, réessayez");
     setDone(true);
-    toast.success("✅ Inscription confirmée !");
+    toast.success(data?.already ? "Vous êtes déjà abonné ✓" : "📧 Vérifiez votre email pour confirmer");
     setEmail(""); setFirstName("");
-    setTimeout(() => setDone(false), 4000);
+    setTimeout(() => setDone(false), 5000);
   };
 
   if (variant === "footer") {
     return (
       <form onSubmit={submit} className="flex flex-col sm:flex-row gap-2">
+        <input type="text" tabIndex={-1} autoComplete="off" value={website} onChange={e => setWebsite(e.target.value)}
+          style={{ position: "absolute", left: "-9999px", width: 1, height: 1 }} aria-hidden />
         <Input type="email" required placeholder="Votre email" value={email} onChange={e => setEmail(e.target.value)}
           className="bg-primary-foreground/10 border-primary-foreground/20 text-primary-foreground placeholder:text-primary-foreground/60" />
         <Button type="submit" disabled={loading || done} variant="hero" className="shrink-0">
           {done ? <CheckCircle size={16} /> : <Send size={16} />}
-          {done ? "Inscrit !" : "S'abonner"}
+          {done ? "Vérifiez votre email" : "S'abonner"}
         </Button>
       </form>
     );
@@ -50,12 +53,14 @@ const NewsletterSignup = ({ variant = "default" }: { variant?: "default" | "foot
           <p className="text-primary-foreground/80 text-sm sm:text-base">Promos exclusives, nouveautés et conseils rentrée — directement dans votre boîte mail.</p>
         </div>
         <form onSubmit={submit} className="w-full md:w-auto flex flex-col sm:flex-row gap-2 md:min-w-[400px]">
+          <input type="text" tabIndex={-1} autoComplete="off" value={website} onChange={e => setWebsite(e.target.value)}
+            style={{ position: "absolute", left: "-9999px", width: 1, height: 1 }} aria-hidden />
           <Input type="text" placeholder="Prénom" value={firstName} onChange={e => setFirstName(e.target.value)}
             className="bg-primary-foreground/10 border-primary-foreground/20 text-primary-foreground placeholder:text-primary-foreground/60" />
           <Input type="email" required placeholder="Votre email" value={email} onChange={e => setEmail(e.target.value)}
             className="bg-primary-foreground/10 border-primary-foreground/20 text-primary-foreground placeholder:text-primary-foreground/60" />
           <Button type="submit" disabled={loading || done} variant="hero" className="shrink-0">
-            {done ? <><CheckCircle size={16} /> Inscrit</> : <>S'abonner <Send size={16} /></>}
+            {done ? <><CheckCircle size={16} /> Vérifiez email</> : <>S'abonner <Send size={16} /></>}
           </Button>
         </form>
       </div>

@@ -12,8 +12,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
-type Subscriber = { id: string; email: string; first_name: string | null; is_active: boolean; subscribed_at: string; source: string | null };
+type Subscriber = { id: string; email: string; first_name: string | null; is_active: boolean; confirmed: boolean; subscribed_at: string; source: string | null };
 type Campaign = { id: string; name: string; subject: string; preheader: string | null; html_content: string; status: string; sent_count: number; failed_count: number; recipients_count: number; created_at: string; sent_at: string | null };
+type CampaignLog = { id: string; recipient_email: string; status: string; error_message: string | null; sent_at: string };
 
 const DEFAULT_HTML = `<!DOCTYPE html><html><body style="margin:0;background:#f9fafb;font-family:Inter,Arial,sans-serif">
 <div style="max-width:600px;margin:0 auto;background:#fff">
@@ -45,6 +46,27 @@ const EmailMarketing = () => {
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewHtml, setPreviewHtml] = useState("");
   const [testEmail, setTestEmail] = useState("");
+  const [logsOpen, setLogsOpen] = useState(false);
+  const [logs, setLogs] = useState<CampaignLog[]>([]);
+  const [logsCampaign, setLogsCampaign] = useState<string>("");
+
+  const toggleSubscriber = async (s: Subscriber) => {
+    await supabase.from("newsletter_subscribers").update({ is_active: !s.is_active }).eq("id", s.id);
+    toast.success(s.is_active ? "Abonné désactivé" : "Abonné réactivé");
+    load();
+  };
+  const deleteSubscriber = async (id: string) => {
+    if (!confirm("Supprimer définitivement cet abonné ?")) return;
+    await supabase.from("newsletter_subscribers").delete().eq("id", id);
+    toast.success("Supprimé");
+    load();
+  };
+  const openLogs = async (c: Campaign) => {
+    setLogsCampaign(c.name);
+    const { data } = await supabase.from("email_campaign_logs").select("*").eq("campaign_id", c.id).order("sent_at", { ascending: false }).limit(500);
+    setLogs(data || []);
+    setLogsOpen(true);
+  };
 
   const load = async () => {
     setLoading(true);
@@ -138,7 +160,7 @@ const EmailMarketing = () => {
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <StatCard icon={<Users />} label="Abonnés actifs" value={subscribers.filter(s => s.is_active).length} />
+        <StatCard icon={<Users />} label="Abonnés confirmés" value={subscribers.filter(s => s.is_active && s.confirmed).length} />
         <StatCard icon={<Mail />} label="Campagnes" value={campaigns.length} />
         <StatCard icon={<Send />} label="Emails envoyés" value={campaigns.reduce((a, c) => a + (c.sent_count || 0), 0)} />
         <StatCard icon={<Sparkles />} label="Brouillons" value={campaigns.filter(c => c.status === "draft").length} />
@@ -206,7 +228,8 @@ const EmailMarketing = () => {
                     )}
                   </div>
                   <div className="flex gap-2 flex-wrap">
-                    <Button size="sm" variant="outline" onClick={() => { setPreviewHtml(c.html_content); setPreviewOpen(true); }}><Eye size={14} /></Button>
+                    <Button size="sm" variant="outline" onClick={() => { setPreviewHtml(c.html_content); setPreviewOpen(true); }} title="Aperçu"><Eye size={14} /></Button>
+                    <Button size="sm" variant="outline" onClick={() => openLogs(c)} title="Journal d'envoi">📋 Logs</Button>
                     <Button size="sm" variant="outline" onClick={() => setEditing(c)}>Modifier</Button>
                     <Button size="sm" onClick={() => sendCampaign(c.id)} disabled={c.status === "sent"} className="gap-1"><Send size={14} /> Envoyer</Button>
                     <Button size="sm" variant="ghost" onClick={() => deleteCampaign(c.id)}><Trash2 size={14} /></Button>
@@ -228,7 +251,15 @@ const EmailMarketing = () => {
             <CardContent className="p-0 max-h-[500px] overflow-y-auto">
               <table className="w-full text-sm">
                 <thead className="bg-muted sticky top-0">
-                  <tr><th className="text-left p-3">Email</th><th className="text-left p-3">Prénom</th><th className="text-left p-3">Source</th><th className="text-left p-3">Date</th><th className="p-3"></th></tr>
+                  <tr>
+                    <th className="text-left p-3">Email</th>
+                    <th className="text-left p-3">Prénom</th>
+                    <th className="text-left p-3">Source</th>
+                    <th className="text-left p-3">Confirmé</th>
+                    <th className="text-left p-3">Statut</th>
+                    <th className="text-left p-3">Date</th>
+                    <th className="p-3 text-right">Actions</th>
+                  </tr>
                 </thead>
                 <tbody>
                   {subscribers.map(s => (
@@ -236,8 +267,19 @@ const EmailMarketing = () => {
                       <td className="p-3">{s.email}</td>
                       <td className="p-3">{s.first_name || "—"}</td>
                       <td className="p-3"><Badge variant="outline">{s.source || "—"}</Badge></td>
-                      <td className="p-3 text-muted-foreground text-xs">{new Date(s.subscribed_at).toLocaleDateString("fr-FR")}</td>
+                      <td className="p-3">
+                        <Badge variant={s.confirmed ? "default" : "secondary"}>{s.confirmed ? "✓ Oui" : "En attente"}</Badge>
+                      </td>
                       <td className="p-3"><Badge variant={s.is_active ? "default" : "secondary"}>{s.is_active ? "Actif" : "Inactif"}</Badge></td>
+                      <td className="p-3 text-muted-foreground text-xs">{new Date(s.subscribed_at).toLocaleDateString("fr-FR")}</td>
+                      <td className="p-3 text-right">
+                        <div className="flex gap-1 justify-end">
+                          <Button size="sm" variant="outline" onClick={() => toggleSubscriber(s)}>
+                            {s.is_active ? "Désactiver" : "Réactiver"}
+                          </Button>
+                          <Button size="sm" variant="ghost" onClick={() => deleteSubscriber(s.id)}><Trash2 size={14} /></Button>
+                        </div>
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -247,6 +289,24 @@ const EmailMarketing = () => {
           </Card>
         </TabsContent>
       </Tabs>
+
+      {/* Logs Dialog */}
+      <Dialog open={logsOpen} onOpenChange={setLogsOpen}>
+        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader><DialogTitle>📋 Journal d'envoi — {logsCampaign}</DialogTitle></DialogHeader>
+          <div className="space-y-1 text-sm max-h-[60vh] overflow-y-auto">
+            {logs.length === 0 && <p className="text-muted-foreground text-center py-8">Aucun log</p>}
+            {logs.map(l => (
+              <div key={l.id} className="flex items-center gap-3 p-2 border-b border-border">
+                <Badge variant={l.status === "sent" ? "default" : "destructive"} className="shrink-0">{l.status}</Badge>
+                <span className="flex-1 truncate font-mono text-xs">{l.recipient_email}</span>
+                <span className="text-xs text-muted-foreground shrink-0">{new Date(l.sent_at).toLocaleString("fr-FR")}</span>
+                {l.error_message && <span className="text-xs text-destructive truncate max-w-[200px]" title={l.error_message}>{l.error_message}</span>}
+              </div>
+            ))}
+          </div>
+        </DialogContent>
+      </Dialog>
 
       {/* Editor Dialog */}
       <Dialog open={!!editing} onOpenChange={o => !o && setEditing(null)}>
