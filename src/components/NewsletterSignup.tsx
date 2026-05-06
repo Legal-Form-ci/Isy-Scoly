@@ -30,11 +30,13 @@ const NewsletterSignup = ({ variant = "default" }: { variant?: "default" | "foot
   if (variant === "footer") {
     return (
       <form onSubmit={submit} className="flex flex-col sm:flex-row gap-2">
+        <input type="text" tabIndex={-1} autoComplete="off" value={website} onChange={e => setWebsite(e.target.value)}
+          style={{ position: "absolute", left: "-9999px", width: 1, height: 1 }} aria-hidden />
         <Input type="email" required placeholder="Votre email" value={email} onChange={e => setEmail(e.target.value)}
           className="bg-primary-foreground/10 border-primary-foreground/20 text-primary-foreground placeholder:text-primary-foreground/60" />
         <Button type="submit" disabled={loading || done} variant="hero" className="shrink-0">
           {done ? <CheckCircle size={16} /> : <Send size={16} />}
-          {done ? "Inscrit !" : "S'abonner"}
+          {done ? "Vérifiez votre email" : "S'abonner"}
         </Button>
       </form>
     );
@@ -51,12 +53,14 @@ const NewsletterSignup = ({ variant = "default" }: { variant?: "default" | "foot
           <p className="text-primary-foreground/80 text-sm sm:text-base">Promos exclusives, nouveautés et conseils rentrée — directement dans votre boîte mail.</p>
         </div>
         <form onSubmit={submit} className="w-full md:w-auto flex flex-col sm:flex-row gap-2 md:min-w-[400px]">
+          <input type="text" tabIndex={-1} autoComplete="off" value={website} onChange={e => setWebsite(e.target.value)}
+            style={{ position: "absolute", left: "-9999px", width: 1, height: 1 }} aria-hidden />
           <Input type="text" placeholder="Prénom" value={firstName} onChange={e => setFirstName(e.target.value)}
             className="bg-primary-foreground/10 border-primary-foreground/20 text-primary-foreground placeholder:text-primary-foreground/60" />
           <Input type="email" required placeholder="Votre email" value={email} onChange={e => setEmail(e.target.value)}
             className="bg-primary-foreground/10 border-primary-foreground/20 text-primary-foreground placeholder:text-primary-foreground/60" />
           <Button type="submit" disabled={loading || done} variant="hero" className="shrink-0">
-            {done ? <><CheckCircle size={16} /> Inscrit</> : <>S'abonner <Send size={16} /></>}
+            {done ? <><CheckCircle size={16} /> Vérifiez email</> : <>S'abonner <Send size={16} /></>}
           </Button>
         </form>
       </div>
