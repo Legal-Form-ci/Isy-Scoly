@@ -163,7 +163,7 @@ const Navbar = () => {
                       <Link to="/account" className="flex items-center gap-2 px-4 py-2 text-sm hover:bg-muted">
                         <User size={16} /> Mon compte
                       </Link>
-                      {isAdmin && (
+                      {showAdmin && (
                         <Link to="/admin" className="flex items-center gap-2 px-4 py-2 text-sm hover:bg-muted">
                           <Shield size={16} /> Administration
                         </Link>
@@ -325,7 +325,7 @@ const Navbar = () => {
                   <Link to="/wishlist" onClick={() => setIsOpen(false)} className="flex items-center gap-3 px-5 py-3 text-sm hover:bg-muted">
                     <Heart size={16} /> Favoris {wishlistCount > 0 && <span className="ml-auto text-xs bg-secondary text-secondary-foreground px-1.5 rounded-full">{wishlistCount}</span>}
                   </Link>
-                  {isAdmin && (
+                  {showAdmin && (
                     <Link to="/admin" onClick={() => setIsOpen(false)} className="flex items-center gap-3 px-5 py-3 text-sm hover:bg-muted">
                       <Shield size={16} /> Administration
                     </Link>
