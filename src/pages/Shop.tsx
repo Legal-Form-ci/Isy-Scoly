@@ -188,13 +188,15 @@ const Shop = () => {
           </div>
           <select
             value={sortBy}
-            onChange={(e) => setSortBy(e.target.value)}
-            className="hidden sm:block h-10 px-3 rounded-md border border-border bg-card text-sm text-foreground min-w-[160px]"
+            onChange={(e) => setSortBy(e.target.value as SortMode)}
+            className="hidden sm:block h-10 px-3 rounded-md border border-border bg-card text-sm text-foreground min-w-[180px]"
           >
+            <option value="recommended">Recommandés</option>
             <option value="newest">{t.shop.sortNewest}</option>
             <option value="price-asc">{t.shop.sortPriceAsc}</option>
             <option value="price-desc">{t.shop.sortPriceDesc}</option>
             <option value="popular">{t.shop.sortPopular}</option>
+            <option value="rating">Mieux notés</option>
           </select>
           <select
             value={selectedPublisher}
