@@ -54,7 +54,7 @@ const Shop = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(
     searchParams.get("category") || null
   );
-  const [sortBy, setSortBy] = useState("newest");
+  const [sortBy, setSortBy] = useState<SortMode>("recommended");
   const [selectedPublisher, setSelectedPublisher] = useState("all");
 
   const publishers = ["NEI/CEDA", "NEI", "CEDA", "EDICEF", "Eburnie", "Vallesse", "JD Editions", "Les Classiques Ivoiriens", "Frat Mat Editions", "SuperNova", "Sud Editions", "Nouvelles Editions Balafon", "S.N.P.E.C.I", "Africa Reflets Editions", "ARE"];
