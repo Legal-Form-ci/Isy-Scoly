@@ -30,7 +30,7 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
   const { t } = useLanguage();
-  const { user, signOut, isAdmin, roles } = useAuth();
+  const { user, signOut, isAdmin, roles, loading, rolesLoading } = useAuth();
   const { itemCount: cartCount } = useCart();
   const { wishlistCount } = useWishlist();
   const navigate = useNavigate();
@@ -54,9 +54,13 @@ const Navbar = () => {
     { label: t.nav.contact, href: "/contact" },
   ];
 
-  const isVendor = roles.includes("vendor");
-  const isModerator = roles.includes("moderator");
-  const isDelivery = roles.includes("delivery");
+  // Only show role-gated UI once auth AND roles have finished loading,
+  // otherwise the menu flickers on every Supabase token refresh.
+  const rolesReady = !loading && !rolesLoading && !!user;
+  const isVendor = rolesReady && roles.includes("vendor");
+  const isModerator = rolesReady && roles.includes("moderator");
+  const isDelivery = rolesReady && roles.includes("delivery");
+  const showAdmin = rolesReady && isAdmin;
 
   const handleLogout = async () => {
     await signOut();
