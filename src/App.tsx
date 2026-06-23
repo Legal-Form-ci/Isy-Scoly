@@ -12,6 +12,7 @@ import ScrollToTop from "@/components/ScrollToTop";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import PageLoader from "@/components/PageLoader";
 import { SessionSecurityProvider } from "@/components/SessionSecurityProvider";
+import RoleGuard from "@/components/RoleGuard";
 
 // Critical path - eager load
 import Index from "./pages/Index";
