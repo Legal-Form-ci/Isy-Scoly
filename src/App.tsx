@@ -12,6 +12,7 @@ import ScrollToTop from "@/components/ScrollToTop";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import PageLoader from "@/components/PageLoader";
 import { SessionSecurityProvider } from "@/components/SessionSecurityProvider";
+import RoleGuard from "@/components/RoleGuard";
 
 // Critical path - eager load
 import Index from "./pages/Index";
@@ -98,22 +99,22 @@ const App = () => (
                       <Route path="/about" element={<About />} />
                       <Route path="/a-propos" element={<About />} />
                       <Route path="/contact" element={<Contact />} />
-                      <Route path="/account" element={<Account />} />
-                      <Route path="/compte" element={<Account />} />
-                      <Route path="/admin" element={<Admin />} />
+                      <Route path="/account" element={<RoleGuard><Account /></RoleGuard>} />
+                      <Route path="/compte" element={<RoleGuard><Account /></RoleGuard>} />
+                      <Route path="/admin" element={<RoleGuard allow={["admin"]}><Admin /></RoleGuard>} />
                       <Route path="/actualites" element={<Actualites />} />
-                      <Route path="/actualites/write" element={<WriteArticle />} />
-                      <Route path="/actualites/edit/:id" element={<WriteArticle />} />
+                      <Route path="/actualites/write" element={<RoleGuard allow={["admin","moderator","user"]}><WriteArticle /></RoleGuard>} />
+                      <Route path="/actualites/edit/:id" element={<RoleGuard allow={["admin","moderator","user"]}><WriteArticle /></RoleGuard>} />
                       <Route path="/actualites/:id" element={<ArticleDetail />} />
-                      <Route path="/team" element={<TeamDashboard />} />
-                      <Route path="/author" element={<AuthorDashboard />} />
+                      <Route path="/team" element={<RoleGuard allow={["admin","moderator"]}><TeamDashboard /></RoleGuard>} />
+                      <Route path="/author" element={<RoleGuard><AuthorDashboard /></RoleGuard>} />
                       <Route path="/faq" element={<FAQ />} />
-                      <Route path="/article/pay/:id" element={<ArticlePayment />} />
+                      <Route path="/article/pay/:id" element={<RoleGuard><ArticlePayment /></RoleGuard>} />
                       <Route path="/bootstrap-admin" element={<BootstrapAdmin />} />
-                      <Route path="/delivery" element={<DeliveryDashboard />} />
-                      <Route path="/moderator" element={<ModeratorDashboard />} />
-                      <Route path="/vendor" element={<VendorDashboard />} />
-                      <Route path="/wishlist" element={<Wishlist />} />
+                      <Route path="/delivery" element={<RoleGuard allow={["delivery","admin"]}><DeliveryDashboard /></RoleGuard>} />
+                      <Route path="/moderator" element={<RoleGuard allow={["moderator","admin"]}><ModeratorDashboard /></RoleGuard>} />
+                      <Route path="/vendor" element={<RoleGuard allow={["vendor","admin"]}><VendorDashboard /></RoleGuard>} />
+                      <Route path="/wishlist" element={<RoleGuard><Wishlist /></RoleGuard>} />
                       <Route path="/mentions-legales" element={<MentionsLegales />} />
                       <Route path="/terms" element={<TermsOfUse />} />
                       <Route path="/privacy" element={<PrivacyPolicy />} />
