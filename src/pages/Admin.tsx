@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { 
-  Brain,
   LayoutDashboard, 
   Package, 
   FolderTree, 
@@ -45,11 +44,11 @@ import { useLanguage } from "@/i18n/LanguageContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 import AdminDashboard from "@/components/admin/AdminDashboard";
 import UserManagement from "@/components/admin/UserManagement";
 import ProductForm from "@/components/admin/ProductForm";
+import BulkProductImport from "@/components/admin/BulkProductImport";
+import KitComposer from "@/components/KitComposer";
 import AuthorsManagement from "@/components/admin/AuthorsManagement";
 import PublicationsReview from "@/components/admin/PublicationsReview";
 import CouponManagement from "@/components/admin/CouponManagement";
@@ -60,13 +59,14 @@ import PlatformSettings from "@/components/admin/PlatformSettings";
 import AdvancedStats from "@/components/admin/AdvancedStats";
 import PaymentsTab from "@/components/admin/PaymentsTab";
 import ShareStatsTab from "@/components/admin/ShareStatsTab";
-import AIManager from "@/components/admin/AIManager";
 import PromotionsManagement from "@/components/admin/PromotionsManagement";
 import FlashDealsManagement from "@/components/admin/FlashDealsManagement";
 import SocialMediaManager from "@/components/admin/SocialMediaManager";
 import DocumentationManager from "@/components/admin/DocumentationManager";
-import EducationAIManager from "@/components/admin/EducationAIManager";
 import EmailMarketing from "@/components/admin/EmailMarketing";
+import EmailLogsDashboard from "@/components/admin/EmailLogsDashboard";
+import CampaignAnalyticsDashboard from "@/components/admin/CampaignAnalyticsDashboard";
+import ProviderMonitoring from "@/components/admin/ProviderMonitoring";
 
 import { Share2 } from "lucide-react";
 
@@ -93,15 +93,17 @@ type TabType =
   | "deliveries"
   | "loyalty"
   | "payments"
-  | "ai_manager"
   | "social_media"
   | "documentation"
   | "schools"
   | "resources"
   | "referrals"
   | "flash_deals"
-  | "education_ai"
-  | "email_marketing";
+  | "kit_composer"
+  | "email_marketing"
+  | "email_logs"
+  | "email_analytics"
+  | "email_monitoring";
 
 const Admin = () => {
   const { t, language } = useLanguage();
@@ -111,6 +113,7 @@ const Admin = () => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [openMenuGroups, setOpenMenuGroups] = useState<string[]>(["Vue d'ensemble", "Catalogue & Ventes", "Contenu & Kits"]);
 
   useEffect(() => {
     if (authLoading) return;
@@ -143,37 +146,80 @@ const Admin = () => {
     setLoading(false);
   };
 
-  const menuItems = [
-    { id: "dashboard", label: "Tableau de bord", icon: LayoutDashboard },
-    { id: "ai_manager", label: "🤖 Module IA", icon: Brain },
-    { id: "stats", label: "Statistiques", icon: BarChart3 },
-    { id: "sharestats", label: "Partages & Analytics", icon: Share2 },
-    { id: "products", label: "Produits", icon: Package },
-    { id: "categories", label: "Catégories", icon: FolderTree },
-    { id: "orders", label: "Commandes", icon: ShoppingBag },
-    { id: "payments", label: "Paiements", icon: DollarSign },
-    { id: "deliveries", label: "Livraisons", icon: Truck },
-    { id: "users", label: "Utilisateurs", icon: Users },
-    { id: "vendors", label: "Vendeurs", icon: Store },
-    { id: "commissions", label: "Commissions", icon: DollarSign },
-    { id: "loyalty", label: "Fidélité", icon: Gift },
-    { id: "promotions_mgmt", label: "Promotions", icon: Tag },
-    { id: "flash_deals", label: "Ventes Flash", icon: Zap },
-    { id: "social_media", label: "Réseaux Sociaux", icon: Share2 },
-    { id: "email_marketing", label: "📧 Email Marketing", icon: Bell },
-    { id: "schools", label: "Écoles", icon: GraduationCap },
-    { id: "resources", label: "Ressources Édu", icon: BookOpen },
-    { id: "education_ai", label: "🧠 IA Éducation", icon: Brain },
-    { id: "referrals", label: "Parrainages", icon: UserPlus },
-    { id: "authors", label: "Auteurs", icon: Users },
-    { id: "review", label: "Validation", icon: Eye },
-    { id: "articles", label: "Actualités", icon: FileText },
-    { id: "promotions", label: "Coupons", icon: Tag },
-    { id: "advertisements", label: "Publicités", icon: Bell },
-    { id: "faq", label: "FAQ", icon: HelpCircle },
-    { id: "documentation", label: "Documentation", icon: FileText },
-    { id: "settings", label: "Paramètres", icon: Settings },
+  const menuGroups: Array<{ label: string; items: Array<{ id: string; label: string; icon: any }> }> = [
+    {
+      label: "Vue d'ensemble",
+      items: [
+        { id: "dashboard", label: "Tableau de bord", icon: LayoutDashboard },
+        { id: "stats", label: "Statistiques", icon: BarChart3 },
+        { id: "sharestats", label: "Partages & Analytics", icon: Share2 },
+      ],
+    },
+    {
+      label: "Catalogue & Ventes",
+      items: [
+        { id: "products", label: "Produits", icon: Package },
+        { id: "categories", label: "Catégories", icon: FolderTree },
+        { id: "orders", label: "Commandes", icon: ShoppingBag },
+        { id: "payments", label: "Paiements", icon: DollarSign },
+        { id: "deliveries", label: "Livraisons", icon: Truck },
+        { id: "promotions_mgmt", label: "Promotions", icon: Tag },
+        { id: "flash_deals", label: "Ventes Flash", icon: Zap },
+        { id: "promotions", label: "Coupons", icon: Tag },
+      ],
+    },
+    {
+      label: "Utilisateurs & Équipe",
+      items: [
+        { id: "users", label: "Utilisateurs", icon: Users },
+        { id: "vendors", label: "Vendeurs", icon: Store },
+        { id: "commissions", label: "Commissions", icon: DollarSign },
+        { id: "loyalty", label: "Fidélité", icon: Gift },
+        { id: "referrals", label: "Parrainages", icon: UserPlus },
+        { id: "authors", label: "Auteurs", icon: Users },
+      ],
+    },
+    {
+      label: "Contenu & Kits",
+      items: [
+        { id: "articles", label: "Actualités", icon: FileText },
+        { id: "review", label: "Validation", icon: Eye },
+        { id: "kit_composer", label: "Compositeur de kit", icon: GraduationCap },
+        { id: "advertisements", label: "Publicités", icon: Bell },
+        { id: "social_media", label: "Réseaux Sociaux", icon: Share2 },
+      ],
+    },
+    {
+      label: "Emails",
+      items: [
+        { id: "email_marketing", label: "📧 Email Marketing", icon: Bell },
+        { id: "email_logs", label: "📬 Journaux Email", icon: Bell },
+        { id: "email_analytics", label: "📊 Analytics Campagnes", icon: BarChart3 },
+        { id: "email_monitoring", label: "🛰️ Monitoring Fournisseurs", icon: BarChart3 },
+      ],
+    },
+    {
+      label: "Système",
+      items: [
+        { id: "faq", label: "FAQ", icon: HelpCircle },
+        { id: "documentation", label: "Documentation", icon: FileText },
+        { id: "settings", label: "Paramètres", icon: Settings },
+      ],
+    },
   ];
+  const menuItems = menuGroups.flatMap((g) => g.items);
+  const activeGroup = menuGroups.find((group) => group.items.some((item) => item.id === activeTab))?.label;
+
+  useEffect(() => {
+    if (!activeGroup) return;
+    setOpenMenuGroups((prev) => (prev.includes(activeGroup) ? prev : [...prev, activeGroup]));
+  }, [activeGroup]);
+
+  const toggleMenuGroup = (label: string) => {
+    setOpenMenuGroups((prev) =>
+      prev.includes(label) ? prev.filter((item) => item !== label) : [...prev, label]
+    );
+  };
 
   const handleTabChange = (tab: TabType) => {
     setActiveTab(tab);
@@ -183,8 +229,7 @@ const Admin = () => {
   if (loading) {
     return (
       <main className="min-h-screen bg-background">
-        <Navbar />
-        <div className="pt-24 pb-16 flex items-center justify-center">
+        <div className="min-h-screen flex items-center justify-center">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
         </div>
       </main>
@@ -197,45 +242,51 @@ const Admin = () => {
 
   return (
     <main className="min-h-screen bg-background">
-      <Navbar />
-      
-      <div className="pt-20 min-h-screen flex">
-        {/* Fixed Admin Header with menu toggle - visible on all screen sizes */}
-        <div className="fixed top-16 left-0 right-0 z-40 bg-background/95 backdrop-blur-sm border-b border-border lg:hidden">
-          <div className="flex items-center justify-between px-4 py-2">
-            <h2 className="text-lg font-display font-bold text-foreground">Admin</h2>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setMobileMenuOpen(true)}
-              className="gap-2"
-            >
-              <Menu size={18} />
-              Menu
-            </Button>
-          </div>
-        </div>
+      <div className="min-h-screen flex">
+
 
         {/* Sidebar - Desktop */}
-        <aside className="w-64 bg-card border-r border-border hidden lg:block sticky top-20 h-[calc(100vh-5rem)] overflow-y-auto">
-          <div className="p-6">
-            <h2 className="text-xl font-display font-bold text-foreground">Administration</h2>
+        <aside className="w-64 bg-card border-r border-border hidden lg:block sticky top-0 h-screen overflow-y-auto">
+          <div className="p-4 border-b border-border">
+            <h2 className="text-lg font-display font-bold text-foreground">Administration</h2>
+            <p className="text-xs text-muted-foreground">Menu interne</p>
           </div>
-          <nav className="px-4 space-y-1 pb-8">
-            {menuItems.map((item) => (
-              <button
-                key={item.id}
-                onClick={() => handleTabChange(item.id as TabType)}
-                className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors text-sm ${
-                  activeTab === item.id
-                    ? "bg-primary text-primary-foreground"
-                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
-                }`}
-              >
-                <item.icon size={18} />
-                {item.label}
-              </button>
-            ))}
+          <nav className="px-3 py-4 space-y-2">
+            {menuGroups.map((group) => {
+              const isGroupActive = group.items.some((i) => i.id === activeTab);
+              return (
+                <details
+                  key={group.label}
+                  open={openMenuGroups.includes(group.label)}
+                  onToggle={(event) => {
+                    event.preventDefault();
+                    toggleMenuGroup(group.label);
+                  }}
+                  className="group/details rounded-lg border border-border/60 bg-background/40"
+                >
+                  <summary className="cursor-pointer list-none px-3 py-2 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/80 flex items-center justify-between hover:text-foreground">
+                    {group.label}
+                    <ChevronRight size={13} className="transition-transform group-open/details:rotate-90" />
+                  </summary>
+                  <div className="space-y-1 px-2 pb-2 pt-1">
+                    {group.items.map((item) => (
+                      <button
+                        key={item.id}
+                        onClick={() => handleTabChange(item.id as TabType)}
+                        className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-colors text-sm ${
+                          activeTab === item.id
+                            ? "bg-primary text-primary-foreground"
+                            : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                        }`}
+                      >
+                        <item.icon size={16} />
+                        <span className="truncate">{item.label}</span>
+                      </button>
+                    ))}
+                  </div>
+                </details>
+              );
+            })}
           </nav>
         </aside>
 
@@ -245,21 +296,42 @@ const Admin = () => {
             <SheetHeader className="p-6 border-b border-border">
               <SheetTitle>Administration</SheetTitle>
             </SheetHeader>
-            <nav className="p-4 space-y-1 overflow-y-auto max-h-[calc(100vh-100px)]">
-              {menuItems.map((item) => (
-                <button
-                  key={item.id}
-                  onClick={() => handleTabChange(item.id as TabType)}
-                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors text-sm ${
-                    activeTab === item.id
-                      ? "bg-primary text-primary-foreground"
-                      : "text-muted-foreground hover:bg-muted hover:text-foreground"
-                  }`}
-                >
-                  <item.icon size={18} />
-                  {item.label}
-                </button>
-              ))}
+            <nav className="p-4 space-y-3 overflow-y-auto max-h-[calc(100vh-100px)]">
+              {menuGroups.map((group) => {
+                const isGroupActive = group.items.some((i) => i.id === activeTab);
+                return (
+                  <details
+                    key={group.label}
+                    open={openMenuGroups.includes(group.label)}
+                    onToggle={(event) => {
+                      event.preventDefault();
+                      toggleMenuGroup(group.label);
+                    }}
+                    className="group/details rounded-lg border border-border/70"
+                  >
+                    <summary className="cursor-pointer list-none px-3 py-2 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/80 flex items-center justify-between hover:text-foreground">
+                      {group.label}
+                      <ChevronRight size={13} className="transition-transform group-open/details:rotate-90" />
+                    </summary>
+                    <div className="space-y-1 px-2 pb-2 pt-1">
+                      {group.items.map((item) => (
+                        <button
+                          key={item.id}
+                          onClick={() => handleTabChange(item.id as TabType)}
+                          className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-colors text-sm ${
+                            activeTab === item.id
+                              ? "bg-primary text-primary-foreground"
+                              : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                          }`}
+                        >
+                          <item.icon size={16} />
+                          <span className="truncate">{item.label}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </details>
+                );
+              })}
             </nav>
           </SheetContent>
         </Sheet>
@@ -276,10 +348,13 @@ const Admin = () => {
         </div>
 
         {/* Main Content */}
-        <div className="flex-1 p-4 sm:p-6 lg:p-8 pb-24 lg:pb-8 pt-16 lg:pt-4">
+        <div className="flex-1 p-4 sm:p-6 lg:p-8 pb-24 lg:pb-8 pt-4">
+
           {activeTab === "dashboard" && <AdminDashboard />}
-          {activeTab === "ai_manager" && <AIManager />}
           {activeTab === "email_marketing" && <EmailMarketing />}
+          {activeTab === "email_logs" && <EmailLogsDashboard />}
+          {activeTab === "email_analytics" && <CampaignAnalyticsDashboard />}
+          {activeTab === "email_monitoring" && <ProviderMonitoring />}
           {activeTab === "stats" && <AdvancedStats />}
           {activeTab === "sharestats" && <ShareStatsTab />}
           {activeTab === "products" && <ProductsTab />}
@@ -303,7 +378,7 @@ const Admin = () => {
           {activeTab === "documentation" && <DocumentationManager />}
           {activeTab === "schools" && <SchoolsAdminTab />}
           {activeTab === "resources" && <ResourcesAdminTab />}
-          {activeTab === "education_ai" && <EducationAIManager />}
+          {activeTab === "kit_composer" && <KitComposer />}
           {activeTab === "referrals" && <ReferralsAdminTab />}
           {activeTab === "settings" && <PlatformSettings />}
         </div>
@@ -373,25 +448,28 @@ const ProductsTab = () => {
     <div>
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
         <h1 className="text-2xl font-display font-bold text-foreground">Produits</h1>
-        <Dialog open={isDialogOpen} onOpenChange={(open) => { setIsDialogOpen(open); if (!open) setEditingProduct(null); }}>
-          <DialogTrigger asChild>
-            <Button className="bg-primary text-primary-foreground">
-              <Plus size={18} />
-              Ajouter un produit
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-            <DialogHeader>
-              <DialogTitle>{editingProduct ? "Modifier le produit" : "Ajouter un produit"}</DialogTitle>
-            </DialogHeader>
-            <ProductForm 
-              product={editingProduct}
-              categories={categories}
-              onSubmit={() => { setIsDialogOpen(false); setEditingProduct(null); fetchProducts(); }}
-              onCancel={() => { setIsDialogOpen(false); setEditingProduct(null); }}
-            />
-          </DialogContent>
-        </Dialog>
+        <div className="flex gap-2">
+          <BulkProductImport onDone={fetchProducts} />
+          <Dialog open={isDialogOpen} onOpenChange={(open) => { setIsDialogOpen(open); if (!open) setEditingProduct(null); }}>
+            <DialogTrigger asChild>
+              <Button className="bg-primary text-primary-foreground">
+                <Plus size={18} />
+                Ajouter un produit
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+              <DialogHeader>
+                <DialogTitle>{editingProduct ? "Modifier le produit" : "Ajouter un produit"}</DialogTitle>
+              </DialogHeader>
+              <ProductForm 
+                product={editingProduct}
+                categories={categories}
+                onSubmit={() => { setIsDialogOpen(false); setEditingProduct(null); fetchProducts(); }}
+                onCancel={() => { setIsDialogOpen(false); setEditingProduct(null); }}
+              />
+            </DialogContent>
+          </Dialog>
+        </div>
       </div>
 
       <div className="mb-6">

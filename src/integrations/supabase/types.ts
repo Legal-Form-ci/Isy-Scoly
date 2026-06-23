@@ -742,29 +742,71 @@ export type Database = {
       }
       email_campaign_logs: {
         Row: {
+          attempt_count: number
+          bounced_at: string | null
           campaign_id: string | null
+          clicked_at: string | null
+          complained_at: string | null
+          created_at: string
+          dedupe_key: string | null
+          delivered_at: string | null
           error_message: string | null
           id: string
+          last_error_code: string | null
+          metadata: Json
+          next_retry_at: string | null
+          opened_at: string | null
+          provider: string | null
+          provider_message_id: string | null
           recipient_email: string
           resend_id: string | null
+          retryable: boolean
           sent_at: string
           status: string
         }
         Insert: {
+          attempt_count?: number
+          bounced_at?: string | null
           campaign_id?: string | null
+          clicked_at?: string | null
+          complained_at?: string | null
+          created_at?: string
+          dedupe_key?: string | null
+          delivered_at?: string | null
           error_message?: string | null
           id?: string
+          last_error_code?: string | null
+          metadata?: Json
+          next_retry_at?: string | null
+          opened_at?: string | null
+          provider?: string | null
+          provider_message_id?: string | null
           recipient_email: string
           resend_id?: string | null
+          retryable?: boolean
           sent_at?: string
           status: string
         }
         Update: {
+          attempt_count?: number
+          bounced_at?: string | null
           campaign_id?: string | null
+          clicked_at?: string | null
+          complained_at?: string | null
+          created_at?: string
+          dedupe_key?: string | null
+          delivered_at?: string | null
           error_message?: string | null
           id?: string
+          last_error_code?: string | null
+          metadata?: Json
+          next_retry_at?: string | null
+          opened_at?: string | null
+          provider?: string | null
+          provider_message_id?: string | null
           recipient_email?: string
           resend_id?: string | null
+          retryable?: boolean
           sent_at?: string
           status?: string
         }
@@ -780,15 +822,25 @@ export type Database = {
       }
       email_campaigns: {
         Row: {
+          bounced_count: number
+          clicked_count: number
+          complained_count: number
           created_at: string
           created_by: string | null
+          delivered_count: number
           failed_count: number | null
+          from_email: string | null
+          from_name: string | null
           html_content: string
           id: string
+          image_url: string | null
           name: string
+          opened_count: number
           preheader: string | null
           recipients_count: number | null
           scheduled_at: string | null
+          segment_filters: Json
+          segment_type: string
           sent_at: string | null
           sent_count: number | null
           status: string
@@ -797,15 +849,25 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          bounced_count?: number
+          clicked_count?: number
+          complained_count?: number
           created_at?: string
           created_by?: string | null
+          delivered_count?: number
           failed_count?: number | null
+          from_email?: string | null
+          from_name?: string | null
           html_content: string
           id?: string
+          image_url?: string | null
           name: string
+          opened_count?: number
           preheader?: string | null
           recipients_count?: number | null
           scheduled_at?: string | null
+          segment_filters?: Json
+          segment_type?: string
           sent_at?: string | null
           sent_count?: number | null
           status?: string
@@ -814,15 +876,25 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          bounced_count?: number
+          clicked_count?: number
+          complained_count?: number
           created_at?: string
           created_by?: string | null
+          delivered_count?: number
           failed_count?: number | null
+          from_email?: string | null
+          from_name?: string | null
           html_content?: string
           id?: string
+          image_url?: string | null
           name?: string
+          opened_count?: number
           preheader?: string | null
           recipients_count?: number | null
           scheduled_at?: string | null
+          segment_filters?: Json
+          segment_type?: string
           sent_at?: string | null
           sent_count?: number | null
           status?: string
@@ -834,31 +906,70 @@ export type Database = {
       }
       email_logs: {
         Row: {
+          attempt_count: number
+          created_at: string
+          dedupe_key: string | null
+          delivered_at: string | null
+          email_category: string | null
           email_type: string
           error_message: string | null
           id: string
+          last_attempt_at: string | null
+          last_error_code: string | null
+          metadata: Json
+          next_retry_at: string | null
           order_id: string | null
+          provider: string | null
+          provider_message_id: string | null
           recipient_email: string
+          retryable: boolean
           sent_at: string | null
           status: string | null
+          updated_at: string
         }
         Insert: {
+          attempt_count?: number
+          created_at?: string
+          dedupe_key?: string | null
+          delivered_at?: string | null
+          email_category?: string | null
           email_type: string
           error_message?: string | null
           id?: string
+          last_attempt_at?: string | null
+          last_error_code?: string | null
+          metadata?: Json
+          next_retry_at?: string | null
           order_id?: string | null
+          provider?: string | null
+          provider_message_id?: string | null
           recipient_email: string
+          retryable?: boolean
           sent_at?: string | null
           status?: string | null
+          updated_at?: string
         }
         Update: {
+          attempt_count?: number
+          created_at?: string
+          dedupe_key?: string | null
+          delivered_at?: string | null
+          email_category?: string | null
           email_type?: string
           error_message?: string | null
           id?: string
+          last_attempt_at?: string | null
+          last_error_code?: string | null
+          metadata?: Json
+          next_retry_at?: string | null
           order_id?: string | null
+          provider?: string | null
+          provider_message_id?: string | null
           recipient_email?: string
+          retryable?: boolean
           sent_at?: string | null
           status?: string | null
+          updated_at?: string
         }
         Relationships: [
           {
@@ -869,6 +980,30 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      email_provider_daily_stats: {
+        Row: {
+          failed_count: number
+          provider: string
+          sent_count: number
+          stat_date: string
+          updated_at: string
+        }
+        Insert: {
+          failed_count?: number
+          provider: string
+          sent_count?: number
+          stat_date: string
+          updated_at?: string
+        }
+        Update: {
+          failed_count?: number
+          provider?: string
+          sent_count?: number
+          stat_date?: string
+          updated_at?: string
+        }
+        Relationships: []
       }
       faq: {
         Row: {
@@ -1334,6 +1469,7 @@ export type Database = {
           discount_percent: number | null
           education_level: string | null
           education_series: string | null
+          flash_deal_ends_at: string | null
           free_shipping: boolean | null
           id: string
           image_url: string | null
@@ -1342,6 +1478,7 @@ export type Database = {
           is_featured: boolean | null
           is_office_supply: boolean | null
           material: string | null
+          metadata: Json
           model: string | null
           name_de: string
           name_en: string
@@ -1372,6 +1509,7 @@ export type Database = {
           discount_percent?: number | null
           education_level?: string | null
           education_series?: string | null
+          flash_deal_ends_at?: string | null
           free_shipping?: boolean | null
           id?: string
           image_url?: string | null
@@ -1380,6 +1518,7 @@ export type Database = {
           is_featured?: boolean | null
           is_office_supply?: boolean | null
           material?: string | null
+          metadata?: Json
           model?: string | null
           name_de: string
           name_en: string
@@ -1410,6 +1549,7 @@ export type Database = {
           discount_percent?: number | null
           education_level?: string | null
           education_series?: string | null
+          flash_deal_ends_at?: string | null
           free_shipping?: boolean | null
           id?: string
           image_url?: string | null
@@ -1418,6 +1558,7 @@ export type Database = {
           is_featured?: boolean | null
           is_office_supply?: boolean | null
           material?: string | null
+          metadata?: Json
           model?: string | null
           name_de?: string
           name_en?: string
@@ -1983,6 +2124,8 @@ export type Database = {
       }
       smart_kit_items: {
         Row: {
+          category_hint: string | null
+          estimated_price: number
           id: string
           is_required: boolean | null
           item_name: string
@@ -1992,6 +2135,8 @@ export type Database = {
           sort_order: number | null
         }
         Insert: {
+          category_hint?: string | null
+          estimated_price?: number
           id?: string
           is_required?: boolean | null
           item_name: string
@@ -2001,6 +2146,8 @@ export type Database = {
           sort_order?: number | null
         }
         Update: {
+          category_hint?: string | null
+          estimated_price?: number
           id?: string
           is_required?: boolean | null
           item_name?: string
@@ -2029,6 +2176,7 @@ export type Database = {
       smart_kits: {
         Row: {
           created_at: string | null
+          created_by: string | null
           description: string | null
           discount_price: number | null
           grade_level: string
@@ -2036,13 +2184,17 @@ export type Database = {
           image_url: string | null
           is_active: boolean | null
           name: string
+          product_id: string | null
+          published_at: string | null
           school_type: string | null
           series: string | null
+          status: string
           total_price: number | null
           updated_at: string | null
         }
         Insert: {
           created_at?: string | null
+          created_by?: string | null
           description?: string | null
           discount_price?: number | null
           grade_level: string
@@ -2050,13 +2202,17 @@ export type Database = {
           image_url?: string | null
           is_active?: boolean | null
           name: string
+          product_id?: string | null
+          published_at?: string | null
           school_type?: string | null
           series?: string | null
+          status?: string
           total_price?: number | null
           updated_at?: string | null
         }
         Update: {
           created_at?: string | null
+          created_by?: string | null
           description?: string | null
           discount_price?: number | null
           grade_level?: string
@@ -2064,12 +2220,30 @@ export type Database = {
           image_url?: string | null
           is_active?: boolean | null
           name?: string
+          product_id?: string | null
+          published_at?: string | null
           school_type?: string | null
           series?: string | null
+          status?: string
           total_price?: number | null
           updated_at?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "smart_kits_created_by_profiles_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "smart_kits_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: true
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_addresses: {
         Row: {
@@ -2310,7 +2484,6 @@ export type Database = {
       }
       schools_public: {
         Row: {
-          address: string | null
           city: string | null
           code: string | null
           created_at: string | null
@@ -2324,7 +2497,6 @@ export type Database = {
           website: string | null
         }
         Insert: {
-          address?: string | null
           city?: string | null
           code?: string | null
           created_at?: string | null
@@ -2338,7 +2510,6 @@ export type Database = {
           website?: string | null
         }
         Update: {
-          address?: string | null
           city?: string | null
           code?: string | null
           created_at?: string | null
@@ -2388,6 +2559,29 @@ export type Database = {
       }
     }
     Functions: {
+      auto_confirm_newsletter_subscriber: {
+        Args: { _subscriber_id: string }
+        Returns: {
+          confirmation_sent_at: string | null
+          confirmation_token: string
+          confirmed: boolean
+          confirmed_at: string | null
+          email: string
+          first_name: string | null
+          id: string
+          is_active: boolean
+          source: string | null
+          subscribed_at: string
+          unsubscribe_token: string
+          unsubscribed_at: string | null
+        }
+        SetofOptions: {
+          from: "*"
+          to: "newsletter_subscribers"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       check_password_strength: { Args: { _password: string }; Returns: boolean }
       check_rate_limit: {
         Args: {
@@ -2413,6 +2607,89 @@ export type Database = {
           success: boolean
         }[]
       }
+      finalize_campaign_email_log: {
+        Args: {
+          _attempt_count?: number
+          _campaign_id: string
+          _dedupe_key: string
+          _error_message?: string
+          _metadata?: Json
+          _provider: string
+          _provider_message_id?: string
+          _recipient_email: string
+          _retryable?: boolean
+          _status: string
+        }
+        Returns: {
+          attempt_count: number
+          bounced_at: string | null
+          campaign_id: string | null
+          clicked_at: string | null
+          complained_at: string | null
+          created_at: string
+          dedupe_key: string | null
+          delivered_at: string | null
+          error_message: string | null
+          id: string
+          last_error_code: string | null
+          metadata: Json
+          next_retry_at: string | null
+          opened_at: string | null
+          provider: string | null
+          provider_message_id: string | null
+          recipient_email: string
+          resend_id: string | null
+          retryable: boolean
+          sent_at: string
+          status: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "email_campaign_logs"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      finalize_email_log: {
+        Args: {
+          _attempt_increment?: number
+          _error_message?: string
+          _log_id: string
+          _metadata_patch?: Json
+          _provider: string
+          _provider_message_id?: string
+          _retryable?: boolean
+          _status: string
+        }
+        Returns: {
+          attempt_count: number
+          created_at: string
+          dedupe_key: string | null
+          delivered_at: string | null
+          email_category: string | null
+          email_type: string
+          error_message: string | null
+          id: string
+          last_attempt_at: string | null
+          last_error_code: string | null
+          metadata: Json
+          next_retry_at: string | null
+          order_id: string | null
+          provider: string | null
+          provider_message_id: string | null
+          recipient_email: string
+          retryable: boolean
+          sent_at: string | null
+          status: string | null
+          updated_at: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "email_logs"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       generate_referral_code: { Args: never; Returns: string }
       get_admin_stats: {
         Args: never
@@ -2424,6 +2701,28 @@ export type Database = {
           total_products: number
           total_revenue: number
           total_users: number
+        }[]
+      }
+      get_campaign_analytics: {
+        Args: never
+        Returns: {
+          bounce_rate: number
+          bounced_count: number
+          campaign_id: string
+          click_rate: number
+          clicked_count: number
+          complained_count: number
+          delivered_count: number
+          delivery_rate: number
+          failed_count: number
+          name: string
+          open_rate: number
+          opened_count: number
+          recipients_count: number
+          sent_at: string
+          sent_count: number
+          status: string
+          subject: string
         }[]
       }
       get_delivery_orders: {
@@ -2462,6 +2761,58 @@ export type Database = {
           in_transit: number
           pending_pickup: number
           total_assigned: number
+        }[]
+      }
+      get_email_provider_daily_stats: {
+        Args: never
+        Returns: {
+          failed_count: number
+          provider: string
+          sent_count: number
+          stat_date: string
+          updated_at: string
+        }[]
+      }
+      get_email_segment_recipients: {
+        Args: { _filters?: Json; _segment_type: string }
+        Returns: {
+          first_name: string
+          metadata: Json
+          recipient_email: string
+          source_id: string
+          source_table: string
+        }[]
+      }
+      get_failed_emails_for_retry: {
+        Args: { _limit?: number }
+        Returns: {
+          attempt_count: number
+          campaign_id: string
+          dedupe_key: string
+          email_category: string
+          email_type: string
+          log_id: string
+          metadata: Json
+          recipient_email: string
+          source: string
+        }[]
+      }
+      get_provider_quota_status: {
+        Args: never
+        Returns: {
+          daily_limit: number
+          failed_today: number
+          provider: string
+          remaining: number
+          sent_today: number
+          usage_pct: number
+        }[]
+      }
+      get_public_runtime_settings: {
+        Args: never
+        Returns: {
+          key: string
+          value: string
         }[]
       }
       get_share_stats: {
@@ -2515,6 +2866,10 @@ export type Database = {
         Args: { _article_id: string }
         Returns: undefined
       }
+      increment_email_provider_stat: {
+        Args: { _provider: string; _success: boolean }
+        Returns: undefined
+      }
       increment_product_views: {
         Args: { _product_id: string }
         Returns: undefined
@@ -2528,9 +2883,60 @@ export type Database = {
           success: boolean
         }[]
       }
+      reserve_email_log: {
+        Args: {
+          _dedupe_key: string
+          _email_category?: string
+          _email_type: string
+          _metadata?: Json
+          _order_id?: string
+          _recipient_email: string
+        }
+        Returns: {
+          attempt_count: number
+          created_at: string
+          dedupe_key: string | null
+          delivered_at: string | null
+          email_category: string | null
+          email_type: string
+          error_message: string | null
+          id: string
+          last_attempt_at: string | null
+          last_error_code: string | null
+          metadata: Json
+          next_retry_at: string | null
+          order_id: string | null
+          provider: string | null
+          provider_message_id: string | null
+          recipient_email: string
+          retryable: boolean
+          sent_at: string | null
+          status: string | null
+          updated_at: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "email_logs"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       revoke_blocked_session: {
         Args: { _session_id: string }
         Returns: boolean
+      }
+      schedule_email_retry: {
+        Args: {
+          _attempt: number
+          _error?: string
+          _log_id: string
+          _source: string
+        }
+        Returns: undefined
+      }
+      update_campaign_event_counts: {
+        Args: { _event: string; _provider_message_id: string }
+        Returns: undefined
       }
       validate_coupon: {
         Args: { _code: string; _order_total: number }

@@ -34,10 +34,11 @@ const FeaturedProductsCarousel = () => {
   // Auto-scroll every 4 seconds
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % Math.max(products.length - 3, 1));
+      setCurrentIndex((prev) => (prev + 1) % Math.max(products.length - 5, 1));
     }, 4000);
     return () => clearInterval(interval);
   }, [products.length]);
+
 
   const fetchFeaturedProducts = async () => {
     try {
@@ -70,8 +71,9 @@ const FeaturedProductsCarousel = () => {
   };
 
   const scrollToIndex = (index: number) => {
-    setCurrentIndex(Math.max(0, Math.min(index, products.length - 4)));
+    setCurrentIndex(Math.max(0, Math.min(index, products.length - 6)));
   };
+
 
   const nextSlide = () => {
     scrollToIndex(currentIndex + 1);
@@ -84,50 +86,38 @@ const FeaturedProductsCarousel = () => {
   if (products.length === 0) return null;
 
   return (
-    <section className="py-16 bg-muted/50">
+    <section className="py-5 bg-muted/50">
       <div className="container mx-auto px-4">
-        {/* Header - Centered */}
-        <div className="text-center mb-8">
-          <h2 className="text-3xl font-display font-bold text-foreground">
-            Produits populaires
-          </h2>
-          <p className="text-muted-foreground mt-2">
-            Les fournitures les plus demandées par nos clients
-          </p>
-          {/* Navigation buttons centered below */}
-          <div className="flex justify-center gap-2 mt-4">
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={prevSlide}
-              disabled={currentIndex === 0}
-              className="rounded-full"
-            >
-              <ChevronLeft size={20} />
+        <div className="flex items-end justify-between mb-4 gap-3">
+          <div>
+            <h2 className="text-xl sm:text-2xl font-display font-bold text-foreground">
+              Produits populaires
+            </h2>
+            <p className="text-xs sm:text-sm text-muted-foreground">
+              Les fournitures les plus demandées
+            </p>
+          </div>
+          <div className="flex gap-2 shrink-0">
+            <Button variant="outline" size="icon" onClick={prevSlide} disabled={currentIndex === 0} className="rounded-full h-8 w-8">
+              <ChevronLeft size={16} />
             </Button>
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={nextSlide}
-              disabled={currentIndex >= products.length - 4}
-              className="rounded-full"
-            >
-              <ChevronRight size={20} />
+            <Button variant="outline" size="icon" onClick={nextSlide} disabled={currentIndex >= products.length - 6} className="rounded-full h-8 w-8">
+              <ChevronRight size={16} />
             </Button>
           </div>
         </div>
 
         <div className="overflow-hidden" ref={carouselRef}>
-          <div 
-            className="flex gap-3 sm:gap-4 md:gap-6 transition-transform duration-500 ease-in-out"
-            style={{ transform: `translateX(-${currentIndex * (100 / 4)}%)` }}
+          <div
+            className="flex gap-1.5 sm:gap-2 transition-transform duration-500 ease-in-out"
+            style={{ transform: `translateX(-${currentIndex * (100 / 6)}%)` }}
           >
             {products.map((product) => (
               <div
                 key={product.id}
-                className="flex-shrink-0 w-[45%] sm:w-[48%] md:w-1/3 lg:w-1/4 group"
+                className="flex-shrink-0 w-[45%] sm:w-[32%] md:w-[24%] lg:w-[19%] xl:w-[16.5%] group"
               >
-                <div className="bg-card rounded-xl border border-border overflow-hidden hover:shadow-lg transition-all h-full flex flex-col">
+                <div className="bg-card rounded-md border border-border overflow-hidden hover:shadow-md transition-all h-full flex flex-col">
                   <Link to={`/product/${product.id}`} className="relative aspect-square block overflow-hidden">
                     <SmartImage
                       src={product.image_url}
@@ -137,33 +127,28 @@ const FeaturedProductsCarousel = () => {
                       priority={currentIndex === 0}
                     />
                     {product.discount_percent > 0 && (
-                      <span className="absolute top-2 left-2 px-1.5 py-0.5 sm:px-2 sm:py-1 bg-destructive text-destructive-foreground text-[10px] sm:text-xs font-medium rounded">
+                      <span className="absolute top-0.5 left-0.5 px-1 py-0 bg-destructive text-destructive-foreground text-[9px] font-medium rounded">
                         -{product.discount_percent}%
                       </span>
                     )}
                     {product.is_featured && (
-                      <span className="absolute top-2 right-2 px-1.5 py-0.5 sm:px-2 sm:py-1 bg-accent text-accent-foreground text-[10px] sm:text-xs font-medium rounded">
+                      <span className="absolute top-0.5 right-0.5 px-1 py-0 bg-accent text-accent-foreground text-[9px] font-medium rounded">
                         ⭐
                       </span>
                     )}
                   </Link>
-                  <div className="p-2 sm:p-3 md:p-4 flex flex-col flex-1">
+                  <div className="p-1.5 flex flex-col flex-1 gap-1">
                     <Link to={`/product/${product.id}`}>
-                      <h3 className="font-medium text-foreground hover:text-primary transition-colors line-clamp-2 text-xs sm:text-sm mb-1 sm:mb-2">
+                      <h3 className="font-medium text-foreground hover:text-primary transition-colors line-clamp-2 text-[11px] leading-tight">
                         {getLocalizedName(product)}
                       </h3>
                     </Link>
-                    <div className="flex items-center gap-0.5 mb-1 sm:mb-2">
-                      {[...Array(5)].map((_, i) => (
-                        <Star key={i} size={10} className="fill-accent text-accent sm:w-3 sm:h-3" />
-                      ))}
-                    </div>
-                    <div className="flex flex-col sm:flex-row sm:items-center gap-0.5 sm:gap-2 mb-2 sm:mb-3 mt-auto">
-                      <span className="text-sm sm:text-base md:text-lg font-bold text-primary">
+                    <div className="flex items-baseline gap-1 flex-wrap mt-auto">
+                      <span className="text-xs font-bold text-primary tabular-nums">
                         {formatPrice(product.price)}
                       </span>
                       {product.original_price && product.original_price > product.price && (
-                        <span className="text-[10px] sm:text-xs text-muted-foreground line-through">
+                        <span className="text-[9px] text-muted-foreground line-through tabular-nums">
                           {formatPrice(product.original_price)}
                         </span>
                       )}
@@ -171,12 +156,11 @@ const FeaturedProductsCarousel = () => {
                     <Button
                       variant="hero"
                       size="sm"
-                      className="w-full text-xs sm:text-sm h-8 sm:h-9"
+                      className="w-full text-[11px] h-6 px-1"
                       onClick={() => addToCart(product.id)}
                     >
-                      <ShoppingCart size={14} className="sm:w-4 sm:h-4" />
-                      <span className="hidden sm:inline">Acheter</span>
-                      <span className="sm:hidden">+</span>
+                      <ShoppingCart size={11} />
+                      <span className="ml-1">Acheter</span>
                     </Button>
                   </div>
                 </div>
@@ -186,8 +170,9 @@ const FeaturedProductsCarousel = () => {
         </div>
 
         {/* Indicators */}
-        <div className="flex justify-center gap-2 mt-6">
-          {Array.from({ length: Math.max(products.length - 3, 1) }).map((_, i) => (
+        <div className="flex justify-center gap-2 mt-4">
+          {Array.from({ length: Math.max(products.length - 5, 1) }).map((_, i) => (
+
             <button
               key={i}
               onClick={() => scrollToIndex(i)}
@@ -198,9 +183,9 @@ const FeaturedProductsCarousel = () => {
           ))}
         </div>
 
-        <div className="text-center mt-8">
+        <div className="text-center mt-5">
           <Link to="/shop">
-            <Button variant="outline" size="lg">
+            <Button variant="outline" size="sm">
               Voir tous les produits
             </Button>
           </Link>

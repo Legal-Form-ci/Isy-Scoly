@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import {
   Menu,
   X,
@@ -34,6 +34,8 @@ const Navbar = () => {
   const { itemCount: cartCount } = useCart();
   const { wishlistCount } = useWishlist();
   const navigate = useNavigate();
+  const { pathname } = useLocation();
+  const isDashboard = /^\/(admin|vendor|delivery|moderator|team|author|account|compte|wishlist)(\/|$)/.test(pathname);
 
   const categories = [
     { label: "Primaire", href: "/shop?category=scoly-primaire" },
@@ -47,7 +49,6 @@ const Navbar = () => {
     { label: "Boutique", href: "/shop" },
     { label: "Écoles", href: "/ecoles" },
     { label: "Kits", href: "/kits" },
-    { label: "Ressources", href: "/ressources" },
     { label: "Actualités", href: "/actualites" },
     { label: t.nav.about, href: "/about" },
     { label: t.nav.contact, href: "/contact" },
@@ -118,6 +119,17 @@ const Navbar = () => {
               >
                 <Search size={20} />
               </button>
+
+              {/* Mobile-only login icon */}
+              {!user && (
+                <Link
+                  to="/auth"
+                  aria-label="Connexion"
+                  className="sm:hidden p-2 text-foreground"
+                >
+                  <User size={20} />
+                </Link>
+              )}
 
               {user && (
                 <Link to="/wishlist" className="relative hidden sm:inline-flex">
@@ -203,6 +215,7 @@ const Navbar = () => {
         </div>
 
         {/* Categories bar - Jumia style */}
+        {!isDashboard && (
         <div className="hidden lg:block border-t border-border bg-muted/40">
           <div className="container mx-auto px-4">
             <div className="flex items-center gap-1 h-11 overflow-x-auto">
@@ -238,6 +251,7 @@ const Navbar = () => {
             </div>
           </div>
         </div>
+        )}
       </div>
 
       {/* Mobile slide-over menu */}
@@ -249,59 +263,52 @@ const Navbar = () => {
             aria-hidden="true"
           />
           <aside className="lg:hidden fixed top-0 left-0 bottom-0 w-[85%] max-w-sm bg-background z-50 shadow-2xl flex flex-col animate-slide-in-left">
-            <div className="bg-primary text-primary-foreground p-5">
-              {user ? (
-                <div>
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-primary-foreground/20 flex items-center justify-center">
-                      <User size={20} />
-                    </div>
-                    <div className="min-w-0">
-                      <p className="text-sm opacity-80">Bonjour 👋</p>
-                      <p className="font-semibold truncate">{user.email}</p>
-                    </div>
+            {user && (
+              <div className="bg-primary text-primary-foreground p-5">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-primary-foreground/20 flex items-center justify-center">
+                    <User size={20} />
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-sm opacity-80">Bonjour 👋</p>
+                    <p className="font-semibold truncate">{user.email}</p>
                   </div>
                 </div>
-              ) : (
-                <div className="flex gap-2">
-                  <Link to="/auth" className="flex-1" onClick={() => setIsOpen(false)}>
-                    <Button variant="secondary" className="w-full">Connexion</Button>
-                  </Link>
-                  <Link to="/auth?mode=signup" className="flex-1" onClick={() => setIsOpen(false)}>
-                    <Button variant="accent" className="w-full">S'inscrire</Button>
-                  </Link>
-                </div>
-              )}
-            </div>
+              </div>
+            )}
 
             <nav className="flex-1 overflow-y-auto py-2">
-              <p className="px-5 pt-3 pb-1 text-[11px] uppercase tracking-wider text-muted-foreground font-semibold">
-                Catégories
-              </p>
-              {categories.map((c) => (
-                <Link
-                  key={c.href}
-                  to={c.href}
-                  onClick={() => setIsOpen(false)}
-                  className="block px-5 py-3 text-foreground hover:bg-muted text-sm"
-                >
-                  {c.label}
-                </Link>
-              ))}
+              {!isDashboard && (
+                <>
+                  <p className="px-5 pt-3 pb-1 text-[11px] uppercase tracking-wider text-muted-foreground font-semibold">
+                    Catégories
+                  </p>
+                  {categories.map((c) => (
+                    <Link
+                      key={c.href}
+                      to={c.href}
+                      onClick={() => setIsOpen(false)}
+                      className="block px-5 py-3 text-foreground hover:bg-muted text-sm"
+                    >
+                      {c.label}
+                    </Link>
+                  ))}
 
-              <p className="px-5 pt-4 pb-1 text-[11px] uppercase tracking-wider text-muted-foreground font-semibold">
-                Explorer
-              </p>
-              {navItems.map((item) => (
-                <Link
-                  key={item.href}
-                  to={item.href}
-                  onClick={() => setIsOpen(false)}
-                  className="block px-5 py-3 text-foreground hover:bg-muted text-sm"
-                >
-                  {item.label}
-                </Link>
-              ))}
+                  <p className="px-5 pt-4 pb-1 text-[11px] uppercase tracking-wider text-muted-foreground font-semibold">
+                    Explorer
+                  </p>
+                  {navItems.map((item) => (
+                    <Link
+                      key={item.href}
+                      to={item.href}
+                      onClick={() => setIsOpen(false)}
+                      className="block px-5 py-3 text-foreground hover:bg-muted text-sm"
+                    >
+                      {item.label}
+                    </Link>
+                  ))}
+                </>
+              )}
 
               {user && (
                 <>

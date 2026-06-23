@@ -11,9 +11,19 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import RichTextEditor from "@/components/RichTextEditor";
+
+const SEGMENTS: { value: string; label: string }[] = [
+  { value: "newsletter_subscribers", label: "Abonnés newsletter (confirmés)" },
+  { value: "customers", label: "Clients (avec commandes)" },
+  { value: "account_users", label: "Utilisateurs ayant un compte" },
+  { value: "internal_members", label: "Membres internes (admin/modérateurs)" },
+  { value: "all_users", label: "Tous les utilisateurs" },
+  { value: "custom", label: "Segment personnalisé" },
+];
 
 type Subscriber = { id: string; email: string; first_name: string | null; is_active: boolean; confirmed: boolean; subscribed_at: string; source: string | null };
-type Campaign = { id: string; name: string; subject: string; preheader: string | null; html_content: string; status: string; sent_count: number; failed_count: number; recipients_count: number; created_at: string; sent_at: string | null };
+type Campaign = { id: string; name: string; subject: string; preheader: string | null; html_content: string; status: string; sent_count: number; failed_count: number; recipients_count: number; created_at: string; sent_at: string | null; segment_type?: string | null; segment_filters?: any };
 type CampaignLog = { id: string; recipient_email: string; status: string; error_message: string | null; sent_at: string };
 
 const DEFAULT_HTML = `<!DOCTYPE html><html><body style="margin:0;background:#f9fafb;font-family:Inter,Arial,sans-serif">
@@ -42,6 +52,7 @@ const EmailMarketing = () => {
   const [aiOpen, setAiOpen] = useState(false);
   const [aiPrompt, setAiPrompt] = useState("");
   const [aiType, setAiType] = useState("newsletter");
+  const [aiWithVisual, setAiWithVisual] = useState(true);
   const [aiLoading, setAiLoading] = useState(false);
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewHtml, setPreviewHtml] = useState("");
@@ -89,6 +100,8 @@ const EmailMarketing = () => {
     const payload = {
       name: editing.name, subject: editing.subject, preheader: editing.preheader || null,
       html_content: editing.html_content, status: "draft" as const,
+      segment_type: editing.segment_type || "newsletter_subscribers",
+      segment_filters: editing.segment_filters || {},
     };
     const { error } = editing.id
       ? await supabase.from("email_campaigns").update(payload).eq("id", editing.id)
@@ -122,7 +135,7 @@ const EmailMarketing = () => {
     if (!aiPrompt) return toast.error("Décrivez votre email");
     setAiLoading(true);
     const { data, error } = await supabase.functions.invoke("generate-email-content", {
-      body: { prompt: aiPrompt, type: aiType },
+      body: { prompt: aiPrompt, type: aiType, with_visual: aiWithVisual },
     });
     setAiLoading(false);
     if (error) return toast.error(error.message);
@@ -131,10 +144,11 @@ const EmailMarketing = () => {
       subject: data.subject,
       preheader: data.preheader,
       html_content: data.html_content,
-    });
+      ...(data.image_url ? { image_url: data.image_url } : {}),
+    } as any);
     setAiOpen(false);
     setAiPrompt("");
-    toast.success("✨ Email généré !");
+    toast.success(aiWithVisual ? "✨ Email + visuel générés !" : "✨ Email généré !");
   };
 
   const exportCSV = () => {
@@ -201,6 +215,12 @@ const EmailMarketing = () => {
                     <Label>Décrivez votre email</Label>
                     <Textarea rows={4} value={aiPrompt} onChange={e => setAiPrompt(e.target.value)}
                       placeholder="Ex : Annoncer -30% sur tous les cahiers cette semaine pour la rentrée, ton chaleureux et urgent" />
+                  </div>
+                  <div className="flex items-center gap-2 rounded-md border p-3 bg-muted/40">
+                    <input id="aiVisual" type="checkbox" checked={aiWithVisual} onChange={(e) => setAiWithVisual(e.target.checked)} />
+                    <Label htmlFor="aiVisual" className="cursor-pointer text-sm">
+                      🎨 Générer aussi un visuel (bannière) adapté au type — recommandé pour promo / vente flash
+                    </Label>
                   </div>
                   <Button onClick={generateAI} disabled={aiLoading} className="w-full">
                     {aiLoading ? <RefreshCw className="animate-spin" size={16} /> : <Sparkles size={16} />}
@@ -317,10 +337,25 @@ const EmailMarketing = () => {
               <div><Label>Nom interne *</Label><Input value={editing?.name || ""} onChange={e => setEditing({ ...editing, name: e.target.value })} /></div>
               <div><Label>Sujet *</Label><Input value={editing?.subject || ""} onChange={e => setEditing({ ...editing, subject: e.target.value })} /></div>
             </div>
-            <div><Label>Pré-en-tête</Label><Input value={editing?.preheader || ""} onChange={e => setEditing({ ...editing, preheader: e.target.value })} /></div>
+            <div className="grid md:grid-cols-2 gap-4">
+              <div>
+                <Label>Segment de destinataires *</Label>
+                <Select value={(editing?.segment_type as string) || "newsletter_subscribers"} onValueChange={(v) => setEditing({ ...editing, segment_type: v })}>
+                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    {SEGMENTS.map((s) => <SelectItem key={s.value} value={s.value}>{s.label}</SelectItem>)}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div><Label>Pré-en-tête</Label><Input value={editing?.preheader || ""} onChange={e => setEditing({ ...editing, preheader: e.target.value })} /></div>
+            </div>
             <div>
-              <Label>HTML * <span className="text-xs text-muted-foreground">(variables: {"{{first_name}}, {{unsubscribe_url}}"})</span></Label>
-              <Textarea rows={12} className="font-mono text-xs" value={editing?.html_content || ""} onChange={e => setEditing({ ...editing, html_content: e.target.value })} />
+              <Label className="mb-1 block">Contenu de l'email * <span className="text-xs text-muted-foreground">(éditeur visuel — variables: {"{{first_name}}, {{unsubscribe_url}}"})</span></Label>
+              <RichTextEditor
+                content={editing?.html_content || ""}
+                onChange={(html) => setEditing({ ...editing, html_content: html })}
+                placeholder="Composez votre email..."
+              />
             </div>
             <div className="flex gap-2 flex-wrap">
               <Button onClick={() => { setPreviewHtml(editing?.html_content || ""); setPreviewOpen(true); }} variant="outline"><Eye size={14} className="mr-1" />Aperçu</Button>

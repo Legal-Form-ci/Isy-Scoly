@@ -1,7 +1,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { sendBrevoEmail } from "../_shared/brevo.ts";
 
-const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
 const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
 const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 
@@ -244,7 +244,7 @@ const handler = async (req: Request): Promise<Response> => {
               <p class="auto-msg">Message généré automatiquement, ne pas répondre.</p>
               <p>Bonjour <strong>${authorName}</strong>,</p>
               <p>Votre article <strong>"${article.title_fr}"</strong> nécessite des modifications.</p>
-              ${reason ? `<div class="reason-box"><strong>Commentaire :</strong><p>${reason}</p></div>` : ""}
+              ${reason ? `<div class="reason-box"><strong>Commentaire :</strong><p style="white-space:pre-wrap;">${String(reason).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}</p></div>` : ""}
               <p>Modifiez votre article depuis votre espace auteur et soumettez-le à nouveau.</p>
               <center>
                 <a href="https://scoly.ci/author" class="button">Modifier mon article</a>
@@ -259,26 +259,12 @@ const handler = async (req: Request): Promise<Response> => {
       `;
     }
 
-    if (RESEND_API_KEY) {
-      const emailResponse = await fetch("https://api.resend.com/emails", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${RESEND_API_KEY}`,
-        },
-        body: JSON.stringify({
-          from: "Scoly <onboarding@resend.dev>",
-          to: [authorEmail],
-          subject: emailSubject,
-          html: htmlContent,
-        }),
-      });
-
-      const emailData = await emailResponse.json();
-      console.log("Email sent:", emailData);
-    } else {
-      console.log("RESEND_API_KEY not configured, skipping email. In-app notification created.");
-    }
+    await sendBrevoEmail({
+      from: { name: "Scoly", email: "noreply@scoly.ci" },
+      to: authorEmail,
+      subject: emailSubject,
+      html: htmlContent,
+    });
 
     return new Response(JSON.stringify({ success: true }), {
       status: 200,
