@@ -82,9 +82,15 @@ const SmartKits = () => {
     queryFn: async () => {
       const from = (page - 1) * PAGE_SIZE;
       const to = from + PAGE_SIZE - 1;
+      // Trim payload: only fetch the product columns the kit card actually renders.
       let q = supabase
         .from("smart_kits")
-        .select("*, smart_kit_items(*, products(*))", { count: "exact" })
+        .select(
+          "id,name,description,grade_level,series,is_active,created_at," +
+            "smart_kit_items(id,product_id,quantity,item_name," +
+            "products(id,name_fr,price,image_url,stock,is_active))",
+          { count: "exact" },
+        )
         .eq("is_active", true);
       if (selectedLevel !== "all") q = q.eq("grade_level", selectedLevel);
       if (showSeries && selectedSeries !== "all") q = q.eq("series", selectedSeries);
@@ -99,6 +105,9 @@ const SmartKits = () => {
       return { rows: data || [], count: count || 0 };
     },
     placeholderData: keepPreviousData,
+    staleTime: 1000 * 60 * 5, // 5 min — kits change rarely
+    gcTime: 1000 * 60 * 30,
+    refetchOnWindowFocus: false,
   });
 
   const kits = kitsResult?.rows || [];
