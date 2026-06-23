@@ -367,13 +367,15 @@ const FiltersPanel = ({
         <h3 className="font-bold text-sm text-foreground mb-3 uppercase tracking-wide">Trier par</h3>
         <select
           value={sortBy}
-          onChange={(e) => setSortBy(e.target.value)}
+          onChange={(e) => setSortBy(e.target.value as SortMode)}
           className="w-full px-3 py-2 rounded-md border border-border bg-background text-sm"
         >
+          <option value="recommended">Recommandés</option>
           <option value="newest">{t.shop.sortNewest}</option>
           <option value="price-asc">{t.shop.sortPriceAsc}</option>
           <option value="price-desc">{t.shop.sortPriceDesc}</option>
           <option value="popular">{t.shop.sortPopular}</option>
+          <option value="rating">Mieux notés</option>
         </select>
       </div>
     )}
