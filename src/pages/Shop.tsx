@@ -10,6 +10,7 @@ import SEOHead from "@/components/SEOHead";
 import { useLanguage } from "@/i18n/LanguageContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useSearchParams, Link } from "react-router-dom";
+import { applySort, type SortMode } from "@/lib/productSort";
 
 interface Product {
   id: string;
@@ -53,7 +54,7 @@ const Shop = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(
     searchParams.get("category") || null
   );
-  const [sortBy, setSortBy] = useState("newest");
+  const [sortBy, setSortBy] = useState<SortMode>("recommended");
   const [selectedPublisher, setSelectedPublisher] = useState("all");
 
   const publishers = ["NEI/CEDA", "NEI", "CEDA", "EDICEF", "Eburnie", "Vallesse", "JD Editions", "Les Classiques Ivoiriens", "Frat Mat Editions", "SuperNova", "Sud Editions", "Nouvelles Editions Balafon", "S.N.P.E.C.I", "Africa Reflets Editions", "ARE"];
@@ -131,22 +132,16 @@ const Shop = () => {
     }
   };
 
-  const filteredProducts = products
-    .filter(product => {
-      const name = (productName(product) || '').toLowerCase();
-      const matchesSearch = name.includes(searchQuery.toLowerCase());
-      const matchesCategory = !selectedCategory || product.category_id === selectedCategory;
-      const pub = `${product.brand || ""} ${product.author_details || ""} ${(product.metadata as any)?.publisher || ""}`.toLowerCase();
-      const matchesPublisher = selectedPublisher === "all" || pub.includes(selectedPublisher.toLowerCase());
-      return matchesSearch && matchesCategory && matchesPublisher;
-    })
-    .sort((a, b) => {
-      switch (sortBy) {
-        case 'price-asc': return a.price - b.price;
-        case 'price-desc': return b.price - a.price;
-        default: return 0;
-      }
-    });
+  const baseFiltered = products.filter((product) => {
+    const name = (productName(product) || '').toLowerCase();
+    const matchesSearch = name.includes(searchQuery.toLowerCase());
+    const matchesCategory = !selectedCategory || product.category_id === selectedCategory;
+    const pub = `${product.brand || ""} ${product.author_details || ""} ${(product.metadata as any)?.publisher || ""}`.toLowerCase();
+    const matchesPublisher = selectedPublisher === "all" || pub.includes(selectedPublisher.toLowerCase());
+    return matchesSearch && matchesCategory && matchesPublisher;
+  });
+
+  const filteredProducts = applySort(baseFiltered as any, sortBy) as Product[];
 
   return (
     <main className="min-h-screen bg-background">
@@ -193,13 +188,15 @@ const Shop = () => {
           </div>
           <select
             value={sortBy}
-            onChange={(e) => setSortBy(e.target.value)}
-            className="hidden sm:block h-10 px-3 rounded-md border border-border bg-card text-sm text-foreground min-w-[160px]"
+            onChange={(e) => setSortBy(e.target.value as SortMode)}
+            className="hidden sm:block h-10 px-3 rounded-md border border-border bg-card text-sm text-foreground min-w-[180px]"
           >
+            <option value="recommended">Recommandés</option>
             <option value="newest">{t.shop.sortNewest}</option>
             <option value="price-asc">{t.shop.sortPriceAsc}</option>
             <option value="price-desc">{t.shop.sortPriceDesc}</option>
             <option value="popular">{t.shop.sortPopular}</option>
+            <option value="rating">Mieux notés</option>
           </select>
           <select
             value={selectedPublisher}
@@ -305,8 +302,8 @@ interface FiltersPanelProps {
   selectedCategory: string | null;
   onSelectCategory: (id: string | null, slug?: string) => void;
   getLocalizedName: (c: Category) => string;
-  sortBy: string;
-  setSortBy: (s: string) => void;
+  sortBy: SortMode;
+  setSortBy: (s: SortMode) => void;
   publishers: string[];
   selectedPublisher: string;
   setSelectedPublisher: (s: string) => void;
@@ -370,13 +367,15 @@ const FiltersPanel = ({
         <h3 className="font-bold text-sm text-foreground mb-3 uppercase tracking-wide">Trier par</h3>
         <select
           value={sortBy}
-          onChange={(e) => setSortBy(e.target.value)}
+          onChange={(e) => setSortBy(e.target.value as SortMode)}
           className="w-full px-3 py-2 rounded-md border border-border bg-background text-sm"
         >
+          <option value="recommended">Recommandés</option>
           <option value="newest">{t.shop.sortNewest}</option>
           <option value="price-asc">{t.shop.sortPriceAsc}</option>
           <option value="price-desc">{t.shop.sortPriceDesc}</option>
           <option value="popular">{t.shop.sortPopular}</option>
+          <option value="rating">Mieux notés</option>
         </select>
       </div>
     )}
