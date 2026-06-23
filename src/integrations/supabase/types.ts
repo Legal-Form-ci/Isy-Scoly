@@ -1193,7 +1193,7 @@ export type Database = {
       newsletter_subscribers: {
         Row: {
           confirmation_sent_at: string | null
-          confirmation_token: string
+          confirmation_token_hash: string | null
           confirmed: boolean
           confirmed_at: string | null
           email: string
@@ -1202,12 +1202,12 @@ export type Database = {
           is_active: boolean
           source: string | null
           subscribed_at: string
-          unsubscribe_token: string
+          unsubscribe_token_hash: string | null
           unsubscribed_at: string | null
         }
         Insert: {
           confirmation_sent_at?: string | null
-          confirmation_token?: string
+          confirmation_token_hash?: string | null
           confirmed?: boolean
           confirmed_at?: string | null
           email: string
@@ -1216,12 +1216,12 @@ export type Database = {
           is_active?: boolean
           source?: string | null
           subscribed_at?: string
-          unsubscribe_token?: string
+          unsubscribe_token_hash?: string | null
           unsubscribed_at?: string | null
         }
         Update: {
           confirmation_sent_at?: string | null
-          confirmation_token?: string
+          confirmation_token_hash?: string | null
           confirmed?: boolean
           confirmed_at?: string | null
           email?: string
@@ -1230,7 +1230,7 @@ export type Database = {
           is_active?: boolean
           source?: string | null
           subscribed_at?: string
-          unsubscribe_token?: string
+          unsubscribe_token_hash?: string | null
           unsubscribed_at?: string | null
         }
         Relationships: []
@@ -2563,7 +2563,7 @@ export type Database = {
         Args: { _subscriber_id: string }
         Returns: {
           confirmation_sent_at: string | null
-          confirmation_token: string
+          confirmation_token_hash: string | null
           confirmed: boolean
           confirmed_at: string | null
           email: string
@@ -2572,7 +2572,7 @@ export type Database = {
           is_active: boolean
           source: string | null
           subscribed_at: string
-          unsubscribe_token: string
+          unsubscribe_token_hash: string | null
           unsubscribed_at: string | null
         }
         SetofOptions: {
@@ -2607,6 +2607,7 @@ export type Database = {
           success: boolean
         }[]
       }
+      confirm_order_receipt: { Args: { _order_id: string }; Returns: boolean }
       finalize_campaign_email_log: {
         Args: {
           _attempt_count?: number
@@ -2815,6 +2816,14 @@ export type Database = {
           value: string
         }[]
       }
+      get_school_contact: {
+        Args: { _school_id: string }
+        Returns: {
+          address: string
+          email: string
+          phone: string
+        }[]
+      }
       get_share_stats: {
         Args: { _end_date?: string; _start_date?: string }
         Returns: {
@@ -2934,6 +2943,7 @@ export type Database = {
         }
         Returns: undefined
       }
+      unsubscribe_newsletter: { Args: { _token: string }; Returns: boolean }
       update_campaign_event_counts: {
         Args: { _event: string; _provider_message_id: string }
         Returns: undefined
