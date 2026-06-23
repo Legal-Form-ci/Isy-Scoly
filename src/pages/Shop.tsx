@@ -132,22 +132,16 @@ const Shop = () => {
     }
   };
 
-  const filteredProducts = products
-    .filter(product => {
-      const name = (productName(product) || '').toLowerCase();
-      const matchesSearch = name.includes(searchQuery.toLowerCase());
-      const matchesCategory = !selectedCategory || product.category_id === selectedCategory;
-      const pub = `${product.brand || ""} ${product.author_details || ""} ${(product.metadata as any)?.publisher || ""}`.toLowerCase();
-      const matchesPublisher = selectedPublisher === "all" || pub.includes(selectedPublisher.toLowerCase());
-      return matchesSearch && matchesCategory && matchesPublisher;
-    })
-    .sort((a, b) => {
-      switch (sortBy) {
-        case 'price-asc': return a.price - b.price;
-        case 'price-desc': return b.price - a.price;
-        default: return 0;
-      }
-    });
+  const baseFiltered = products.filter((product) => {
+    const name = (productName(product) || '').toLowerCase();
+    const matchesSearch = name.includes(searchQuery.toLowerCase());
+    const matchesCategory = !selectedCategory || product.category_id === selectedCategory;
+    const pub = `${product.brand || ""} ${product.author_details || ""} ${(product.metadata as any)?.publisher || ""}`.toLowerCase();
+    const matchesPublisher = selectedPublisher === "all" || pub.includes(selectedPublisher.toLowerCase());
+    return matchesSearch && matchesCategory && matchesPublisher;
+  });
+
+  const filteredProducts = applySort(baseFiltered as any, sortBy) as Product[];
 
   return (
     <main className="min-h-screen bg-background">
