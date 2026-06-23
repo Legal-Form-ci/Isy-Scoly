@@ -14,8 +14,10 @@ import FreeShippingPopup from "@/components/FreeShippingPopup";
 import SEOHead from "@/components/SEOHead";
 import RecentlyViewed from "@/components/RecentlyViewed";
 import NewsletterSignup from "@/components/NewsletterSignup";
+import { usePublicDataPrefetch } from "@/hooks/usePublicDataPrefetch";
 
 const Index = () => {
+  usePublicDataPrefetch();
   return (
     <main id="main-content" className="min-h-screen bg-background">
       <SEOHead 
