@@ -48,9 +48,6 @@ interface Category {
 const Shop = () => {
   const { language, t } = useLanguage();
   const [searchParams, setSearchParams] = useSearchParams();
-  const [products, setProducts] = useState<Product[]>([]);
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(
     searchParams.get("category") || null
@@ -60,51 +57,46 @@ const Shop = () => {
 
   const publishers = ["NEI/CEDA", "NEI", "CEDA", "EDICEF", "Eburnie", "Vallesse", "JD Editions", "Les Classiques Ivoiriens", "Frat Mat Editions", "SuperNova", "Sud Editions", "Nouvelles Editions Balafon", "S.N.P.E.C.I", "Africa Reflets Editions", "ARE"];
 
-  useEffect(() => {
-    fetchProducts();
-    fetchCategories();
-  }, []);
+  // Cached + shared with the homepage prefetch hook (same query key).
+  const { data: products = [], isLoading: loading } = useQuery({
+    queryKey: ["shop-products", "page-0"],
+    staleTime: 1000 * 60 * 5,
+    gcTime: 1000 * 60 * 30,
+    refetchOnWindowFocus: false,
+    queryFn: async (): Promise<Product[]> => {
+      const { data, error } = await supabase
+        .from("products")
+        .select(
+          "id,name_fr,name_en,name_de,name_es,description_fr,description_en,description_de,description_es,price,original_price,discount_percent,stock,image_url,is_featured,category_id,free_shipping,brand,author_details,metadata,views,sales_count,rating,created_at",
+        )
+        .eq("is_active", true)
+        .order("created_at", { ascending: false })
+        .range(0, 47);
+      if (error) throw error;
+      return (data || []) as any;
+    },
+  });
+
+  const { data: categories = [] } = useQuery({
+    queryKey: ["shop-categories"],
+    staleTime: 1000 * 60 * 10,
+    queryFn: async (): Promise<Category[]> => {
+      const { data, error } = await supabase
+        .from("categories")
+        .select("*")
+        .order("name_fr");
+      if (error) throw error;
+      return data || [];
+    },
+  });
 
   useEffect(() => {
     const categoryParam = searchParams.get("category");
-    if (categoryParam) {
+    if (categoryParam && categories.length > 0) {
       const cat = categories.find(c => c.slug === categoryParam);
-      if (cat) {
-        setSelectedCategory(cat.id);
-      }
+      if (cat) setSelectedCategory(cat.id);
     }
   }, [searchParams, categories]);
-
-  const fetchProducts = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('products')
-        .select('*')
-        .eq('is_active', true)
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
-      setProducts(data || []);
-    } catch (error) {
-      console.error('Error fetching products:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const fetchCategories = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('categories')
-        .select('*')
-        .order('name_fr');
-
-      if (error) throw error;
-      setCategories(data || []);
-    } catch (error) {
-      console.error('Error fetching categories:', error);
-    }
-  };
 
   const getLocalizedName = (item: Category) => {
     switch (language) {
