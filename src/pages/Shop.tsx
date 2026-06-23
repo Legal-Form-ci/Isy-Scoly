@@ -302,8 +302,8 @@ interface FiltersPanelProps {
   selectedCategory: string | null;
   onSelectCategory: (id: string | null, slug?: string) => void;
   getLocalizedName: (c: Category) => string;
-  sortBy: string;
-  setSortBy: (s: string) => void;
+  sortBy: SortMode;
+  setSortBy: (s: SortMode) => void;
   publishers: string[];
   selectedPublisher: string;
   setSelectedPublisher: (s: string) => void;
