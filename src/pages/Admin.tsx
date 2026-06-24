@@ -107,7 +107,7 @@ type TabType =
 
 const Admin = () => {
   const { t, language } = useLanguage();
-  const { user, loading: authLoading } = useAuth();
+  const { user, loading: authLoading, rolesLoading, isAdmin: hasAdminRole } = useAuth();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<TabType>("dashboard");
   const [isAdmin, setIsAdmin] = useState(false);
@@ -116,26 +116,15 @@ const Admin = () => {
   const [openMenuGroups, setOpenMenuGroups] = useState<string[]>(["Vue d'ensemble", "Catalogue & Ventes", "Contenu & Kits"]);
 
   useEffect(() => {
-    if (authLoading) return;
-    checkAdminRole();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [authLoading, user]);
+    if (authLoading || (user && rolesLoading)) return;
 
-  const checkAdminRole = async () => {
     if (!user) {
       setLoading(false);
       navigate("/auth");
       return;
     }
 
-    const { data, error } = await supabase
-      .from("user_roles")
-      .select("role")
-      .eq("user_id", user.id)
-      .eq("role", "admin")
-      .maybeSingle();
-
-    if (error || !data) {
+    if (!hasAdminRole) {
       toast.error("Accès refusé. Vous n'êtes pas administrateur.");
       setLoading(false);
       navigate("/");
@@ -144,7 +133,7 @@ const Admin = () => {
 
     setIsAdmin(true);
     setLoading(false);
-  };
+  }, [authLoading, rolesLoading, user, hasAdminRole, navigate]);
 
   const menuGroups: Array<{ label: string; items: Array<{ id: string; label: string; icon: any }> }> = [
     {
@@ -252,70 +241,29 @@ const Admin = () => {
             <p className="text-xs text-muted-foreground">Menu interne</p>
           </div>
           <nav className="px-3 py-4 space-y-2">
-            {menuGroups.map((group) => {
-              const isGroupActive = group.items.some((i) => i.id === activeTab);
+            {menuGroups.map((group, groupIndex) => {
+              const isGroupOpen = openMenuGroups.includes(group.label);
+              const panelId = `admin-menu-desktop-${groupIndex}`;
               return (
-                <details
+                <div
                   key={group.label}
-                  open={openMenuGroups.includes(group.label)}
-                  onToggle={(event) => {
-                    event.preventDefault();
-                    toggleMenuGroup(group.label);
-                  }}
-                  className="group/details rounded-lg border border-border/60 bg-background/40"
+                  className="rounded-lg border border-border/60 bg-background/40"
                 >
-                  <summary className="cursor-pointer list-none px-3 py-2 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/80 flex items-center justify-between hover:text-foreground">
-                    {group.label}
-                    <ChevronRight size={13} className="transition-transform group-open/details:rotate-90" />
-                  </summary>
-                  <div className="space-y-1 px-2 pb-2 pt-1">
-                    {group.items.map((item) => (
-                      <button
-                        key={item.id}
-                        onClick={() => handleTabChange(item.id as TabType)}
-                        className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-colors text-sm ${
-                          activeTab === item.id
-                            ? "bg-primary text-primary-foreground"
-                            : "text-muted-foreground hover:bg-muted hover:text-foreground"
-                        }`}
-                      >
-                        <item.icon size={16} />
-                        <span className="truncate">{item.label}</span>
-                      </button>
-                    ))}
-                  </div>
-                </details>
-              );
-            })}
-          </nav>
-        </aside>
-
-        {/* Mobile Menu Sheet */}
-        <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
-          <SheetContent side="left" className="w-72 p-0 z-[60]">
-            <SheetHeader className="p-6 border-b border-border">
-              <SheetTitle>Administration</SheetTitle>
-            </SheetHeader>
-            <nav className="p-4 space-y-3 overflow-y-auto max-h-[calc(100vh-100px)]">
-              {menuGroups.map((group) => {
-                const isGroupActive = group.items.some((i) => i.id === activeTab);
-                return (
-                  <details
-                    key={group.label}
-                    open={openMenuGroups.includes(group.label)}
-                    onToggle={(event) => {
-                      event.preventDefault();
-                      toggleMenuGroup(group.label);
-                    }}
-                    className="group/details rounded-lg border border-border/70"
+                  <button
+                    type="button"
+                    aria-expanded={isGroupOpen}
+                    aria-controls={panelId}
+                    onClick={() => toggleMenuGroup(group.label)}
+                    className="w-full px-3 py-2 text-left text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/80 flex items-center justify-between hover:text-foreground"
                   >
-                    <summary className="cursor-pointer list-none px-3 py-2 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/80 flex items-center justify-between hover:text-foreground">
-                      {group.label}
-                      <ChevronRight size={13} className="transition-transform group-open/details:rotate-90" />
-                    </summary>
-                    <div className="space-y-1 px-2 pb-2 pt-1">
+                    {group.label}
+                    <ChevronRight size={13} className={`transition-transform ${isGroupOpen ? "rotate-90" : ""}`} />
+                  </button>
+                  {isGroupOpen && (
+                    <div id={panelId} className="space-y-1 px-2 pb-2 pt-1">
                       {group.items.map((item) => (
                         <button
+                          type="button"
                           key={item.id}
                           onClick={() => handleTabChange(item.id as TabType)}
                           className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-colors text-sm ${
@@ -329,7 +277,58 @@ const Admin = () => {
                         </button>
                       ))}
                     </div>
-                  </details>
+                  )}
+                </div>
+              );
+            })}
+          </nav>
+        </aside>
+
+        {/* Mobile Menu Sheet */}
+        <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+          <SheetContent side="left" className="w-72 p-0 z-[60]">
+            <SheetHeader className="p-6 border-b border-border">
+              <SheetTitle>Administration</SheetTitle>
+            </SheetHeader>
+            <nav className="p-4 space-y-3 overflow-y-auto max-h-[calc(100vh-100px)]">
+              {menuGroups.map((group, groupIndex) => {
+                const isGroupOpen = openMenuGroups.includes(group.label);
+                const panelId = `admin-menu-mobile-${groupIndex}`;
+                return (
+                  <div
+                    key={group.label}
+                    className="group/details rounded-lg border border-border/70"
+                  >
+                    <button
+                      type="button"
+                      aria-expanded={isGroupOpen}
+                      aria-controls={panelId}
+                      onClick={() => toggleMenuGroup(group.label)}
+                      className="w-full px-3 py-2 text-left text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/80 flex items-center justify-between hover:text-foreground"
+                    >
+                      {group.label}
+                      <ChevronRight size={13} className={`transition-transform ${isGroupOpen ? "rotate-90" : ""}`} />
+                    </button>
+                    {isGroupOpen && (
+                      <div id={panelId} className="space-y-1 px-2 pb-2 pt-1">
+                        {group.items.map((item) => (
+                          <button
+                            type="button"
+                            key={item.id}
+                            onClick={() => handleTabChange(item.id as TabType)}
+                            className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-colors text-sm ${
+                              activeTab === item.id
+                                ? "bg-primary text-primary-foreground"
+                                : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                            }`}
+                          >
+                            <item.icon size={16} />
+                            <span className="truncate">{item.label}</span>
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 );
               })}
             </nav>

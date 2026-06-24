@@ -91,6 +91,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         return;
       }
       currentUserId = userId;
+      setRolesLoading(true);
 
       if (rolesChannel) {
         supabase.removeChannel(rolesChannel);
