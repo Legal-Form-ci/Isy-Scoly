@@ -107,7 +107,7 @@ type TabType =
 
 const Admin = () => {
   const { t, language } = useLanguage();
-  const { user, loading: authLoading } = useAuth();
+  const { user, loading: authLoading, rolesLoading, isAdmin: hasAdminRole } = useAuth();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<TabType>("dashboard");
   const [isAdmin, setIsAdmin] = useState(false);
@@ -116,26 +116,15 @@ const Admin = () => {
   const [openMenuGroups, setOpenMenuGroups] = useState<string[]>(["Vue d'ensemble", "Catalogue & Ventes", "Contenu & Kits"]);
 
   useEffect(() => {
-    if (authLoading) return;
-    checkAdminRole();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [authLoading, user]);
+    if (authLoading || (user && rolesLoading)) return;
 
-  const checkAdminRole = async () => {
     if (!user) {
       setLoading(false);
       navigate("/auth");
       return;
     }
 
-    const { data, error } = await supabase
-      .from("user_roles")
-      .select("role")
-      .eq("user_id", user.id)
-      .eq("role", "admin")
-      .maybeSingle();
-
-    if (error || !data) {
+    if (!hasAdminRole) {
       toast.error("Accès refusé. Vous n'êtes pas administrateur.");
       setLoading(false);
       navigate("/");
@@ -144,7 +133,7 @@ const Admin = () => {
 
     setIsAdmin(true);
     setLoading(false);
-  };
+  }, [authLoading, rolesLoading, user, hasAdminRole, navigate]);
 
   const menuGroups: Array<{ label: string; items: Array<{ id: string; label: string; icon: any }> }> = [
     {
