@@ -329,6 +329,10 @@ const Checkout = () => {
     e.preventDefault();
     
     if (!user || items.length === 0) return;
+    if (!isOrderAmountValid(finalTotal)) {
+      toast({ title: "Montant trop bas", description: formatMinOrderMessage(), variant: "destructive" });
+      return;
+    }
     if (!validateForm()) return;
 
     setLoading(true);
