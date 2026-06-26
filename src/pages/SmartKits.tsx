@@ -87,7 +87,7 @@ const SmartKits = () => {
         .from("smart_kits")
         .select(
           "id,name,description,grade_level,series,is_active,created_at," +
-            "smart_kit_items(id,product_id,quantity,item_name," +
+            "smart_kit_items(id,product_id,quantity,item_name,estimated_price," +
             "products(id,name_fr,price,image_url,stock,is_active))",
           { count: "exact" },
         )
