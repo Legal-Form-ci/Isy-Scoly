@@ -87,7 +87,7 @@ const SmartKits = () => {
         .from("smart_kits")
         .select(
           "id,name,description,grade_level,series,is_active,created_at," +
-            "smart_kit_items(id,product_id,quantity,item_name," +
+            "smart_kit_items(id,product_id,quantity,item_name,estimated_price," +
             "products(id,name_fr,price,image_url,stock,is_active))",
           { count: "exact" },
         )
@@ -139,26 +139,36 @@ const SmartKits = () => {
   const handleAddKitToCart = async (kit: any) => {
     const items = kit.smart_kit_items || [];
     let added = 0;
+    let skipped = 0;
     for (const item of items) {
-      if (item.products && item.products.is_active) {
+      if (item.product_id && item.products?.is_active) {
         try {
           await addToCart(item.product_id, item.quantity || 1);
           added++;
-        } catch (e) {
-          // skip
+        } catch {
+          skipped++;
         }
+      } else {
+        skipped++;
       }
     }
     if (added > 0) {
-      toast.success(`${added} article(s) ajouté(s) au panier !`);
+      toast.success(
+        skipped > 0
+          ? `${added} article(s) ajouté(s) au panier (${skipped} non disponible(s) à la vente unitaire)`
+          : `${added} article(s) ajouté(s) au panier !`,
+      );
     } else {
-      toast.error("Impossible d'ajouter les articles. Connectez-vous d'abord.");
+      toast.error("Ce kit n'a aucun article achetable individuellement pour le moment.");
     }
   };
 
+  const itemUnitPrice = (item: any) =>
+    item.products?.price ?? Number(item.estimated_price) ?? 0;
+
   const totalKitPrice = (kit: any) => {
     return (kit.smart_kit_items || []).reduce((sum: number, item: any) => {
-      return sum + (item.products?.price || 0) * (item.quantity || 1);
+      return sum + itemUnitPrice(item) * (item.quantity || 1);
     }, 0);
   };
 
@@ -320,7 +330,7 @@ const SmartKits = () => {
                               {item.quantity > 1 && <Badge variant="outline" className="text-xs shrink-0">x{item.quantity}</Badge>}
                             </span>
                             <span className="text-muted-foreground shrink-0 ml-2">
-                              {item.products ? formatPrice((item.products.price || 0) * (item.quantity || 1)) : "—"}
+                              {itemUnitPrice(item) > 0 ? formatPrice(itemUnitPrice(item) * (item.quantity || 1)) : "—"}
                             </span>
                           </div>
                         ))}
