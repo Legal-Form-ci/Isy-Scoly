@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Minus, Plus, Trash2, ShoppingBag, ArrowRight, Truck, ShieldCheck } from "lucide-react";
+import { Minus, Plus, Trash2, ShoppingBag, ArrowRight, Truck, ShieldCheck, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -7,6 +7,7 @@ import SmartImage from "@/components/SmartImage";
 import { useLanguage } from "@/i18n/LanguageContext";
 import { useCart } from "@/contexts/CartContext";
 import { useAuth } from "@/contexts/AuthContext";
+import { MIN_ORDER_AMOUNT, isOrderAmountValid, formatMinOrderMessage } from "@/lib/orderRules";
 
 const Cart = () => {
   const { language, t } = useLanguage();
@@ -25,6 +26,9 @@ const Cart = () => {
 
   const formatPrice = (price: number) =>
     new Intl.NumberFormat("fr-FR").format(price) + " " + t.common.currency;
+
+  const meetsMinimum = isOrderAmountValid(total);
+  const missingForMinimum = Math.max(0, MIN_ORDER_AMOUNT - total);
 
   const checkoutHref = user ? "/checkout" : "/auth?redirect=/checkout";
   const checkoutLabel = user ? t.shop.proceedCheckout : `${t.nav.login} pour commander`;
