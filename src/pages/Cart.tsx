@@ -183,12 +183,27 @@ const Cart = () => {
                       <span className="text-primary tabular-nums">{formatPrice(total)}</span>
                     </div>
                   </div>
-                  <Link to={checkoutHref} className="block">
-                    <Button variant="default" className="w-full">
+                  {!meetsMinimum && (
+                    <div className="mb-3 flex items-start gap-2 rounded-lg border border-amber-300 bg-amber-50 dark:bg-amber-950/30 p-3 text-xs text-amber-900 dark:text-amber-200">
+                      <AlertCircle size={16} className="shrink-0 mt-0.5" />
+                      <span>
+                        {formatMinOrderMessage()} Il manque <strong>{formatPrice(missingForMinimum)}</strong>.
+                      </span>
+                    </div>
+                  )}
+                  {meetsMinimum ? (
+                    <Link to={checkoutHref} className="block">
+                      <Button variant="default" className="w-full">
+                        {checkoutLabel}
+                        <ArrowRight size={18} />
+                      </Button>
+                    </Link>
+                  ) : (
+                    <Button variant="default" className="w-full" disabled>
                       {checkoutLabel}
                       <ArrowRight size={18} />
                     </Button>
-                  </Link>
+                  )}
                   <Link to="/shop" className="block mt-2">
                     <Button variant="outline" className="w-full">{t.shop.continueShopping}</Button>
                   </Link>
