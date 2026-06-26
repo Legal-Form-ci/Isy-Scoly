@@ -16,6 +16,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useKkiaPay } from "@/hooks/useKkiaPay";
 import { usePaymentTracking } from "@/hooks/usePaymentTracking";
+import { MIN_ORDER_AMOUNT, isOrderAmountValid, formatMinOrderMessage } from "@/lib/orderRules";
 
 // Regions of Côte d'Ivoire
 const regions = [
