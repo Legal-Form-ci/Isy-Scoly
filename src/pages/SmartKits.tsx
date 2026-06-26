@@ -330,7 +330,7 @@ const SmartKits = () => {
                               {item.quantity > 1 && <Badge variant="outline" className="text-xs shrink-0">x{item.quantity}</Badge>}
                             </span>
                             <span className="text-muted-foreground shrink-0 ml-2">
-                              {item.products ? formatPrice((item.products.price || 0) * (item.quantity || 1)) : "—"}
+                              {itemUnitPrice(item) > 0 ? formatPrice(itemUnitPrice(item) * (item.quantity || 1)) : "—"}
                             </span>
                           </div>
                         ))}
