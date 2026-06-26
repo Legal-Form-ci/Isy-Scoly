@@ -217,17 +217,29 @@ const Cart = () => {
       {/* Mobile sticky checkout bar */}
       {items.length > 0 && (
         <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-card/95 backdrop-blur border-t border-border shadow-[0_-4px_16px_rgba(0,0,0,0.08)] px-3 py-2.5">
+          {!meetsMinimum && (
+            <p className="text-[11px] text-amber-700 dark:text-amber-300 mb-1.5 flex items-center gap-1">
+              <AlertCircle size={12} /> Minimum {formatPrice(MIN_ORDER_AMOUNT)} — il manque {formatPrice(missingForMinimum)}
+            </p>
+          )}
           <div className="flex items-center gap-3">
             <div className="flex-1 min-w-0">
               <p className="text-[11px] text-muted-foreground">{t.shop.total}</p>
               <p className="text-base font-bold text-primary tabular-nums truncate">{formatPrice(total)}</p>
             </div>
-            <Link to={checkoutHref} className="flex-1">
-              <Button variant="default" className="w-full h-11">
+            {meetsMinimum ? (
+              <Link to={checkoutHref} className="flex-1">
+                <Button variant="default" className="w-full h-11">
+                  Commander
+                  <ArrowRight size={16} />
+                </Button>
+              </Link>
+            ) : (
+              <Button variant="default" className="flex-1 h-11" disabled>
                 Commander
                 <ArrowRight size={16} />
               </Button>
-            </Link>
+            )}
           </div>
         </div>
       )}
