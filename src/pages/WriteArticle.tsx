@@ -242,8 +242,13 @@ const WriteArticle = () => {
 
     setLoading(true);
     try {
-      const coverImage = form.media.length > 0 ? form.media[0].url : null;
-      const mediaJson = form.media.map(item => ({ url: item.url, type: item.type }));
+      // Guardrail: never store heavy base64 blobs in the DB. Upload to Storage.
+      const processedMedia = await Promise.all(
+        form.media.map(async (item) => ({ url: await ensureStorageUrl(item.url, user.id), type: item.type }))
+      );
+      const coverImage = processedMedia.length > 0 ? processedMedia[0].url : null;
+      const mediaJson = processedMedia.map(item => ({ url: item.url, type: item.type }));
+
 
       const articleData = {
         author_id: user.id,
