@@ -26,6 +26,7 @@ interface MediaItem {
   type: "image" | "video";
 }
 
+type GenerationMode = "single_image" | "video" | "image_video" | "multi_image" | "text_only";
 
 // Guardrail: any base64 data URL larger than 100 KB is uploaded to Storage
 // instead of being persisted in the DB (prevents the articles table bloat
