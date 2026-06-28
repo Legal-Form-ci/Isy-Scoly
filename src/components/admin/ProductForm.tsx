@@ -420,9 +420,15 @@ const ProductForm = ({ product, categories, onSubmit, onCancel }: ProductFormPro
 
     setUploading(true);
     try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        toast.error("Vous devez être connecté");
+        setUploading(false);
+        return;
+      }
       const fileExt = file.name.split(".").pop();
       const fileName = `${Date.now()}.${fileExt}`;
-      const filePath = `products/${fileName}`;
+      const filePath = `${user.id}/products/${fileName}`;
 
       const { error: uploadError } = await supabase.storage.from("product-images").upload(filePath, file);
 
