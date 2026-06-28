@@ -1,0 +1,37 @@
+# Scoly — Fournitures scolaires & bureautiques en Côte d'Ivoire
+
+> Scoly (scoly.ci) est la plateforme de référence en Côte d'Ivoire pour l'achat en ligne de fournitures scolaires, manuels scolaires, articles de bureautique et kits intelligents pour la rentrée. Livraison gratuite à Abidjan et partout en Côte d'Ivoire, paiement Mobile Money sécurisé (Orange Money, MTN, Moov, Wave).
+
+Scoly est un marchand mono-vendeur : tous les produits proposés sont vendus directement par Scoly, sans place de marché tierce. Catégories couvertes : Primaire, Secondaire, Universitaire, Bureautique, Librairie.
+
+## Pages principales
+- [Accueil](/): vitrine, offres flash, nouveautés
+- [Boutique](/shop): catalogue complet des produits scolaires et bureautiques
+- [Kits intelligents](/kits): kits scolaires composés automatiquement par classe
+- [Actualités](/actualites): articles, conseils éducatifs, actualité de la rentrée
+- [Écoles partenaires](/ecoles): annuaire d'écoles ivoiriennes
+- [Livraison & retours](/livraison-retours): zones et délais de livraison en Côte d'Ivoire
+- [Programme de parrainage](/parrainage)
+- [Ressources pédagogiques](/ressources)
+
+## À propos & support
+- [À propos de Scoly](/about)
+- [Contact](/contact) — contact@scoly.ci, +225 07 58 46 59 33, Abidjan
+- [FAQ](/faq)
+
+## Mentions légales
+- [Mentions légales](/mentions-legales)
+- [Conditions d'utilisation](/terms)
+- [Politique de confidentialité](/privacy)
+- [Politique cookies](/cookies)
+
+## Catégories produits clés
+- Manuels scolaires Primaire (CP1, CP2, CE1, CE2, CM1, CM2)
+- Manuels scolaires Secondaire (6e à Terminale)
+- Manuels Universitaires
+- Bureautique (papeterie, classement, écriture)
+- Librairie (lectures, romans, dictionnaires)
+
+## Optional
+- [Sitemap XML](/sitemap.xml)
+- [Robots](/robots.txt)

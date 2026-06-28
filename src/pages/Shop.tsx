@@ -258,7 +258,8 @@ const Shop = () => {
 
             <div>
               {loading ? (
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 sm:gap-3 lg:gap-4">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-2 sm:gap-3 lg:gap-4">
+
                   {[...Array(10)].map((_, i) => (
                     <div key={i} className="bg-card rounded-lg border border-border p-2 animate-pulse">
                       <div className="aspect-square bg-muted rounded mb-2" />
@@ -274,7 +275,7 @@ const Shop = () => {
                   <p className="text-sm text-muted-foreground mt-1">{t.common.noResults}</p>
                 </div>
               ) : (
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 sm:gap-3 lg:gap-4">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-2 sm:gap-3 lg:gap-4">
                   {filteredProducts.map((product) => (
                     <ProductCard key={product.id} product={product} />
                   ))}
