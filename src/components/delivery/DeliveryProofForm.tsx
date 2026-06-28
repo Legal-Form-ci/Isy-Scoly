@@ -76,9 +76,11 @@ const DeliveryProofForm = ({ orderId, proofType, onSuccess, onCancel }: Delivery
   };
 
   const uploadPhoto = async (file: File, folder: string): Promise<string | null> => {
+    const { data: { user: authUser } } = await supabase.auth.getUser();
+    if (!authUser) return null;
     const fileExt = file.name.split('.').pop();
     const fileName = `${orderId}-${Date.now()}.${fileExt}`;
-    const filePath = `${folder}/${fileName}`;
+    const filePath = `${authUser.id}/${folder}/${fileName}`;
 
     const { error } = await supabase.storage
       .from('article-media') // Reuse existing bucket
