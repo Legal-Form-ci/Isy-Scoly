@@ -67,6 +67,8 @@ import EmailMarketing from "@/components/admin/EmailMarketing";
 import EmailLogsDashboard from "@/components/admin/EmailLogsDashboard";
 import CampaignAnalyticsDashboard from "@/components/admin/CampaignAnalyticsDashboard";
 import ProviderMonitoring from "@/components/admin/ProviderMonitoring";
+import SmartImage from "@/components/SmartImage";
+import { getCategoryImageUrl, sortCategories } from "@/lib/categoryAssets";
 
 import { Share2 } from "lucide-react";
 
@@ -502,12 +504,14 @@ const ProductsTab = () => {
                 <tr key={product.id} className="border-t border-border">
                   <td className="py-3 px-4">
                     <div className="w-12 h-12 bg-muted rounded-lg overflow-hidden">
-                      <img 
+                      <SmartImage 
                         src={product.image_url || "/placeholder.svg"} 
                         alt="" 
                         className="w-full h-full object-cover"
-                        loading="lazy"
-                        onError={(e) => { (e.target as HTMLImageElement).src = '/placeholder.svg'; }}
+                        fallbackSrc="/placeholder.svg"
+                        width={48}
+                        height={48}
+                        sizes="48px"
                       />
                     </div>
                   </td>
@@ -565,13 +569,14 @@ const CategoriesTab = () => {
   };
 
   const handleSubmit = async () => {
+    const slug = formData.slug || formData.name_fr.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
     const categoryData = {
       name_fr: formData.name_fr,
       name_en: formData.name_en || formData.name_fr,
       name_de: formData.name_de || formData.name_fr,
       name_es: formData.name_es || formData.name_fr,
-      slug: formData.slug || formData.name_fr.toLowerCase().replace(/\s+/g, "-"),
-      image_url: formData.image_url || null,
+      slug,
+      image_url: formData.image_url || getCategoryImageUrl({ slug, name_fr: formData.name_fr, image_url: null }),
       parent_id: formData.parent_id || null,
     };
 
@@ -624,14 +629,20 @@ const CategoriesTab = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {categories.map((cat) => (
+        {sortCategories(categories).map((cat) => (
           <div key={cat.id} className="bg-card rounded-xl border border-border p-4 flex items-center justify-between">
             <div className="flex items-center gap-3">
-              {cat.image_url && (
-                <div className="w-12 h-12 bg-muted rounded-lg overflow-hidden">
-                  <img src={cat.image_url} alt="" className="w-full h-full object-cover" loading="lazy" onError={(e) => { (e.target as HTMLImageElement).src = '/placeholder.svg'; }} />
-                </div>
-              )}
+              <div className="w-12 h-12 bg-muted rounded-lg overflow-hidden">
+                <SmartImage
+                  src={getCategoryImageUrl(cat)}
+                  alt={cat.name_fr}
+                  className="w-full h-full object-cover"
+                  fallbackSrc="/placeholder.svg"
+                  width={48}
+                  height={48}
+                  sizes="48px"
+                />
+              </div>
               <div>
                 <p className="font-medium">{cat.name_fr}</p>
                 <p className="text-xs text-muted-foreground">{cat.slug}</p>
