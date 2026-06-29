@@ -52,9 +52,7 @@ const Shop = () => {
   const { language, t } = useLanguage();
   const [searchParams, setSearchParams] = useSearchParams();
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(
-    searchParams.get("category") || null
-  );
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [sortBy, setSortBy] = useState<SortMode>("recommended");
   const [selectedPublisher, setSelectedPublisher] = useState("all");
 
@@ -96,8 +94,10 @@ const Shop = () => {
   useEffect(() => {
     const categoryParam = searchParams.get("category");
     if (categoryParam && categories.length > 0) {
-      const cat = categories.find(c => c.slug === categoryParam);
-      if (cat) setSelectedCategory(cat.id);
+      const cat = categories.find(c => c.slug === categoryParam || c.id === categoryParam);
+      setSelectedCategory(cat?.id || null);
+    } else if (!categoryParam) {
+      setSelectedCategory(null);
     }
   }, [searchParams, categories]);
 
