@@ -239,10 +239,12 @@ const ProductDetail = () => {
   const productDescription =
     getLocalizedDescription(product) ||
     `Achetez ${productName} sur Scoly — Livraison gratuite en Côte d'Ivoire.`;
-  const productImage =
-    (product.images && product.images[0]) ||
-    product.image_url ||
-    "https://scoly.ci/og-image.png";
+  const toAbsoluteUrl = (value?: string | null) => {
+    if (!value) return "https://scoly.ci/og-image.png";
+    if (value.startsWith("http://") || value.startsWith("https://")) return value;
+    return `https://scoly.ci${value.startsWith("/") ? value : `/${value}`}`;
+  };
+  const productImage = toAbsoluteUrl((product.images && product.images[0]) || product.image_url);
 
   const productJsonLd = {
     "@context": "https://schema.org/",

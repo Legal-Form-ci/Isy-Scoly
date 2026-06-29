@@ -7,10 +7,12 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ProductCard from "@/components/ProductCard";
 import SEOHead from "@/components/SEOHead";
+import SmartImage from "@/components/SmartImage";
 import { useLanguage } from "@/i18n/LanguageContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useSearchParams, Link } from "react-router-dom";
 import { applySort, type SortMode } from "@/lib/productSort";
+import { getCategoryImageUrl, sortCategories } from "@/lib/categoryAssets";
 import { useQuery } from "@tanstack/react-query";
 
 interface Product {
@@ -43,15 +45,14 @@ interface Category {
   name_de: string;
   name_es: string;
   slug: string;
+  image_url: string | null;
 }
 
 const Shop = () => {
   const { language, t } = useLanguage();
   const [searchParams, setSearchParams] = useSearchParams();
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(
-    searchParams.get("category") || null
-  );
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [sortBy, setSortBy] = useState<SortMode>("recommended");
   const [selectedPublisher, setSelectedPublisher] = useState("all");
 
@@ -71,7 +72,7 @@ const Shop = () => {
         )
         .eq("is_active", true)
         .order("created_at", { ascending: false })
-        .range(0, 47);
+        .range(0, 1999);
       if (error) throw error;
       return (data || []) as any;
     },
@@ -93,8 +94,10 @@ const Shop = () => {
   useEffect(() => {
     const categoryParam = searchParams.get("category");
     if (categoryParam && categories.length > 0) {
-      const cat = categories.find(c => c.slug === categoryParam);
-      if (cat) setSelectedCategory(cat.id);
+      const cat = categories.find(c => c.slug === categoryParam || c.id === categoryParam);
+      setSelectedCategory(cat?.id || null);
+    } else if (!categoryParam) {
+      setSelectedCategory(null);
     }
   }, [searchParams, categories]);
 
@@ -135,6 +138,7 @@ const Shop = () => {
   });
 
   const filteredProducts = applySort(baseFiltered as any, sortBy) as Product[];
+  const displayCategories = sortCategories(categories);
 
   return (
     <main className="min-h-screen bg-background">
@@ -163,6 +167,47 @@ const Shop = () => {
               <> dans <span className="text-foreground font-medium">{getLocalizedName(categories.find(c => c.id === selectedCategory)!)}</span></>
             )}
           </p>
+        </div>
+      </section>
+
+      {/* Categories visual grid */}
+      <section className="bg-background border-b border-border">
+        <div className="container mx-auto px-3 sm:px-4 py-3 sm:py-4">
+          <div className="flex gap-2.5 sm:gap-3 overflow-x-auto pb-1 snap-x">
+            <button
+              onClick={() => handleCategoryClick(null)}
+              className={`snap-start shrink-0 w-[84px] sm:w-[112px] rounded-xl border p-2 text-center transition-all ${
+                !selectedCategory ? "border-primary bg-primary/5 shadow-sm" : "border-border bg-card hover:border-primary/40"
+              }`}
+            >
+              <div className="mx-auto mb-1.5 h-12 w-12 sm:h-14 sm:w-14 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-primary-foreground font-bold text-xs">
+                Tous
+              </div>
+              <span className="block text-[11px] sm:text-xs font-semibold text-foreground leading-tight">Toutes</span>
+            </button>
+            {displayCategories.map((cat) => (
+              <button
+                key={cat.id}
+                onClick={() => handleCategoryClick(cat.id, cat.slug)}
+                className={`snap-start shrink-0 w-[84px] sm:w-[112px] rounded-xl border p-2 text-center transition-all ${
+                  selectedCategory === cat.id ? "border-primary bg-primary/5 shadow-sm" : "border-border bg-card hover:border-primary/40"
+                }`}
+              >
+                <SmartImage
+                  src={getCategoryImageUrl(cat)}
+                  alt={cat.name_fr}
+                  className="mx-auto mb-1.5 h-12 w-12 sm:h-14 sm:w-14 rounded-full object-cover ring-1 ring-border"
+                  fallbackSrc="/placeholder.svg"
+                  width={56}
+                  height={56}
+                  sizes="56px"
+                />
+                <span className="block text-[11px] sm:text-xs font-semibold text-foreground leading-tight line-clamp-2">
+                  {getLocalizedName(cat)}
+                </span>
+              </button>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -212,7 +257,7 @@ const Shop = () => {
                 <SheetTitle>Filtres</SheetTitle>
               </SheetHeader>
               <FiltersPanel
-                categories={categories}
+                categories={displayCategories}
                 selectedCategory={selectedCategory}
                 onSelectCategory={handleCategoryClick}
                 getLocalizedName={getLocalizedName}
@@ -236,7 +281,7 @@ const Shop = () => {
             <aside className="hidden lg:block">
               <div className="sticky top-[180px] space-y-4">
                 <FiltersPanel
-                  categories={categories}
+                  categories={displayCategories}
                   selectedCategory={selectedCategory}
                   onSelectCategory={handleCategoryClick}
                   getLocalizedName={getLocalizedName}
