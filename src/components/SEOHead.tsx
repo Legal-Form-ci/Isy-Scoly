@@ -31,11 +31,11 @@ const SEOHead = ({
   currency = "XOF",
   availability,
   noindex = false,
-  structuredData,
+  structuredData: customStructuredData,
 }: SEOHeadProps) => {
   const fullTitle = title.includes("Scoly") ? title : `${title} | Scoly`;
   
-  const structuredData = type === 'product' && price ? {
+  const fallbackStructuredData = type === 'product' && price ? {
     "@context": "https://schema.org",
     "@type": "Product",
     "name": title,
@@ -72,7 +72,7 @@ const SEOHead = ({
       }
     }
   } : null;
-  const jsonLd = structuredData ?? structuredDataFallback;
+  const jsonLd = customStructuredData ?? fallbackStructuredData;
   const jsonLdItems = Array.isArray(jsonLd) ? jsonLd : jsonLd ? [jsonLd] : [];
 
   return (
