@@ -14,6 +14,7 @@ interface SEOHeadProps {
   currency?: string;
   availability?: 'InStock' | 'OutOfStock' | 'PreOrder';
   noindex?: boolean;
+  structuredData?: Record<string, any> | Record<string, any>[];
 }
 
 const SEOHead = ({
@@ -29,7 +30,8 @@ const SEOHead = ({
   price,
   currency = "XOF",
   availability,
-  noindex = false
+  noindex = false,
+  structuredData,
 }: SEOHeadProps) => {
   const fullTitle = title.includes("Scoly") ? title : `${title} | Scoly`;
   
@@ -70,6 +72,8 @@ const SEOHead = ({
       }
     }
   } : null;
+  const jsonLd = structuredData ?? structuredDataFallback;
+  const jsonLdItems = Array.isArray(jsonLd) ? jsonLd : jsonLd ? [jsonLd] : [];
 
   return (
     <Helmet>
@@ -119,11 +123,11 @@ const SEOHead = ({
       )}
       
       {/* Structured Data */}
-      {structuredData && (
-        <script type="application/ld+json">
-          {JSON.stringify(structuredData)}
+      {jsonLdItems.map((item, index) => (
+        <script key={index} type="application/ld+json">
+          {JSON.stringify(item)}
         </script>
-      )}
+      ))}
     </Helmet>
   );
 };
