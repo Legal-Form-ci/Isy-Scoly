@@ -29,7 +29,7 @@ export const usePublicDataPrefetch = () => {
             )
             .eq("is_active", true)
             .order("created_at", { ascending: false })
-            .range(0, 47);
+            .range(0, 1999);
           return data || [];
         },
       });
