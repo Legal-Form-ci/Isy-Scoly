@@ -9,6 +9,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useCart } from "@/contexts/CartContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
+import SmartImage from "@/components/SmartImage";
 
 const KIT_LEVELS = [
   { value: "CP1", cycle: "Primaire" }, { value: "CP2", cycle: "Primaire" },
@@ -32,6 +33,7 @@ interface KitItem {
   is_required: boolean;
   estimated_price: number;
   product_id: string | null;
+  product_image_url?: string | null;
   category_hint?: string | null;
 }
 interface GeneratedKit {
@@ -52,6 +54,7 @@ interface CatalogProduct {
   price: number;
   stock: number | null;
   is_active: boolean | null;
+  image_url: string | null;
 }
 
 const emptyItem = (): KitItem => ({
@@ -83,7 +86,7 @@ const KitComposer = () => {
     (async () => {
       const { data } = await supabase
         .from("products")
-        .select("id, name_fr, price, stock, is_active")
+        .select("id, name_fr, price, stock, is_active, image_url")
         .eq("is_active", true)
         .order("name_fr")
         .limit(1000);
@@ -166,8 +169,10 @@ const KitComposer = () => {
   const selectProduct = (idx: number, productId: string) => {
     const product = products.find((p) => p.id === productId);
     if (!product) return updateItem(idx, { product_id: null });
-    updateItem(idx, { product_id: product.id, item_name: product.name_fr, estimated_price: product.price });
+    updateItem(idx, { product_id: product.id, item_name: product.name_fr, estimated_price: product.price, product_image_url: product.image_url });
   };
+
+  const kitImageUrl = (items: KitItem[]) => items.find((item) => item.product_image_url)?.product_image_url || null;
 
   const addAll = async () => {
     if (!kit) return;
@@ -199,9 +204,13 @@ const KitComposer = () => {
           name_de: kit.kit_name,
           name_es: kit.kit_name,
           description_fr: kit.description,
+          description_en: kit.description,
+          description_de: kit.description,
+          description_es: kit.description,
           price: total,
           stock: 999,
           is_active: true,
+          image_url: kitImageUrl(kit.items),
           product_type: "school_supply",
           metadata: { source: "smart_kit", grade_level: kit.grade_level, series: kit.series },
         };
@@ -223,6 +232,7 @@ const KitComposer = () => {
             series: kit.series,
             description: kit.description,
             total_price: total,
+            image_url: kitImageUrl(kit.items),
             is_active: publish,
             status: publish ? "published" : "draft",
             published_at: publish ? new Date().toISOString() : null,
@@ -239,6 +249,7 @@ const KitComposer = () => {
             series: kit.series,
             description: kit.description,
             total_price: total,
+            image_url: kitImageUrl(kit.items),
             is_active: publish,
             status: publish ? "published" : "draft",
             published_at: publish ? new Date().toISOString() : null,
@@ -374,7 +385,16 @@ const KitComposer = () => {
 
           <div className="space-y-2 max-h-96 overflow-y-auto">
             {kit.items.map((it, idx) => (
-              <div key={idx} className="grid grid-cols-1 lg:grid-cols-[1fr_1fr_72px_112px_40px] gap-2 bg-muted/30 rounded-lg p-2">
+              <div key={idx} className="grid grid-cols-[44px_1fr] lg:grid-cols-[44px_1fr_1fr_72px_112px_72px_40px] gap-2 bg-muted/30 rounded-lg p-2 items-center">
+                <SmartImage
+                  src={it.product_image_url}
+                  alt={it.item_name || "Produit du kit"}
+                  className="h-11 w-11 rounded-md object-cover bg-background border border-border"
+                  fallbackSrc="/placeholder.svg"
+                  width={44}
+                  height={44}
+                  sizes="44px"
+                />
                 <Select value={it.product_id || "manual"} onValueChange={(value) => selectProduct(idx, value === "manual" ? "" : value)}>
                   <SelectTrigger className="h-9"><SelectValue placeholder="Produit catalogue" /></SelectTrigger>
                   <SelectContent>
