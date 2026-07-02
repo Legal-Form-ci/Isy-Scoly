@@ -137,24 +137,15 @@ const DeliveryProofForm = ({ orderId, proofType, onSuccess, onCancel }: Delivery
 
       if (proofError) throw proofError;
 
-      // Update order status
-      const updates: Record<string, unknown> = {};
-      if (proofType === 'pickup') {
-        updates.delivery_received_at = new Date().toISOString();
-        updates.status = 'shipped';
-      } else {
-        updates.delivery_delivered_at = new Date().toISOString();
-        updates.status = 'delivered';
-      }
-
-      const { error: orderError } = await (supabase as any)
-        .from('orders')
-        .update(updates)
-        .eq('id', orderId);
+      const { data: accepted, error: orderError } = await (supabase as any).rpc(
+        proofType === 'pickup' ? 'delivery_mark_picked_up' : 'delivery_submit_handoff',
+        { _order_id: orderId }
+      );
 
       if (orderError) throw orderError;
+      if (!accepted) throw new Error('Commande non autorisée');
 
-      toast.success(proofType === 'pickup' ? 'Réception confirmée' : 'Livraison confirmée');
+      toast.success(proofType === 'pickup' ? 'Réception confirmée' : 'Remise au client soumise — attente confirmation client');
       onSuccess();
     } catch (error) {
       console.error('Error submitting proof:', error);

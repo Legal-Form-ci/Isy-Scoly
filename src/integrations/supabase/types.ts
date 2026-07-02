@@ -2608,6 +2608,8 @@ export type Database = {
         }[]
       }
       confirm_order_receipt: { Args: { _order_id: string }; Returns: boolean }
+      delivery_mark_picked_up: { Args: { _order_id: string }; Returns: boolean }
+      delivery_submit_handoff: { Args: { _order_id: string }; Returns: boolean }
       finalize_campaign_email_log: {
         Args: {
           _attempt_count?: number

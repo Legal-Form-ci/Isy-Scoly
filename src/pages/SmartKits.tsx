@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import SEOHead from "@/components/SEOHead";
+import SmartImage from "@/components/SmartImage";
 import { useLanguage } from "@/i18n/LanguageContext";
 import { useCart } from "@/contexts/CartContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -86,7 +87,7 @@ const SmartKits = () => {
       let q = supabase
         .from("smart_kits")
         .select(
-          "id,name,description,grade_level,series,is_active,created_at," +
+          "id,name,description,grade_level,series,is_active,created_at,image_url," +
             "smart_kit_items(id,product_id,quantity,item_name,estimated_price," +
             "products(id,name_fr,price,image_url,stock,is_active))",
           { count: "exact" },
@@ -171,6 +172,11 @@ const SmartKits = () => {
       return sum + itemUnitPrice(item) * (item.quantity || 1);
     }, 0);
   };
+
+  const kitImage = (kit: any) =>
+    kit.image_url ||
+    (kit.smart_kit_items || []).find((item: any) => item.products?.image_url)?.products?.image_url ||
+    "/categories/primaire.jpg";
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat("fr-FR").format(price) + " " + t.common.currency;
@@ -304,6 +310,18 @@ const SmartKits = () => {
                     animate={{ opacity: 1, y: 0 }}
                     className="bg-card rounded-xl border border-border overflow-hidden"
                   >
+                    <div className="relative h-36 sm:h-44 bg-muted overflow-hidden">
+                      <SmartImage
+                        src={kitImage(kit)}
+                        alt={kit.name}
+                        className="h-full w-full object-cover"
+                        fallbackSrc="/categories/primaire.jpg"
+                        width={640}
+                        height={360}
+                        sizes="(max-width: 768px) 100vw, 50vw"
+                      />
+                      <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-background/80 to-transparent" />
+                    </div>
                     <div className="p-6">
                       <div className="flex items-start justify-between mb-4 gap-3">
                         <div className="min-w-0">
@@ -323,9 +341,17 @@ const SmartKits = () => {
 
                       <div className="space-y-2 mb-6 max-h-48 overflow-y-auto">
                         {(kit.smart_kit_items || []).map((item: any, idx: number) => (
-                          <div key={idx} className="flex items-center justify-between text-sm py-1 border-b border-border/50 last:border-0">
+                          <div key={idx} className="flex items-center justify-between text-sm py-1 border-b border-border/50 last:border-0 gap-2">
                             <span className="text-foreground flex items-center gap-2 min-w-0">
-                              <BookOpen className="w-3 h-3 text-muted-foreground shrink-0" />
+                              <SmartImage
+                                src={item.products?.image_url}
+                                alt={item.products?.name_fr || item.item_name || "Produit"}
+                                className="h-8 w-8 rounded object-cover bg-muted shrink-0"
+                                fallbackSrc="/placeholder.svg"
+                                width={32}
+                                height={32}
+                                sizes="32px"
+                              />
                               <span className="truncate">{item.products?.name_fr || item.item_name || "Produit"}</span>
                               {item.quantity > 1 && <Badge variant="outline" className="text-xs shrink-0">x{item.quantity}</Badge>}
                             </span>

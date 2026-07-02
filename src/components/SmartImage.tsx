@@ -74,6 +74,7 @@ const SmartImage = forwardRef<HTMLImageElement, SmartImageProps>(function SmartI
 
 function getOptimizedSources(src: string) {
   if (!src.startsWith("/") || src.startsWith("//")) return null;
+  if (src === "/placeholder.svg") return null;
   const match = src.match(/\.(jpe?g|png)$/i);
   if (!match) return null;
   const base = src.slice(0, -match[0].length);

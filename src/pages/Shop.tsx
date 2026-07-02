@@ -36,6 +36,8 @@ interface Product {
   brand: string | null;
   author_details: string | null;
   metadata: any;
+  views?: number | null;
+  created_at?: string | null;
 }
 
 interface Category {
@@ -68,7 +70,7 @@ const Shop = () => {
       const { data, error } = await supabase
         .from("products")
         .select(
-          "id,name_fr,name_en,name_de,name_es,description_fr,description_en,description_de,description_es,price,original_price,discount_percent,stock,image_url,is_featured,category_id,free_shipping,brand,author_details,metadata,views,sales_count,rating,created_at",
+          "id,name_fr,name_en,name_de,name_es,description_fr,description_en,description_de,description_es,price,original_price,discount_percent,stock,image_url,is_featured,category_id,free_shipping,brand,author_details,metadata,views,created_at",
         )
         .eq("is_active", true)
         .order("created_at", { ascending: false })
@@ -131,7 +133,18 @@ const Shop = () => {
   const baseFiltered = products.filter((product) => {
     const name = (productName(product) || '').toLowerCase();
     const matchesSearch = name.includes(searchQuery.toLowerCase());
-    const matchesCategory = !selectedCategory || product.category_id === selectedCategory;
+    const selected = selectedCategory ? categories.find((c) => c.id === selectedCategory) : null;
+    const categoryText = `${selected?.slug || ""} ${selected?.name_fr || ""} ${selected?.name_en || ""}`.toLowerCase();
+    const productText = `${productName(product) || ""} ${product.description_fr || ""} ${product.brand || ""} ${product.author_details || ""} ${product.metadata?.category || ""} ${product.metadata?.cycle || ""}`.toLowerCase();
+    const fallbackCategoryMatch =
+      !!selected &&
+      ((categoryText.includes("maternelle") && /maternelle|prescolaire|préscolaire|pre[- ]?school/.test(productText)) ||
+        (categoryText.includes("primaire") && /\b(cp|ce|cm)\d?\b|primaire|primary/.test(productText)) ||
+        (categoryText.includes("secondaire") && /6[eè]|5[eè]|4[eè]|3[eè]|2nde|1[eè]re|terminale|college|collège|lycee|lycée|secondaire/.test(productText)) ||
+        (categoryText.includes("bureau") && /bureau|bureautique|office|papier|stylo|classeur|enveloppe|cartouche/.test(productText)) ||
+        (categoryText.includes("librairie") && /livre|roman|lecture|cahier|ouvrage|librairie/.test(productText)) ||
+        (categoryText.includes("univers") && /universit|facult|superieur|supérieur/.test(productText)));
+    const matchesCategory = !selectedCategory || product.category_id === selectedCategory || fallbackCategoryMatch;
     const pub = `${product.brand || ""} ${product.author_details || ""} ${(product.metadata as any)?.publisher || ""}`.toLowerCase();
     const matchesPublisher = selectedPublisher === "all" || pub.includes(selectedPublisher.toLowerCase());
     return matchesSearch && matchesCategory && matchesPublisher;
