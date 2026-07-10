@@ -376,7 +376,7 @@ const Admin = () => {
           {activeTab === "advertisements" && <AdvertisementsManagement />}
           {activeTab === "faq" && <FAQManagement />}
           {activeTab === "documentation" && <DocumentationManager />}
-          {activeTab === "schools" && <SchoolsAdminTab />}
+          {/* schools tab removed */}
           {activeTab === "resources" && <ResourcesAdminTab />}
           {activeTab === "kit_composer" && <KitComposer />}
           {activeTab === "referrals" && <ReferralsAdminTab />}
