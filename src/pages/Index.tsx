@@ -37,7 +37,7 @@ const Index = () => {
       <FeaturesSection />
       <StatsSection />
       <PaymentSection />
-      <div className="container mx-auto px-3 sm:px-4 py-4"><NewsletterSignup /></div>
+
       <CTASection />
       <Footer />
       <FreeShippingPopup />
