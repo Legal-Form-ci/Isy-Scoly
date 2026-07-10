@@ -369,7 +369,7 @@ const Admin = () => {
           {activeTab === "promotions_mgmt" && <PromotionsManagement />}
           {activeTab === "flash_deals" && <FlashDealsManagement />}
           {activeTab === "social_media" && <SocialMediaManager />}
-          {activeTab === "authors" && <AuthorsManagement />}
+          {/* authors tab removed */}
           {activeTab === "review" && <PublicationsReview />}
           {activeTab === "articles" && <ArticlesTab />}
           {activeTab === "promotions" && <CouponManagement />}
