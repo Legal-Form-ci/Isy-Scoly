@@ -49,7 +49,7 @@ import UserManagement from "@/components/admin/UserManagement";
 import ProductForm from "@/components/admin/ProductForm";
 import BulkProductImport from "@/components/admin/BulkProductImport";
 import KitComposer from "@/components/KitComposer";
-import AuthorsManagement from "@/components/admin/AuthorsManagement";
+// AuthorsManagement removed
 import PublicationsReview from "@/components/admin/PublicationsReview";
 import CouponManagement from "@/components/admin/CouponManagement";
 import AdvertisementsManagement from "@/components/admin/AdvertisementsManagement";
