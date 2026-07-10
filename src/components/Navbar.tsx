@@ -47,8 +47,7 @@ const Navbar = () => {
 
   const navItems = [
     { label: "Boutique", href: "/shop" },
-    { label: "Écoles", href: "/ecoles" },
-    { label: "Kits", href: "/kits" },
+    { label: "Kits École", href: "/kits-ecole" },
     { label: "Actualités", href: "/actualites" },
     { label: t.nav.about, href: "/about" },
     { label: t.nav.contact, href: "/contact" },
