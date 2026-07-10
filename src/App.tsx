@@ -31,7 +31,7 @@ const Actualites = lazy(() => import("./pages/Actualites"));
 const ArticleDetail = lazy(() => import("./pages/ArticleDetail"));
 const WriteArticle = lazy(() => import("./pages/WriteArticle"));
 const TeamDashboard = lazy(() => import("./pages/TeamDashboard"));
-const AuthorDashboard = lazy(() => import("./pages/AuthorDashboard"));
+// AuthorDashboard removed
 const FAQ = lazy(() => import("./pages/FAQ"));
 const ArticlePayment = lazy(() => import("./pages/ArticlePayment"));
 const NotFound = lazy(() => import("./pages/NotFound"));
