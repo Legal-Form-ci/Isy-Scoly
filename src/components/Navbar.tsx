@@ -35,7 +35,7 @@ const Navbar = () => {
   const { wishlistCount } = useWishlist();
   const navigate = useNavigate();
   const { pathname } = useLocation();
-  const isDashboard = /^\/(admin|vendor|delivery|moderator|team|author|account|compte|wishlist)(\/|$)/.test(pathname);
+  const isDashboard = /^\/(admin|vendor|delivery|moderator|team|account|compte|wishlist)(\/|$)/.test(pathname);
 
   const categories = [
     { label: "Primaire", href: "/shop?category=scoly-primaire" },
@@ -47,8 +47,7 @@ const Navbar = () => {
 
   const navItems = [
     { label: "Boutique", href: "/shop" },
-    { label: "Écoles", href: "/ecoles" },
-    { label: "Kits", href: "/kits" },
+    { label: "Kits École", href: "/kits-ecole" },
     { label: "Actualités", href: "/actualites" },
     { label: t.nav.about, href: "/about" },
     { label: t.nav.contact, href: "/contact" },

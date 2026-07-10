@@ -31,7 +31,7 @@ const Actualites = lazy(() => import("./pages/Actualites"));
 const ArticleDetail = lazy(() => import("./pages/ArticleDetail"));
 const WriteArticle = lazy(() => import("./pages/WriteArticle"));
 const TeamDashboard = lazy(() => import("./pages/TeamDashboard"));
-const AuthorDashboard = lazy(() => import("./pages/AuthorDashboard"));
+// AuthorDashboard removed
 const FAQ = lazy(() => import("./pages/FAQ"));
 const ArticlePayment = lazy(() => import("./pages/ArticlePayment"));
 const NotFound = lazy(() => import("./pages/NotFound"));
@@ -46,9 +46,8 @@ const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
 const CookiesPolicy = lazy(() => import("./pages/CookiesPolicy"));
 const AuthConfirm = lazy(() => import("./pages/AuthConfirm"));
 const ResetPassword = lazy(() => import("./pages/ResetPassword"));
-const Schools = lazy(() => import("./pages/Schools"));
-const SchoolDetail = lazy(() => import("./pages/SchoolDetail"));
-const SmartKits = lazy(() => import("./pages/SmartKits"));
+// Schools/SmartKits removed — replaced by Kits École route below
+const KitsEcole = lazy(() => import("./pages/SmartKits"));
 const Referral = lazy(() => import("./pages/Referral"));
 const Resources = lazy(() => import("./pages/Resources"));
 const DeliveryReturns = lazy(() => import("./pages/DeliveryReturns"));
@@ -107,7 +106,7 @@ const App = () => (
                       <Route path="/actualites/edit/:id" element={<RoleGuard allow={["admin","moderator","user"]}><WriteArticle /></RoleGuard>} />
                       <Route path="/actualites/:id" element={<ArticleDetail />} />
                       <Route path="/team" element={<RoleGuard allow={["admin","moderator"]}><TeamDashboard /></RoleGuard>} />
-                      <Route path="/author" element={<RoleGuard><AuthorDashboard /></RoleGuard>} />
+                      
                       <Route path="/faq" element={<FAQ />} />
                       <Route path="/article/pay/:id" element={<RoleGuard><ArticlePayment /></RoleGuard>} />
                       <Route path="/bootstrap-admin" element={<BootstrapAdmin />} />
@@ -121,9 +120,7 @@ const App = () => (
                       <Route path="/cookies" element={<CookiesPolicy />} />
                       <Route path="/auth/confirm" element={<AuthConfirm />} />
                       <Route path="/auth/reset-password" element={<ResetPassword />} />
-                      <Route path="/ecoles" element={<Schools />} />
-                      <Route path="/ecoles/:id" element={<SchoolDetail />} />
-                      <Route path="/kits" element={<SmartKits />} />
+                      <Route path="/kits-ecole" element={<KitsEcole />} />
                       <Route path="/parrainage" element={<Referral />} />
                       <Route path="/ressources" element={<Resources />} />
                       <Route path="/livraison-retours" element={<DeliveryReturns />} />

@@ -49,7 +49,7 @@ import UserManagement from "@/components/admin/UserManagement";
 import ProductForm from "@/components/admin/ProductForm";
 import BulkProductImport from "@/components/admin/BulkProductImport";
 import KitComposer from "@/components/KitComposer";
-import AuthorsManagement from "@/components/admin/AuthorsManagement";
+// AuthorsManagement removed
 import PublicationsReview from "@/components/admin/PublicationsReview";
 import CouponManagement from "@/components/admin/CouponManagement";
 import AdvertisementsManagement from "@/components/admin/AdvertisementsManagement";
@@ -167,7 +167,6 @@ const Admin = () => {
         { id: "commissions", label: "Commissions", icon: DollarSign },
         { id: "loyalty", label: "Fidélité", icon: Gift },
         { id: "referrals", label: "Parrainages", icon: UserPlus },
-        { id: "authors", label: "Auteurs", icon: Users },
       ],
     },
     {
@@ -175,7 +174,7 @@ const Admin = () => {
       items: [
         { id: "articles", label: "Actualités", icon: FileText },
         { id: "review", label: "Validation", icon: Eye },
-        { id: "kit_composer", label: "Compositeur de kit", icon: GraduationCap },
+        { id: "kit_composer", label: "Gestion des Kits Scolaires", icon: GraduationCap },
         { id: "advertisements", label: "Publicités", icon: Bell },
         { id: "social_media", label: "Réseaux Sociaux", icon: Share2 },
       ],
@@ -370,14 +369,14 @@ const Admin = () => {
           {activeTab === "promotions_mgmt" && <PromotionsManagement />}
           {activeTab === "flash_deals" && <FlashDealsManagement />}
           {activeTab === "social_media" && <SocialMediaManager />}
-          {activeTab === "authors" && <AuthorsManagement />}
+          {/* authors tab removed */}
           {activeTab === "review" && <PublicationsReview />}
           {activeTab === "articles" && <ArticlesTab />}
           {activeTab === "promotions" && <CouponManagement />}
           {activeTab === "advertisements" && <AdvertisementsManagement />}
           {activeTab === "faq" && <FAQManagement />}
           {activeTab === "documentation" && <DocumentationManager />}
-          {activeTab === "schools" && <SchoolsAdminTab />}
+          {/* schools tab removed */}
           {activeTab === "resources" && <ResourcesAdminTab />}
           {activeTab === "kit_composer" && <KitComposer />}
           {activeTab === "referrals" && <ReferralsAdminTab />}

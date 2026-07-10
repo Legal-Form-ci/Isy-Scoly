@@ -1,4 +1,4 @@
-import { GraduationCap, Package, Users, BookOpen, ArrowRight } from "lucide-react";
+import { Package, Users, BookOpen, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useLanguage } from "@/i18n/LanguageContext";
 
@@ -7,22 +7,12 @@ const NewFeaturesSection = () => {
 
   const features = [
     {
-      icon: <GraduationCap size={28} />,
-      title: language === 'en' ? 'Schools Space' : 'Espace Écoles',
-      description: language === 'en'
-        ? 'Find your school, access official supply lists and order in one click.'
-        : 'Trouvez votre école, accédez aux listes officielles et commandez en un clic.',
-      href: '/ecoles',
-      color: 'from-blue-500/20 to-blue-600/10',
-      iconBg: 'bg-blue-500/15 text-blue-600 dark:text-blue-400',
-    },
-    {
       icon: <Package size={28} />,
-      title: language === 'en' ? 'Smart Kits' : 'Kits Intelligents',
+      title: language === 'en' ? 'School Kits' : 'Kits École',
       description: language === 'en'
-        ? 'Auto-generated school kits based on grade level and series.'
-        : 'Kits scolaires auto-générés selon le niveau et la série.',
-      href: '/kits',
+        ? 'Ready-made school kits by grade level, delivered to your door.'
+        : 'Kits scolaires prêts par niveau, livrés chez vous.',
+      href: '/kits-ecole',
       color: 'from-emerald-500/20 to-emerald-600/10',
       iconBg: 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400',
     },
@@ -65,7 +55,7 @@ const NewFeaturesSection = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
           {features.map((f, i) => (
             <Link
               key={i}
