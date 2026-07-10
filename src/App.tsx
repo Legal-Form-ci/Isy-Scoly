@@ -46,9 +46,8 @@ const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
 const CookiesPolicy = lazy(() => import("./pages/CookiesPolicy"));
 const AuthConfirm = lazy(() => import("./pages/AuthConfirm"));
 const ResetPassword = lazy(() => import("./pages/ResetPassword"));
-const Schools = lazy(() => import("./pages/Schools"));
-const SchoolDetail = lazy(() => import("./pages/SchoolDetail"));
-const SmartKits = lazy(() => import("./pages/SmartKits"));
+// Schools/SmartKits removed — replaced by Kits École route below
+const KitsEcole = lazy(() => import("./pages/SmartKits"));
 const Referral = lazy(() => import("./pages/Referral"));
 const Resources = lazy(() => import("./pages/Resources"));
 const DeliveryReturns = lazy(() => import("./pages/DeliveryReturns"));
