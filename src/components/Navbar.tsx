@@ -35,7 +35,7 @@ const Navbar = () => {
   const { wishlistCount } = useWishlist();
   const navigate = useNavigate();
   const { pathname } = useLocation();
-  const isDashboard = /^\/(admin|vendor|delivery|moderator|team|author|account|compte|wishlist)(\/|$)/.test(pathname);
+  const isDashboard = /^\/(admin|vendor|delivery|moderator|team|account|compte|wishlist)(\/|$)/.test(pathname);
 
   const categories = [
     { label: "Primaire", href: "/shop?category=scoly-primaire" },
