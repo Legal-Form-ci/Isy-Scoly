@@ -120,9 +120,7 @@ const App = () => (
                       <Route path="/cookies" element={<CookiesPolicy />} />
                       <Route path="/auth/confirm" element={<AuthConfirm />} />
                       <Route path="/auth/reset-password" element={<ResetPassword />} />
-                      <Route path="/ecoles" element={<Schools />} />
-                      <Route path="/ecoles/:id" element={<SchoolDetail />} />
-                      <Route path="/kits" element={<SmartKits />} />
+                      <Route path="/kits-ecole" element={<KitsEcole />} />
                       <Route path="/parrainage" element={<Referral />} />
                       <Route path="/ressources" element={<Resources />} />
                       <Route path="/livraison-retours" element={<DeliveryReturns />} />
