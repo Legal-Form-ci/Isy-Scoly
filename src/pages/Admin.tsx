@@ -167,7 +167,6 @@ const Admin = () => {
         { id: "commissions", label: "Commissions", icon: DollarSign },
         { id: "loyalty", label: "Fidélité", icon: Gift },
         { id: "referrals", label: "Parrainages", icon: UserPlus },
-        { id: "authors", label: "Auteurs", icon: Users },
       ],
     },
     {
@@ -175,7 +174,7 @@ const Admin = () => {
       items: [
         { id: "articles", label: "Actualités", icon: FileText },
         { id: "review", label: "Validation", icon: Eye },
-        { id: "kit_composer", label: "Compositeur de kit", icon: GraduationCap },
+        { id: "kit_composer", label: "Gestion des Kits Scolaires", icon: GraduationCap },
         { id: "advertisements", label: "Publicités", icon: Bell },
         { id: "social_media", label: "Réseaux Sociaux", icon: Share2 },
       ],
