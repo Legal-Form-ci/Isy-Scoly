@@ -483,6 +483,74 @@ export type Database = {
           },
         ]
       }
+      commercial_availability: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          end_date: string | null
+          id: string
+          notes: string | null
+          reason: string
+          start_date: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          end_date?: string | null
+          id?: string
+          notes?: string | null
+          reason: string
+          start_date: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          end_date?: string | null
+          id?: string
+          notes?: string | null
+          reason?: string
+          start_date?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      commercial_zones: {
+        Row: {
+          assigned_at: string
+          assigned_by: string | null
+          id: string
+          user_id: string
+          zone_id: string
+        }
+        Insert: {
+          assigned_at?: string
+          assigned_by?: string | null
+          id?: string
+          user_id: string
+          zone_id: string
+        }
+        Update: {
+          assigned_at?: string
+          assigned_by?: string | null
+          id?: string
+          user_id?: string
+          zone_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "commercial_zones_zone_id_fkey"
+            columns: ["zone_id"]
+            isOneToOne: false
+            referencedRelation: "zones"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       commissions: {
         Row: {
           commission_amount: number
@@ -1313,8 +1381,47 @@ export type Database = {
           },
         ]
       }
+      order_reassignments: {
+        Row: {
+          created_at: string
+          from_user_id: string | null
+          id: string
+          order_id: string
+          reason: string | null
+          reassigned_by: string | null
+          to_user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          from_user_id?: string | null
+          id?: string
+          order_id: string
+          reason?: string | null
+          reassigned_by?: string | null
+          to_user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          from_user_id?: string | null
+          id?: string
+          order_id?: string
+          reason?: string | null
+          reassigned_by?: string | null
+          to_user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_reassignments_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       orders: {
         Row: {
+          assigned_at: string | null
           coupon_code: string | null
           created_at: string | null
           customer_confirmed_at: string | null
@@ -1328,13 +1435,16 @@ export type Database = {
           payment_method: string | null
           payment_reference: string | null
           phone: string | null
+          reassignment_count: number
           shipping_address: string | null
           status: Database["public"]["Enums"]["order_status"] | null
           total_amount: number
           updated_at: string | null
           user_id: string | null
+          zone_id: string | null
         }
         Insert: {
+          assigned_at?: string | null
           coupon_code?: string | null
           created_at?: string | null
           customer_confirmed_at?: string | null
@@ -1348,13 +1458,16 @@ export type Database = {
           payment_method?: string | null
           payment_reference?: string | null
           phone?: string | null
+          reassignment_count?: number
           shipping_address?: string | null
           status?: Database["public"]["Enums"]["order_status"] | null
           total_amount: number
           updated_at?: string | null
           user_id?: string | null
+          zone_id?: string | null
         }
         Update: {
+          assigned_at?: string | null
           coupon_code?: string | null
           created_at?: string | null
           customer_confirmed_at?: string | null
@@ -1368,13 +1481,23 @@ export type Database = {
           payment_method?: string | null
           payment_reference?: string | null
           phone?: string | null
+          reassignment_count?: number
           shipping_address?: string | null
           status?: Database["public"]["Enums"]["order_status"] | null
           total_amount?: number
           updated_at?: string | null
           user_id?: string | null
+          zone_id?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "orders_zone_id_fkey"
+            columns: ["zone_id"]
+            isOneToOne: false
+            referencedRelation: "zones"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       payments: {
         Row: {
@@ -1591,6 +1714,7 @@ export type Database = {
           email: string | null
           first_name: string | null
           id: string
+          is_available: boolean
           last_name: string | null
           phone: string | null
           preferred_language: string | null
@@ -1603,6 +1727,7 @@ export type Database = {
           email?: string | null
           first_name?: string | null
           id: string
+          is_available?: boolean
           last_name?: string | null
           phone?: string | null
           preferred_language?: string | null
@@ -1615,6 +1740,7 @@ export type Database = {
           email?: string | null
           first_name?: string | null
           id?: string
+          is_available?: boolean
           last_name?: string | null
           phone?: string | null
           preferred_language?: string | null
@@ -2245,6 +2371,39 @@ export type Database = {
           },
         ]
       }
+      sms_templates: {
+        Row: {
+          body: string
+          created_at: string
+          id: string
+          is_active: boolean
+          key: string
+          label: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          key: string
+          label: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          key?: string
+          label?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
       user_addresses: {
         Row: {
           address: string
@@ -2437,6 +2596,101 @@ export type Database = {
             columns: ["product_id"]
             isOneToOne: false
             referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      withdrawal_requests: {
+        Row: {
+          amount: number
+          created_at: string
+          id: string
+          notes: string | null
+          paid_at: string | null
+          payment_details: Json | null
+          payment_method: string | null
+          processed_at: string | null
+          processed_by: string | null
+          rejection_reason: string | null
+          status: string
+          updated_at: string
+          user_id: string
+          validated_at: string | null
+          validated_by: string | null
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          id?: string
+          notes?: string | null
+          paid_at?: string | null
+          payment_details?: Json | null
+          payment_method?: string | null
+          processed_at?: string | null
+          processed_by?: string | null
+          rejection_reason?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+          validated_at?: string | null
+          validated_by?: string | null
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          id?: string
+          notes?: string | null
+          paid_at?: string | null
+          payment_details?: Json | null
+          payment_method?: string | null
+          processed_at?: string | null
+          processed_by?: string | null
+          rejection_reason?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+          validated_at?: string | null
+          validated_by?: string | null
+        }
+        Relationships: []
+      }
+      zones: {
+        Row: {
+          code: string | null
+          created_at: string
+          id: string
+          is_active: boolean
+          level: string
+          name: string
+          parent_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          code?: string | null
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          level: string
+          name: string
+          parent_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          code?: string | null
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          level?: string
+          name?: string
+          parent_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "zones_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "zones"
             referencedColumns: ["id"]
           },
         ]
@@ -2731,6 +2985,7 @@ export type Database = {
       get_delivery_orders: {
         Args: { _delivery_user_id: string }
         Returns: {
+          assigned_at: string | null
           coupon_code: string | null
           created_at: string | null
           customer_confirmed_at: string | null
@@ -2744,11 +2999,13 @@ export type Database = {
           payment_method: string | null
           payment_reference: string | null
           phone: string | null
+          reassignment_count: number
           shipping_address: string | null
           status: Database["public"]["Enums"]["order_status"] | null
           total_amount: number
           updated_at: string | null
           user_id: string | null
+          zone_id: string | null
         }[]
         SetofOptions: {
           from: "*"
@@ -2818,6 +3075,14 @@ export type Database = {
           value: string
         }[]
       }
+      get_referral_balance: {
+        Args: { _user_id: string }
+        Returns: {
+          available: number
+          total_earned: number
+          total_withdrawn: number
+        }[]
+      }
       get_school_contact: {
         Args: { _school_id: string }
         Returns: {
@@ -2885,6 +3150,7 @@ export type Database = {
         Args: { _product_id: string }
         Returns: undefined
       }
+      pick_available_commercial: { Args: { _zone_id: string }; Returns: string }
       redeem_loyalty_points: {
         Args: { _points_required: number; _reward_type: string }
         Returns: {
