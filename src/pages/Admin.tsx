@@ -174,7 +174,7 @@ const Admin = () => {
       items: [
         { id: "articles", label: "Actualités", icon: FileText },
         { id: "review", label: "Validation", icon: Eye },
-        { id: "kit_composer", label: "Gestion des Kits Scolaires", icon: GraduationCap },
+        // Kits École gérés côté module dédié (/kits-ecole)
         { id: "advertisements", label: "Publicités", icon: Bell },
         { id: "social_media", label: "Réseaux Sociaux", icon: Share2 },
       ],
