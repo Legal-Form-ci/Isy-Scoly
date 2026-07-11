@@ -277,7 +277,7 @@ const ScIA = () => {
     { label: "🛒 " + (language === 'fr' ? 'Commander' : language === 'en' ? 'Order' : language === 'de' ? 'Bestellen' : 'Pedir'), query: "commande", icon: ShoppingCart },
     { label: "🚚 " + (language === 'fr' ? 'Livraison' : language === 'en' ? 'Delivery' : language === 'de' ? 'Lieferung' : 'Entrega'), query: "livraison", icon: Truck },
     { label: "💳 " + (language === 'fr' ? 'Paiement' : language === 'en' ? 'Payment' : language === 'de' ? 'Zahlung' : 'Pago'), query: "paiement", icon: CreditCard },
-    { label: "🏫 " + (language === 'fr' ? 'Écoles' : language === 'en' ? 'Schools' : language === 'de' ? 'Schulen' : 'Escuelas'), query: "ecole", icon: School },
+    { label: "🎒 " + (language === 'fr' ? 'Kits École' : language === 'en' ? 'School Kits' : language === 'de' ? 'Schulsets' : 'Kits Escolares'), query: "kits", icon: School },
     { label: "🎁 " + (language === 'fr' ? 'Fidélité' : language === 'en' ? 'Loyalty' : language === 'de' ? 'Treue' : 'Fidelidad'), query: "fidelite", icon: Gift },
     { label: "📚 " + (language === 'fr' ? 'Ressources' : language === 'en' ? 'Resources' : language === 'de' ? 'Ressourcen' : 'Recursos'), query: "ressource", icon: FileText },
     { label: "📞 Contact", query: "contact", icon: Phone },
