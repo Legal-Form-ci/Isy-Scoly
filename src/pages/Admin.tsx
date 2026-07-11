@@ -378,7 +378,7 @@ const Admin = () => {
           {activeTab === "documentation" && <DocumentationManager />}
           {/* schools tab removed */}
           {activeTab === "resources" && <ResourcesAdminTab />}
-          {activeTab === "kit_composer" && <KitComposer />}
+          {/* kit_composer tab removed — use Kits École */}
           {activeTab === "referrals" && <ReferralsAdminTab />}
           {activeTab === "settings" && <PlatformSettings />}
         </div>
