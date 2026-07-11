@@ -48,7 +48,7 @@ import AdminDashboard from "@/components/admin/AdminDashboard";
 import UserManagement from "@/components/admin/UserManagement";
 import ProductForm from "@/components/admin/ProductForm";
 import BulkProductImport from "@/components/admin/BulkProductImport";
-import KitComposer from "@/components/KitComposer";
+// KitComposer removed — replaced by Kits École module
 // AuthorsManagement removed
 import PublicationsReview from "@/components/admin/PublicationsReview";
 import CouponManagement from "@/components/admin/CouponManagement";
