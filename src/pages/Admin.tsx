@@ -67,6 +67,7 @@ import EmailMarketing from "@/components/admin/EmailMarketing";
 import EmailLogsDashboard from "@/components/admin/EmailLogsDashboard";
 import CampaignAnalyticsDashboard from "@/components/admin/CampaignAnalyticsDashboard";
 import ProviderMonitoring from "@/components/admin/ProviderMonitoring";
+import ZonesManagement from "@/components/admin/ZonesManagement";
 import SmartImage from "@/components/SmartImage";
 import { getCategoryImageUrl, sortCategories } from "@/lib/categoryAssets";
 
@@ -103,7 +104,8 @@ type TabType =
   | "email_marketing"
   | "email_logs"
   | "email_analytics"
-  | "email_monitoring";
+  | "email_monitoring"
+  | "zones";
 
 const Admin = () => {
   const { t, language } = useLanguage();
@@ -165,6 +167,7 @@ const Admin = () => {
         { id: "commissions", label: "Commissions", icon: DollarSign },
         { id: "loyalty", label: "Fidélité", icon: Gift },
         { id: "referrals", label: "Parrainages", icon: UserPlus },
+        { id: "zones", label: "Zones & Commerciaux", icon: Truck },
       ],
     },
     {
@@ -379,6 +382,7 @@ const Admin = () => {
           {/* kit_composer tab removed — use Kits École */}
           {activeTab === "referrals" && <ReferralsAdminTab />}
           {activeTab === "settings" && <PlatformSettings />}
+          {activeTab === "zones" && <ZonesManagement />}
         </div>
       </div>
     </main>
