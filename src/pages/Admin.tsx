@@ -167,6 +167,7 @@ const Admin = () => {
         { id: "commissions", label: "Commissions", icon: DollarSign },
         { id: "loyalty", label: "Fidélité", icon: Gift },
         { id: "referrals", label: "Parrainages", icon: UserPlus },
+        { id: "zones", label: "Zones & Commerciaux", icon: Truck },
       ],
     },
     {
