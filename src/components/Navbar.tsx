@@ -149,6 +149,19 @@ const Navbar = () => {
 
               {user && <NotificationBell />}
 
+              {/* Raccourci Admin toujours visible pour les administrateurs */}
+              {showAdmin && (
+                <Link
+                  to="/admin"
+                  aria-label="Administration"
+                  title="Administration"
+                  className="inline-flex items-center gap-1.5 px-2 sm:px-3 py-1.5 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors text-xs sm:text-sm font-semibold"
+                >
+                  <Shield size={16} />
+                  <span className="hidden sm:inline">Admin</span>
+                </Link>
+              )}
+
               {/* Account dropdown trigger */}
               {user ? (
                 <div className="hidden sm:block group relative">
