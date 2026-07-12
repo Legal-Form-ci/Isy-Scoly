@@ -104,7 +104,8 @@ type TabType =
   | "email_marketing"
   | "email_logs"
   | "email_analytics"
-  | "email_monitoring";
+  | "email_monitoring"
+  | "zones";
 
 const Admin = () => {
   const { t, language } = useLanguage();
