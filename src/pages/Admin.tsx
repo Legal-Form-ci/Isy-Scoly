@@ -382,6 +382,7 @@ const Admin = () => {
           {/* kit_composer tab removed — use Kits École */}
           {activeTab === "referrals" && <ReferralsAdminTab />}
           {activeTab === "settings" && <PlatformSettings />}
+          {activeTab === "zones" && <ZonesManagement />}
         </div>
       </div>
     </main>
