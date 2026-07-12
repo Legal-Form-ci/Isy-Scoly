@@ -252,8 +252,15 @@ const Referral = () => {
               </Link>
             </div>
           )}
+
+          {user && (
+            <div className="mt-10">
+              <WithdrawalRequest />
+            </div>
+          )}
         </div>
       </section>
+
 
       <Footer />
     </main>
