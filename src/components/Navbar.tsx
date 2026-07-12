@@ -53,13 +53,13 @@ const Navbar = () => {
     { label: t.nav.contact, href: "/contact" },
   ];
 
-  // Only show role-gated UI once auth AND roles have finished loading,
-  // otherwise the menu flickers on every Supabase token refresh.
-  const rolesReady = !loading && !rolesLoading && !!user;
-  const isVendor = rolesReady && roles.includes("vendor");
-  const isModerator = rolesReady && roles.includes("moderator");
-  const isDelivery = rolesReady && roles.includes("delivery");
-  const showAdmin = rolesReady && isAdmin;
+  // Gating basé uniquement sur le tableau des rôles :
+  // dès que les rôles arrivent ils s'affichent, et ils ne disparaissent plus
+  // pendant un refresh de token (fini le clignotement du menu admin).
+  const isVendor = !!user && roles.includes("vendor");
+  const isModerator = !!user && roles.includes("moderator");
+  const isDelivery = !!user && roles.includes("delivery");
+  const showAdmin = !!user && isAdmin;
 
   const handleLogout = async () => {
     await signOut();
@@ -148,6 +148,19 @@ const Navbar = () => {
               )}
 
               {user && <NotificationBell />}
+
+              {/* Raccourci Admin toujours visible pour les administrateurs */}
+              {showAdmin && (
+                <Link
+                  to="/admin"
+                  aria-label="Administration"
+                  title="Administration"
+                  className="inline-flex items-center gap-1.5 px-2 sm:px-3 py-1.5 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors text-xs sm:text-sm font-semibold"
+                >
+                  <Shield size={16} />
+                  <span className="hidden sm:inline">Admin</span>
+                </Link>
+              )}
 
               {/* Account dropdown trigger */}
               {user ? (
