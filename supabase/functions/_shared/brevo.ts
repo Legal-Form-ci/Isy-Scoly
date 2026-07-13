@@ -152,6 +152,14 @@ async function callResend(opts: BrevoEmail, useFallbackFrom = false) {
   if (opts.text) body.text = opts.text;
   if (opts.replyTo) body.reply_to = opts.replyTo;
   if (opts.category) body.tags = [{ name: "category", value: opts.category }];
+  if (opts.attachments?.length) {
+    body.attachments = opts.attachments.map((a) => ({
+      filename: a.name,
+      content: a.content,
+      content_type: a.type || "application/pdf",
+    }));
+  }
+
 
   const resp = await fetch("https://api.resend.com/emails", {
     method: "POST",
