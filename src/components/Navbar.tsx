@@ -38,6 +38,7 @@ const Navbar = () => {
   const isDashboard = /^\/(admin|vendor|delivery|moderator|team|account|compte|wishlist)(\/|$)/.test(pathname);
 
   const categories = [
+    { label: "Maternelle", href: "/shop?category=scoly-maternelle" },
     { label: "Primaire", href: "/shop?category=scoly-primaire" },
     { label: "Secondaire", href: "/shop?category=scoly-secondaire" },
     { label: "Universitaire", href: "/shop?category=scoly-universite" },

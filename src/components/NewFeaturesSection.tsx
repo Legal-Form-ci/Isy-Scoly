@@ -1,4 +1,4 @@
-import { Package, Users, BookOpen, ArrowRight } from "lucide-react";
+import { Package, Users, Baby, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useLanguage } from "@/i18n/LanguageContext";
 
@@ -27,14 +27,14 @@ const NewFeaturesSection = () => {
       iconBg: 'bg-amber-500/15 text-amber-600 dark:text-amber-400',
     },
     {
-      icon: <BookOpen size={28} />,
-      title: language === 'en' ? 'Educational Resources' : 'Ressources Éducatives',
+      icon: <Baby size={28} />,
+      title: language === 'en' ? 'Preschool books' : 'Maternelle',
       description: language === 'en'
-        ? 'Exercises, past exams, videos — free and premium content.'
-        : 'Exercices, anciens sujets, vidéos — contenus gratuits et premium.',
-      href: '/ressources',
-      color: 'from-purple-500/20 to-purple-600/10',
-      iconBg: 'bg-purple-500/15 text-purple-600 dark:text-purple-400',
+        ? 'Petite, Moyenne and Grande Section books ready to order.'
+        : 'Petite, Moyenne et Grande Section prêtes à commander.',
+      href: '/shop?category=scoly-maternelle',
+      color: 'from-primary/15 to-secondary/10',
+      iconBg: 'bg-primary/10 text-primary',
     },
   ];
 

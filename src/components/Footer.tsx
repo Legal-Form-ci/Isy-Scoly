@@ -11,6 +11,7 @@ const Footer = () => {
     {
       title: "Catégories",
       links: [
+        { label: "Maternelle", href: "/shop?category=scoly-maternelle" },
         { label: "Primaire", href: "/shop?category=scoly-primaire" },
         { label: "Secondaire", href: "/shop?category=scoly-secondaire" },
         { label: "Universitaire", href: "/shop?category=scoly-universite" },
@@ -33,7 +34,6 @@ const Footer = () => {
       links: [
         { label: "Qui sommes-nous", href: "/about" },
         { label: "Kits École", href: "/kits-ecole" },
-        { label: "Ressources éducatives", href: "/ressources" },
         { label: "Programme parrainage", href: "/parrainage" },
         { label: "Actualités", href: "/actualites" },
       ],
