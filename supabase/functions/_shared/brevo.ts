@@ -118,6 +118,7 @@ async function callBrevo(opts: BrevoEmail) {
     body.attachment = opts.attachments.map((a) => ({ name: a.name, content: a.content }));
   }
 
+  const resp = await fetch("https://api.brevo.com/v3/smtp/email", {
     method: "POST",
     headers: {
       "api-key": BREVO_API_KEY,
