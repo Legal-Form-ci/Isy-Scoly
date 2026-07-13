@@ -35,21 +35,16 @@ export const usePublicDataPrefetch = () => {
       });
 
       qc.prefetchQuery({
-        queryKey: ["smart-kits", "all", "all", "", 1],
+        queryKey: ["kits-ecole-products"],
         staleTime: 1000 * 60 * 5,
         queryFn: async () => {
-          const { data, count } = await supabase
-            .from("smart_kits")
-            .select(
-              "id,name,description,grade_level,series,is_active,created_at," +
-                "smart_kit_items(id,product_id,quantity,item_name," +
-                "products(id,name_fr,price,image_url,stock,is_active))",
-              { count: "exact" },
-            )
+          const { data } = await supabase
+            .from("products")
+            .select("id,name_fr,name_en,name_de,name_es,price,original_price,discount_percent,stock,image_url,is_featured,free_shipping,category_id,brand,author_details,metadata,created_at,education_level,subject")
             .eq("is_active", true)
             .order("created_at", { ascending: false })
-            .range(0, 11);
-          return { rows: data || [], count: count || 0 };
+            .limit(240);
+          return data || [];
         },
       });
     });

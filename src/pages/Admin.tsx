@@ -26,7 +26,6 @@ import {
   HelpCircle,
   FileText,
   Menu,
-  GraduationCap,
   BookOpen,
   UserPlus,
   Zap
@@ -41,7 +40,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Switch } from "@/components/ui/switch";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { useLanguage } from "@/i18n/LanguageContext";
-import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import AdminDashboard from "@/components/admin/AdminDashboard";
@@ -98,7 +96,6 @@ type TabType =
   | "payments"
   | "social_media"
   | "documentation"
-  | "resources"
   | "referrals"
   | "flash_deals"
   | "email_marketing"
@@ -109,33 +106,9 @@ type TabType =
 
 const Admin = () => {
   const { t, language } = useLanguage();
-  const { user, loading: authLoading, rolesLoading, isAdmin: hasAdminRole } = useAuth();
-  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<TabType>("dashboard");
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [loading, setLoading] = useState(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [openMenuGroups, setOpenMenuGroups] = useState<string[]>(["Vue d'ensemble", "Catalogue & Ventes", "Contenu & Kits"]);
-
-  useEffect(() => {
-    if (authLoading || (user && rolesLoading)) return;
-
-    if (!user) {
-      setLoading(false);
-      navigate("/auth");
-      return;
-    }
-
-    if (!hasAdminRole) {
-      toast.error("Accès refusé. Vous n'êtes pas administrateur.");
-      setLoading(false);
-      navigate("/");
-      return;
-    }
-
-    setIsAdmin(true);
-    setLoading(false);
-  }, [authLoading, rolesLoading, user, hasAdminRole, navigate]);
 
   const menuGroups: Array<{ label: string; items: Array<{ id: string; label: string; icon: any }> }> = [
     {
@@ -217,27 +190,13 @@ const Admin = () => {
     setMobileMenuOpen(false);
   };
 
-  if (loading) {
-    return (
-      <main className="min-h-screen bg-background">
-        <div className="min-h-screen flex items-center justify-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
-        </div>
-      </main>
-    );
-  }
-
-  if (!isAdmin) {
-    return null;
-  }
-
   return (
-    <main className="min-h-screen bg-background">
-      <div className="min-h-screen flex">
+    <main className="min-h-screen bg-background overflow-x-hidden">
+      <div className="min-h-screen flex w-full min-w-0">
 
 
         {/* Sidebar - Desktop */}
-        <aside className="w-64 bg-card border-r border-border hidden lg:block sticky top-0 h-screen overflow-y-auto">
+        <aside className="w-64 shrink-0 bg-card border-r border-border hidden lg:block sticky top-0 h-screen overflow-y-auto">
           <div className="p-4 border-b border-border">
             <h2 className="text-lg font-display font-bold text-foreground">Administration</h2>
             <p className="text-xs text-muted-foreground">Menu interne</p>
@@ -288,7 +247,7 @@ const Admin = () => {
 
         {/* Mobile Menu Sheet */}
         <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
-          <SheetContent side="left" className="w-72 p-0 z-[60]">
+          <SheetContent side="left" className="w-[min(20rem,92vw)] p-0 z-[60]">
             <SheetHeader className="p-6 border-b border-border">
               <SheetTitle>Administration</SheetTitle>
             </SheetHeader>
@@ -349,7 +308,7 @@ const Admin = () => {
         </div>
 
         {/* Main Content */}
-        <div className="flex-1 p-4 sm:p-6 lg:p-8 pb-24 lg:pb-8 pt-4">
+        <div className="flex-1 min-w-0 w-full max-w-full overflow-x-hidden p-3 sm:p-6 lg:p-8 pb-24 lg:pb-8 pt-4">
 
           {activeTab === "dashboard" && <AdminDashboard />}
           {activeTab === "email_marketing" && <EmailMarketing />}
@@ -378,7 +337,6 @@ const Admin = () => {
           {activeTab === "faq" && <FAQManagement />}
           {activeTab === "documentation" && <DocumentationManager />}
           {/* schools tab removed */}
-          {activeTab === "resources" && <ResourcesAdminTab />}
           {/* kit_composer tab removed — use Kits École */}
           {activeTab === "referrals" && <ReferralsAdminTab />}
           {activeTab === "settings" && <PlatformSettings />}

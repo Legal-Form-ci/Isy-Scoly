@@ -49,7 +49,6 @@ const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 // Schools/SmartKits removed — replaced by Kits École route below
 const KitsEcole = lazy(() => import("./pages/SmartKits"));
 const Referral = lazy(() => import("./pages/Referral"));
-const Resources = lazy(() => import("./pages/Resources"));
 const DeliveryReturns = lazy(() => import("./pages/DeliveryReturns"));
 const Unsubscribe = lazy(() => import("./pages/Unsubscribe"));
 
@@ -122,7 +121,6 @@ const App = () => (
                       <Route path="/auth/reset-password" element={<ResetPassword />} />
                       <Route path="/kits-ecole" element={<KitsEcole />} />
                       <Route path="/parrainage" element={<Referral />} />
-                      <Route path="/ressources" element={<Resources />} />
                       <Route path="/livraison-retours" element={<DeliveryReturns />} />
                       <Route path="/livraison" element={<DeliveryReturns />} />
                       <Route path="/unsubscribe" element={<Unsubscribe />} />
