@@ -42,6 +42,8 @@ export interface BrevoEmail {
   orderId?: string | null;
   /** Force un fournisseur (sinon : auto). */
   preferredProvider?: EmailProvider;
+  /** Pièces jointes optionnelles (base64) */
+  attachments?: Array<{ name: string; content: string; type?: string }>;
 }
 
 export interface SendResult {
