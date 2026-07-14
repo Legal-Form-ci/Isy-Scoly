@@ -129,7 +129,7 @@ const Admin = () => {
         { id: "promotions_mgmt", label: "Promotions", icon: Tag },
         { id: "flash_deals", label: "Ventes Flash", icon: Zap },
         { id: "promotions", label: "Coupons", icon: Tag },
-      ],
+        { id: "school_kits", label: "Kits École", icon: Package },
     },
     {
       label: "Utilisateurs & Équipe",
