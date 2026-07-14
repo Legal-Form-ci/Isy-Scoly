@@ -73,7 +73,7 @@ const SmartImage = forwardRef<HTMLImageElement, SmartImageProps>(function SmartI
 });
 
 function getOptimizedSources(src: string) {
-  if (!src.startsWith("/") || src.startsWith("//")) return null;
+  if (!src.startsWith("/") || src.startsWith("//") || src.startsWith("/__l5e/")) return null;
   if (src === "/placeholder.svg") return null;
   const match = src.match(/\.(jpe?g|png)$/i);
   if (!match) return null;

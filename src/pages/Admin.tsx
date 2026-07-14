@@ -22,11 +22,9 @@ import {
   Truck,
   Gift,
   BarChart3,
-  Database,
   HelpCircle,
   FileText,
   Menu,
-  BookOpen,
   UserPlus,
   Zap
 } from "lucide-react";
@@ -38,7 +36,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { useLanguage } from "@/i18n/LanguageContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -51,7 +49,6 @@ import BulkProductImport from "@/components/admin/BulkProductImport";
 import PublicationsReview from "@/components/admin/PublicationsReview";
 import CouponManagement from "@/components/admin/CouponManagement";
 import AdvertisementsManagement from "@/components/admin/AdvertisementsManagement";
-import DatabaseManagement from "@/components/admin/DatabaseManagement";
 import FAQManagement from "@/components/admin/FAQManagement";
 import PlatformSettings from "@/components/admin/PlatformSettings";
 import AdvancedStats from "@/components/admin/AdvancedStats";
@@ -105,10 +102,10 @@ type TabType =
   | "zones";
 
 const Admin = () => {
-  const { t, language } = useLanguage();
+  useLanguage();
   const [activeTab, setActiveTab] = useState<TabType>("dashboard");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [openMenuGroups, setOpenMenuGroups] = useState<string[]>(["Vue d'ensemble", "Catalogue & Ventes", "Contenu & Kits"]);
+  const [openMenuGroups, setOpenMenuGroups] = useState<string[]>(["Vue d'ensemble", "Catalogue & Ventes", "Contenu"]);
 
   const menuGroups: Array<{ label: string; items: Array<{ id: string; label: string; icon: any }> }> = [
     {
@@ -144,11 +141,10 @@ const Admin = () => {
       ],
     },
     {
-      label: "Contenu & Kits",
+      label: "Contenu",
       items: [
         { id: "articles", label: "Actualités", icon: FileText },
         { id: "review", label: "Validation", icon: Eye },
-        // Kits École gérés côté module dédié (/kits-ecole)
         { id: "advertisements", label: "Publicités", icon: Bell },
         { id: "social_media", label: "Réseaux Sociaux", icon: Share2 },
       ],
@@ -192,11 +188,11 @@ const Admin = () => {
 
   return (
     <main className="min-h-screen bg-background overflow-x-hidden">
-      <div className="min-h-screen flex w-full min-w-0">
+      <div className="min-h-screen flex w-full min-w-0 overflow-x-hidden">
 
 
         {/* Sidebar - Desktop */}
-        <aside className="w-64 shrink-0 bg-card border-r border-border hidden lg:block sticky top-0 h-screen overflow-y-auto">
+        <aside className="w-64 shrink-0 bg-card border-r border-border hidden lg:block sticky top-0 h-screen overflow-y-auto overscroll-contain">
           <div className="p-4 border-b border-border">
             <h2 className="text-lg font-display font-bold text-foreground">Administration</h2>
             <p className="text-xs text-muted-foreground">Menu interne</p>
@@ -247,7 +243,7 @@ const Admin = () => {
 
         {/* Mobile Menu Sheet */}
         <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
-          <SheetContent side="left" className="w-[min(20rem,92vw)] p-0 z-[60]">
+          <SheetContent side="left" className="w-[min(20rem,92vw)] max-w-[92vw] p-0 z-[60] overflow-hidden">
             <SheetHeader className="p-6 border-b border-border">
               <SheetTitle>Administration</SheetTitle>
             </SheetHeader>
@@ -296,19 +292,32 @@ const Admin = () => {
           </SheetContent>
         </Sheet>
 
-        {/* Floating Menu Button (bottom right) - Mobile fallback */}
-        <div className="lg:hidden fixed bottom-4 right-4 z-50">
-          <Button
-            size="icon"
-            className="h-14 w-14 rounded-full shadow-lg"
-            onClick={() => setMobileMenuOpen(true)}
-          >
-            <Menu size={24} />
-          </Button>
-        </div>
-
         {/* Main Content */}
-        <div className="flex-1 min-w-0 w-full max-w-full overflow-x-hidden p-3 sm:p-6 lg:p-8 pb-24 lg:pb-8 pt-4">
+        <div className="flex-1 min-w-0 w-full max-w-full overflow-x-hidden flex flex-col">
+          {/* Mobile Header */}
+          <header className="lg:hidden sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/85 px-3 py-2">
+            <div className="flex items-center gap-2 min-w-0">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => setMobileMenuOpen(true)}
+              className="shrink-0 gap-2 border-primary text-primary"
+              aria-label="Ouvrir le menu admin"
+            >
+              <Menu size={16} />
+              Menu admin
+            </Button>
+            <div className="min-w-0 flex-1">
+              <p className="text-[11px] uppercase tracking-wide text-muted-foreground">Section active</p>
+              <h1 className="truncate text-sm font-semibold text-foreground">
+                {menuItems.find((item) => item.id === activeTab)?.label ?? "Tableau de bord"}
+              </h1>
+            </div>
+            </div>
+          </header>
+          
+          <div className="min-w-0 max-w-full overflow-x-hidden p-3 sm:p-6 lg:p-8 pb-20 lg:pb-8 pt-4">
 
           {activeTab === "dashboard" && <AdminDashboard />}
           {activeTab === "email_marketing" && <EmailMarketing />}
@@ -337,10 +346,10 @@ const Admin = () => {
           {activeTab === "faq" && <FAQManagement />}
           {activeTab === "documentation" && <DocumentationManager />}
           {/* schools tab removed */}
-          {/* kit_composer tab removed — use Kits École */}
           {activeTab === "referrals" && <ReferralsAdminTab />}
           {activeTab === "settings" && <PlatformSettings />}
           {activeTab === "zones" && <ZonesManagement />}
+          </div>
         </div>
       </div>
     </main>
@@ -1387,7 +1396,7 @@ const ResourcesAdminTab = () => {
         <div className="text-center py-12 text-muted-foreground">Chargement...</div>
       ) : resources.length === 0 ? (
         <div className="text-center py-12 bg-card border border-border rounded-xl">
-          <BookOpen size={48} className="mx-auto text-muted-foreground mb-4" />
+          <FileText size={48} className="mx-auto text-muted-foreground mb-4" />
           <p className="text-muted-foreground">Aucune ressource éducative.</p>
         </div>
       ) : (
