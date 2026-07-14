@@ -308,7 +308,7 @@ const Admin = () => {
         </div>
 
         {/* Main Content */}
-        <div className="flex-1 min-w-0 w-full max-w-full overflow-x-auto flex flex-col">
+        <div className="flex-1 min-w-0 overflow-x-auto flex flex-col">
           {/* Mobile Header */}
           <header className="md:hidden flex items-center h-16 px-4 border-b border-border bg-card sticky top-0 z-40">
             <Button variant="ghost" size="icon" onClick={() => setMobileMenuOpen(true)} className="mr-3">
