@@ -1393,7 +1393,7 @@ const ResourcesAdminTab = () => {
         <div className="text-center py-12 text-muted-foreground">Chargement...</div>
       ) : resources.length === 0 ? (
         <div className="text-center py-12 bg-card border border-border rounded-xl">
-          <BookOpen size={48} className="mx-auto text-muted-foreground mb-4" />
+          <FileText size={48} className="mx-auto text-muted-foreground mb-4" />
           <p className="text-muted-foreground">Aucune ressource éducative.</p>
         </div>
       ) : (
