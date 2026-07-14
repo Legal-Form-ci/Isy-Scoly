@@ -63,6 +63,7 @@ import EmailLogsDashboard from "@/components/admin/EmailLogsDashboard";
 import CampaignAnalyticsDashboard from "@/components/admin/CampaignAnalyticsDashboard";
 import ProviderMonitoring from "@/components/admin/ProviderMonitoring";
 import ZonesManagement from "@/components/admin/ZonesManagement";
+import SchoolKitsManagement from "@/components/admin/SchoolKitsManagement";
 import SmartImage from "@/components/SmartImage";
 import { getCategoryImageUrl, sortCategories } from "@/lib/categoryAssets";
 
