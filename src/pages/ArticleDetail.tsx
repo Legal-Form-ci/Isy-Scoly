@@ -366,7 +366,6 @@ const ArticleDetail = () => {
       'general': 'Général',
       'education': 'Éducation',
       'bureautique': 'Bureautique',
-      'resources': 'Ressources',
       'news': 'Actualités',
       'guides': 'Guides'
     };
