@@ -187,12 +187,12 @@ const Admin = () => {
   };
 
   return (
-    <main className="min-h-screen bg-background">
-      <div className="min-h-screen flex w-full min-w-0">
+    <main className="min-h-screen bg-background overflow-x-hidden">
+      <div className="min-h-screen flex w-full min-w-0 overflow-x-hidden">
 
 
         {/* Sidebar - Desktop */}
-        <aside className="w-64 shrink-0 bg-card border-r border-border hidden md:block sticky top-0 h-screen overflow-y-auto">
+        <aside className="w-64 shrink-0 bg-card border-r border-border hidden lg:block sticky top-0 h-screen overflow-y-auto overscroll-contain">
           <div className="p-4 border-b border-border">
             <h2 className="text-lg font-display font-bold text-foreground">Administration</h2>
             <p className="text-xs text-muted-foreground">Menu interne</p>
@@ -243,7 +243,7 @@ const Admin = () => {
 
         {/* Mobile Menu Sheet */}
         <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
-          <SheetContent side="left" className="w-[min(20rem,92vw)] p-0 z-[60]">
+          <SheetContent side="left" className="w-[min(20rem,92vw)] max-w-[92vw] p-0 z-[60] overflow-hidden">
             <SheetHeader className="p-6 border-b border-border">
               <SheetTitle>Administration</SheetTitle>
             </SheetHeader>
@@ -292,28 +292,32 @@ const Admin = () => {
           </SheetContent>
         </Sheet>
 
-        {/* Floating Menu Button (bottom right) - Mobile fallback */}
-        <div className="md:hidden fixed bottom-4 right-4 z-50">
-          <Button
-            size="icon"
-            className="h-14 w-14 rounded-full shadow-lg"
-            onClick={() => setMobileMenuOpen(true)}
-          >
-            <Menu size={24} />
-          </Button>
-        </div>
-
         {/* Main Content */}
-        <div className="flex-1 min-w-0 overflow-x-auto flex flex-col">
+        <div className="flex-1 min-w-0 w-full max-w-full overflow-x-hidden flex flex-col">
           {/* Mobile Header */}
-          <header className="md:hidden flex items-center h-16 px-4 border-b border-border bg-card sticky top-0 z-40">
-            <Button variant="ghost" size="icon" onClick={() => setMobileMenuOpen(true)} className="mr-3">
-              <Menu size={20} />
+          <header className="lg:hidden sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/85 px-3 py-2">
+            <div className="flex items-center gap-2 min-w-0">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => setMobileMenuOpen(true)}
+              className="shrink-0 gap-2 border-primary text-primary"
+              aria-label="Ouvrir le menu admin"
+            >
+              <Menu size={16} />
+              Menu admin
             </Button>
-            <h1 className="text-lg font-display font-bold text-foreground truncate">Administration</h1>
+            <div className="min-w-0 flex-1">
+              <p className="text-[11px] uppercase tracking-wide text-muted-foreground">Section active</p>
+              <h1 className="truncate text-sm font-semibold text-foreground">
+                {menuItems.find((item) => item.id === activeTab)?.label ?? "Tableau de bord"}
+              </h1>
+            </div>
+            </div>
           </header>
           
-          <div className="p-3 sm:p-6 lg:p-8 pb-24 lg:pb-8 pt-4">
+          <div className="min-w-0 max-w-full overflow-x-hidden p-3 sm:p-6 lg:p-8 pb-20 lg:pb-8 pt-4">
 
           {activeTab === "dashboard" && <AdminDashboard />}
           {activeTab === "email_marketing" && <EmailMarketing />}
@@ -342,7 +346,6 @@ const Admin = () => {
           {activeTab === "faq" && <FAQManagement />}
           {activeTab === "documentation" && <DocumentationManager />}
           {/* schools tab removed */}
-          {/* kit_composer tab removed — use Kits École */}
           {activeTab === "referrals" && <ReferralsAdminTab />}
           {activeTab === "settings" && <PlatformSettings />}
           {activeTab === "zones" && <ZonesManagement />}
