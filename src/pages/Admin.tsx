@@ -191,7 +191,7 @@ const Admin = () => {
   };
 
   return (
-    <main className="min-h-screen bg-background overflow-x-hidden">
+    <main className="min-h-screen bg-background">
       <div className="min-h-screen flex w-full min-w-0">
 
 
@@ -308,7 +308,16 @@ const Admin = () => {
         </div>
 
         {/* Main Content */}
-        <div className="flex-1 min-w-0 w-full max-w-full overflow-x-hidden p-3 sm:p-6 lg:p-8 pb-24 lg:pb-8 pt-4">
+        <div className="flex-1 min-w-0 w-full max-w-full overflow-x-auto flex flex-col">
+          {/* Mobile Header */}
+          <header className="md:hidden flex items-center h-16 px-4 border-b border-border bg-card sticky top-0 z-40">
+            <Button variant="ghost" size="icon" onClick={() => setMobileMenuOpen(true)} className="mr-3">
+              <Menu size={20} />
+            </Button>
+            <h1 className="text-lg font-display font-bold text-foreground truncate">Administration</h1>
+          </header>
+          
+          <div className="p-3 sm:p-6 lg:p-8 pb-24 lg:pb-8 pt-4">
 
           {activeTab === "dashboard" && <AdminDashboard />}
           {activeTab === "email_marketing" && <EmailMarketing />}
@@ -341,6 +350,7 @@ const Admin = () => {
           {activeTab === "referrals" && <ReferralsAdminTab />}
           {activeTab === "settings" && <PlatformSettings />}
           {activeTab === "zones" && <ZonesManagement />}
+          </div>
         </div>
       </div>
     </main>
