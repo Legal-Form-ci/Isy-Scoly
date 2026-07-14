@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 
 /**
  * Warms up React Query caches for high-traffic public pages
- * so the first render after refresh is instant on /shop and /kits.
+ * so the first render after refresh is instant on /shop and /kits-ecole.
  *
  * Runs once on mount, in the background — never blocks the UI.
  */
