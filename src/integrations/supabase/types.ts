@@ -2074,6 +2074,13 @@ export type Database = {
             foreignKeyName: "school_loyalty_school_id_fkey"
             columns: ["school_id"]
             isOneToOne: true
+            referencedRelation: "public_schools"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "school_loyalty_school_id_fkey"
+            columns: ["school_id"]
+            isOneToOne: true
             referencedRelation: "schools"
             referencedColumns: ["id"]
           },
@@ -2172,6 +2179,13 @@ export type Database = {
           updated_at?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "school_supply_lists_school_id_fkey"
+            columns: ["school_id"]
+            isOneToOne: false
+            referencedRelation: "public_schools"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "school_supply_lists_school_id_fkey"
             columns: ["school_id"]
@@ -2301,6 +2315,7 @@ export type Database = {
       }
       smart_kits: {
         Row: {
+          category: string | null
           created_at: string | null
           created_by: string | null
           description: string | null
@@ -2310,8 +2325,10 @@ export type Database = {
           image_url: string | null
           is_active: boolean | null
           name: string
+          options: string | null
           product_id: string | null
           published_at: string | null
+          school_id: string | null
           school_type: string | null
           series: string | null
           status: string
@@ -2319,6 +2336,7 @@ export type Database = {
           updated_at: string | null
         }
         Insert: {
+          category?: string | null
           created_at?: string | null
           created_by?: string | null
           description?: string | null
@@ -2328,8 +2346,10 @@ export type Database = {
           image_url?: string | null
           is_active?: boolean | null
           name: string
+          options?: string | null
           product_id?: string | null
           published_at?: string | null
+          school_id?: string | null
           school_type?: string | null
           series?: string | null
           status?: string
@@ -2337,6 +2357,7 @@ export type Database = {
           updated_at?: string | null
         }
         Update: {
+          category?: string | null
           created_at?: string | null
           created_by?: string | null
           description?: string | null
@@ -2346,8 +2367,10 @@ export type Database = {
           image_url?: string | null
           is_active?: boolean | null
           name?: string
+          options?: string | null
           product_id?: string | null
           published_at?: string | null
+          school_id?: string | null
           school_type?: string | null
           series?: string | null
           status?: string
@@ -2367,6 +2390,27 @@ export type Database = {
             columns: ["product_id"]
             isOneToOne: true
             referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "smart_kits_school_id_fkey"
+            columns: ["school_id"]
+            isOneToOne: false
+            referencedRelation: "public_schools"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "smart_kits_school_id_fkey"
+            columns: ["school_id"]
+            isOneToOne: false
+            referencedRelation: "schools"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "smart_kits_school_id_fkey"
+            columns: ["school_id"]
+            isOneToOne: false
+            referencedRelation: "schools_public"
             referencedColumns: ["id"]
           },
         ]
@@ -2733,6 +2777,36 @@ export type Database = {
           min_amount?: number | null
           name?: string | null
           start_date?: string | null
+        }
+        Relationships: []
+      }
+      public_schools: {
+        Row: {
+          city: string | null
+          code: string | null
+          id: string | null
+          logo_url: string | null
+          name: string | null
+          region: string | null
+          type: string | null
+        }
+        Insert: {
+          city?: string | null
+          code?: string | null
+          id?: string | null
+          logo_url?: string | null
+          name?: string | null
+          region?: string | null
+          type?: string | null
+        }
+        Update: {
+          city?: string | null
+          code?: string | null
+          id?: string | null
+          logo_url?: string | null
+          name?: string | null
+          region?: string | null
+          type?: string | null
         }
         Relationships: []
       }

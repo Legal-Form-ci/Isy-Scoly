@@ -63,6 +63,7 @@ import EmailLogsDashboard from "@/components/admin/EmailLogsDashboard";
 import CampaignAnalyticsDashboard from "@/components/admin/CampaignAnalyticsDashboard";
 import ProviderMonitoring from "@/components/admin/ProviderMonitoring";
 import ZonesManagement from "@/components/admin/ZonesManagement";
+import SchoolKitsManagement from "@/components/admin/SchoolKitsManagement";
 import SmartImage from "@/components/SmartImage";
 import { getCategoryImageUrl, sortCategories } from "@/lib/categoryAssets";
 
@@ -99,7 +100,8 @@ type TabType =
   | "email_logs"
   | "email_analytics"
   | "email_monitoring"
-  | "zones";
+  | "zones"
+  | "school_kits";
 
 const Admin = () => {
   useLanguage();
@@ -127,6 +129,7 @@ const Admin = () => {
         { id: "promotions_mgmt", label: "Promotions", icon: Tag },
         { id: "flash_deals", label: "Ventes Flash", icon: Zap },
         { id: "promotions", label: "Coupons", icon: Tag },
+        { id: "school_kits", label: "Kits École", icon: Package },
       ],
     },
     {
@@ -349,6 +352,7 @@ const Admin = () => {
           {activeTab === "referrals" && <ReferralsAdminTab />}
           {activeTab === "settings" && <PlatformSettings />}
           {activeTab === "zones" && <ZonesManagement />}
+          {activeTab === "school_kits" && <SchoolKitsManagement />}
           </div>
         </div>
       </div>
