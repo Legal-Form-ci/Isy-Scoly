@@ -99,7 +99,8 @@ type TabType =
   | "email_logs"
   | "email_analytics"
   | "email_monitoring"
-  | "zones";
+  | "zones"
+  | "school_kits";
 
 const Admin = () => {
   useLanguage();
