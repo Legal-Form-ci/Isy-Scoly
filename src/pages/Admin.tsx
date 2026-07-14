@@ -102,10 +102,10 @@ type TabType =
   | "zones";
 
 const Admin = () => {
-  const { t, language } = useLanguage();
+  useLanguage();
   const [activeTab, setActiveTab] = useState<TabType>("dashboard");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [openMenuGroups, setOpenMenuGroups] = useState<string[]>(["Vue d'ensemble", "Catalogue & Ventes", "Contenu & Kits"]);
+  const [openMenuGroups, setOpenMenuGroups] = useState<string[]>(["Vue d'ensemble", "Catalogue & Ventes", "Contenu"]);
 
   const menuGroups: Array<{ label: string; items: Array<{ id: string; label: string; icon: any }> }> = [
     {
@@ -141,11 +141,10 @@ const Admin = () => {
       ],
     },
     {
-      label: "Contenu & Kits",
+      label: "Contenu",
       items: [
         { id: "articles", label: "Actualités", icon: FileText },
         { id: "review", label: "Validation", icon: Eye },
-        // Kits École gérés côté module dédié (/kits-ecole)
         { id: "advertisements", label: "Publicités", icon: Bell },
         { id: "social_media", label: "Réseaux Sociaux", icon: Share2 },
       ],
