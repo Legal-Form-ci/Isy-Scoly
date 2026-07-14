@@ -22,11 +22,9 @@ import {
   Truck,
   Gift,
   BarChart3,
-  Database,
   HelpCircle,
   FileText,
   Menu,
-  BookOpen,
   UserPlus,
   Zap
 } from "lucide-react";
@@ -38,7 +36,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { useLanguage } from "@/i18n/LanguageContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -51,7 +49,6 @@ import BulkProductImport from "@/components/admin/BulkProductImport";
 import PublicationsReview from "@/components/admin/PublicationsReview";
 import CouponManagement from "@/components/admin/CouponManagement";
 import AdvertisementsManagement from "@/components/admin/AdvertisementsManagement";
-import DatabaseManagement from "@/components/admin/DatabaseManagement";
 import FAQManagement from "@/components/admin/FAQManagement";
 import PlatformSettings from "@/components/admin/PlatformSettings";
 import AdvancedStats from "@/components/admin/AdvancedStats";
