@@ -196,7 +196,7 @@ const Admin = () => {
 
 
         {/* Sidebar - Desktop */}
-        <aside className="w-64 shrink-0 bg-card border-r border-border hidden lg:block sticky top-0 h-screen overflow-y-auto">
+        <aside className="w-64 shrink-0 bg-card border-r border-border hidden md:block sticky top-0 h-screen overflow-y-auto">
           <div className="p-4 border-b border-border">
             <h2 className="text-lg font-display font-bold text-foreground">Administration</h2>
             <p className="text-xs text-muted-foreground">Menu interne</p>
@@ -297,7 +297,7 @@ const Admin = () => {
         </Sheet>
 
         {/* Floating Menu Button (bottom right) - Mobile fallback */}
-        <div className="lg:hidden fixed bottom-4 right-4 z-50">
+        <div className="md:hidden fixed bottom-4 right-4 z-50">
           <Button
             size="icon"
             className="h-14 w-14 rounded-full shadow-lg"
